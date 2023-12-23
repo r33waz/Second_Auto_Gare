@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Css for landing page */
+.gradient_text {
+  background: #21fff8;
+  background: linear-gradient(to bottom, #21fff8 0%, #150ecf 68%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.drop-shadow {
+  filter: drop-shadow(0px 5px 3px #000000);
+}
+.drop-shadow:hover {
+  transform: scale(1.1);
+}
+.image {
+  opacity: 0.8;
+}
+.image:hover {
+  opacity: inherit;
+}
+
+.logo-shadwo {
+  filter: drop-shadow(6px -6px 0px #000000);
+}
+/* Landing page css completed here */
+
+/* Login page Css */
+
+.login {
+  background: rgba( 43, 135, 234, 0.65 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 17px );
+-webkit-backdrop-filter: blur( 17px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
