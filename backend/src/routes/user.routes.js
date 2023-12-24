@@ -1,8 +1,10 @@
-import express from "express"
-import { Signup } from "../controller/user.controller.js"
+import express from "express";
+import { Login, Signup } from "../controller/user.controller.js";
+import { handleFileUpload, upload } from "../middleware/multter.middleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/signup", Signup)
+router.post("/signup", upload.single("photo"), handleFileUpload, Signup);
+router.post("/login",Login);
 
-export default router
+export default router;

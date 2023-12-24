@@ -1,13 +1,9 @@
-import { useState } from "react";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import { postImageData } from "../../service/axiosservice";
 function Signup() {
   const naviagte = useNavigate();
   const [photo, setUserPhoto] = useState(null);
@@ -22,42 +18,38 @@ function Signup() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const OnSubmit = async (data) => {
     const formData = new FormData();
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
     formData.append("email", data.email);
     formData.append("phonenumber", data.phonenumber);
-    formData.append("confirmpassword", data.confirmpassword);
-    formData.append("categoey", data.category);
+    formData.append("password", data.password);
+    formData.append("category", data.category);
     formData.append("photo", data.photo[0]);
-    trigger(formData);
-    console.log(data.photo[0]);
+    const resp = await postImageData("/api/v1/signup", formData);
+    if (resp?.status) {
+      naviagte("/login");
+      toast.success(resp?.message);
+    }
   };
 
-  const createuser = async (url, { arg }) => {
-    await axios.post(url, arg);
-    naviagte("/login");
-    toast.success("User Created Sucessfully");
-  };
-  //* trigger is a remote mutation function
-  //* useSWRMutaion whouldnot be called until the trigger function is invoked
-  const { trigger } = useSWRMutation(createuser);
-
+  useEffect(() => {
+    document.title = "Signup";
+  });
   return (
     <div className="container mx-auto ">
       <div className="flex items-center justify-center h-screen ">
         <div className="relative p-3 w-[350px] lg:w-[500px] md:w-[500px] shadow-[0px_1px_3px_3px_#00000024] ">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(OnSubmit)}>
             <div className="flex flex-col gap-5 ">
               <div className="flex justify-center">
                 {photo ? (
-                  <div className="relative w-32 h-32">
+                  <div className="">
                     <img
                       src={photo}
                       alt="User Image"
-                      className="object-cover border rounded-full"
+                      className="object-fill w-32 h-32 border-2 border-gray-700 rounded-full"
                     />
                   </div>
                 ) : (
@@ -132,7 +124,10 @@ function Signup() {
                   type="text"
                   className="w-full h-10 pl-2 text-black  placeholder-gray-500 border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
                   placeholder="Email"
-                  {...register("email", { required: true })}
+                  {...register("email", {
+                    required: true,
+                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  })}
                   autoComplete="off"
                 />
                 <span className="text-red">
@@ -147,7 +142,6 @@ function Signup() {
                     className="w-full h-10 pl-2  text-black  placeholder-gray-500 bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
                     placeholder="Password"
                     {...register("password", { required: true })}
-                    autoComplete="off"
                   />
                   <span className="text-red">
                     {errors.password && <small>Enter your password</small>}
@@ -183,53 +177,8 @@ function Signup() {
                     )}
                   </span>
                 </div>
-
-                <div className="relative w-full">
-                  <input
-                    id="confirmpassword"
-                    type={showpassword ? "text" : "password"}
-                    className="w-full h-10 pl-2  text-black  placeholder-gray-500 bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
-                    placeholder="Confirm Password"
-                    {...register("confirmpassword", { required: true })}
-                  />
-                  <span className="text-red">
-                    {errors.confirmpassword && (
-                      <small>Enter your password</small>
-                    )}
-                  </span>
-                  <span
-                    className="absolute top-3 right-1"
-                    onClick={() => setShowpassword(!showpassword)}
-                  >
-                    {showpassword ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="black"
-                          d="M12 16q1.875 0 3.188-1.313T16.5 11.5q0-1.875-1.313-3.188T12 7q-1.875 0-3.188 1.313T7.5 11.5q0 1.875 1.313 3.188T12 16Zm0-1.8q-1.125 0-1.913-.788T9.3 11.5q0-1.125.788-1.913T12 8.8q1.125 0 1.913.788T14.7 11.5q0 1.125-.787 1.913T12 14.2Zm0 4.8q-3.65 0-6.65-2.038T1 11.5q1.35-3.425 4.35-5.463T12 4q3.65 0 6.65 2.038T23 11.5q-1.35 3.425-4.35 5.463T12 19Zm0-7.5Zm0 5.5q2.825 0 5.188-1.488T20.8 11.5q-1.25-2.525-3.613-4.013T12 6Q9.175 6 6.812 7.488T3.2 11.5q1.25 2.525 3.613 4.013T12 17Z"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="black"
-                          d="m16.1 13.3l-1.45-1.45q.225-1.175-.675-2.2t-2.325-.8L10.2 7.4q.425-.2.863-.3T12 7q1.875 0 3.188 1.313T16.5 11.5q0 .5-.1.938t-.3.862Zm3.2 3.15l-1.45-1.4q.95-.725 1.688-1.587T20.8 11.5q-1.25-2.525-3.588-4.013T12 6q-.725 0-1.425.1T9.2 6.4L7.65 4.85q1.025-.425 2.1-.638T12 4q3.575 0 6.425 1.887T22.7 10.8q.075.125.1.313t.025.387q0 .2-.037.388t-.088.312q-.575 1.275-1.437 2.35t-1.963 1.9Zm-.2 5.45l-3.5-3.45q-.875.275-1.762.413T12 19q-3.575 0-6.425-1.888T1.3 12.2q-.075-.125-.1-.312t-.025-.388q0-.2.025-.375t.1-.3Q1.825 9.7 2.55 8.75T4.15 7L2.075 4.9Q1.8 4.625 1.8 4.212t.3-.712q.275-.275.7-.275t.7.275l17 17q.275.275.288.688t-.288.712q-.275.275-.7.275t-.7-.275ZM5.55 8.4q-.725.65-1.325 1.425T3.2 11.5q1.25 2.525 3.588 4.013T12 17q.5 0 .975-.063t.975-.137l-.9-.95q-.275.075-.525.113T12 16q-1.875 0-3.188-1.312T7.5 11.5q0-.275.038-.525t.112-.525L5.55 8.4Zm7.975 2.325ZM9.75 12.6Z"
-                        />
-                      </svg>
-                    )}
-                  </span>
-                </div>
               </div>
-              <div className="flex  gap-5">
+              <div className="flex flex-wrap gap-5 lg:flex-nowrap md:flex-nowrap">
                 <div className="flex flex-col w-full">
                   <input
                     id="phonenumber"
@@ -245,7 +194,7 @@ function Signup() {
                     )}
                   </span>
                 </div>
-                <div className="flex flex-col gap-1 w-full">
+                <div className="flex flex-col w-full gap-1">
                   <select
                     className="w-full h-10 pl-2  text-gray-500 bg-white  border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
                     {...register("category", { required: true })}
@@ -265,9 +214,10 @@ function Signup() {
               <input
                 id="photo"
                 type="file"
+                accept="image/jpg,image/jpeg,image/png"
                 placeholder="Upload Image"
                 className="w-full h-10 p-2 text-black placeholder-gray-500 bg-white border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
-                {...register("photo", { required: true })}
+                {...register("photo")}
                 onChange={onChangePicture}
                 autoComplete="off"
               />

@@ -1,11 +1,43 @@
+import { response } from "express";
+import cloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
-import bycrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
+import fs from "fs";
 
+//* API to signup the user
 export const Signup = async (req, res) => {
   const saltRounds = 10;
   try {
-    const { firstname, lastname, email, phonenumber, password, photo } =
-      req.body;
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file found",
+      });
+    }
+    const {
+      firstname,
+      lastname,
+      email,
+      phonenumber,
+      password,
+      category,
+      photo,
+    } = req.body;
+
+    let userPhoto;
+    if (
+      req.file.mimetype === "image/jpeg" ||
+      req.file.mimetype === "image/jpeg" ||
+      req.file.mimetype === "image/png"
+    ) {
+      userPhoto = await cloudinary.v2.uploader.upload(req.file.path);
+    } else {
+      res.status(400).json({
+        status: false,
+        message: "Invalid file type",
+      });
+    }
+
     const existingUserEmail = await User.findOne({ email });
 
     if (existingUserEmail) {
@@ -14,17 +46,30 @@ export const Signup = async (req, res) => {
         message: "Email already exist",
       });
     } else {
-      const hashpassword = await bycrypt.hash(password, saltRounds);
+      const hashpassword = await bcrypt.hash(password, saltRounds);
       const newUser = new User({
         firstname: firstname,
         lastname: lastname,
         email: email,
         password: hashpassword,
         phonenumber: phonenumber,
+        role: category,
+        photo: userPhoto.secure_url,
       });
-      await newUser.save();
+      const saveuser = new User(newUser);
+      await saveuser.save();
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+
+      if (!saveuser) {
+        return res.status(400).json({
+          status: false,
+          message: "Failed to create account",
+        });
+      }
       return res.status(200).json({
-        status: false,
+        status: true,
         data: {
           firstname: newUser.firstname,
           lastname: newUser.lastname,
@@ -35,9 +80,56 @@ export const Signup = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+//*API to Login user ussing session
+export const Login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid Email or Password",
+      });
+    }
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword && !user) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid Email or Password",
+      });
+    } else {
+      req.session.user = {
+        _id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role,
+      };
+
+      return res.status(200).json({
+        status: true,
+        /*Here we are using spread operator to copy all the data from the req.session.user and adding phonenumber property into it*/
+        data: {
+          ...req.session.user,
+          phonenumber: user.phonenumber,
+          islogin: true,
+        },
+        message: `Welcome ${user.firstname + " " + user.lastname}!`,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
     });
   }
 };
