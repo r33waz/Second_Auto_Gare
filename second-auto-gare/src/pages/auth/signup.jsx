@@ -224,7 +224,7 @@ function Signup() {
               <div className="flex flex-col gap-5">
                 <button
                   type="submit"
-                  className="h-10 text-3xl text-white border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] bg-blue"
+                  className="h-10 text-3xl text-white border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] bg-orange"
                 >
                   Sign Up
                 </button>
@@ -232,7 +232,7 @@ function Signup() {
                   Already have an account?{" "}
                   <NavLink
                     to="/login"
-                    className="font-medium underline text-blue"
+                    className="font-medium underline text-orange"
                   >
                     Signin
                   </NavLink>
@@ -240,7 +240,7 @@ function Signup() {
               </div>
               <div className="relative">
                 <hr></hr>
-                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-56 -top-3 text-blue">
+                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-56 -top-3 text-orange">
                   or
                 </span>
               </div>
@@ -292,7 +292,7 @@ function Signup() {
               </div>
             </div>
           </form>
-          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-blue">
+          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-orange">
             Nice to meet you
           </h1>
         </div>

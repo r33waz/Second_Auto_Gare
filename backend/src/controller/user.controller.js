@@ -100,7 +100,7 @@ export const Login = async (req, res) => {
       });
     }
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword && !user) {
+    if (!validPassword || !user) {
       return res.status(400).json({
         status: false,
         message: "Invalid Email or Password",
@@ -127,6 +127,31 @@ export const Login = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+//*API for user logout deleting session id
+export const Logoout = async (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({
+          status: false,
+          message: "Internal server error",
+        });
+      }
+    });
+
+    res.clearCookie("connect.sid");
+    return res.status(200).json({
+      status: true,
+      message: "Logout sucessfull",
+    });
+  } catch (error) {
     return res.status(500).json({
       status: false,
       message: "Internal server error",

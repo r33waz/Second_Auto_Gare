@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { login } from "./loginslice";
 function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showpassword, setShowPassword] = useState(false);
   const loginSchema = yup.object({
     email: yup
@@ -36,6 +37,7 @@ function Login() {
     const resp = await postData("/api/v1/login", data);
     if (resp?.status) {
       dispatch(login(resp.data));
+      navigate("/home");
       toast.success(resp.message);
     }
   };
@@ -104,7 +106,7 @@ function Login() {
               <div className="flex flex-col gap-5">
                 <button
                   type="submit"
-                  className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-blue"
+                  className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-orange"
                 >
                   Sign In
                 </button>
@@ -112,7 +114,7 @@ function Login() {
                   Don't have an account?{" "}
                   <NavLink
                     to="/signup"
-                    className="font-medium underline text-blue"
+                    className="font-medium underline text-orange"
                   >
                     Signup
                   </NavLink>
@@ -120,7 +122,7 @@ function Login() {
               </div>
               <div className="relative">
                 <hr></hr>
-                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-[170px] -top-3 text-blue">
+                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-[170px] -top-3 text-orange">
                   or
                 </span>
               </div>
@@ -172,7 +174,7 @@ function Login() {
               </div>
             </div>
           </form>
-          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-blue">
+          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-orange">
             Welcome Back
           </h1>
         </div>
