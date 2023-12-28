@@ -24,10 +24,16 @@ const loginslice = createSlice({
       state.islogin = action.payload.islogin;
     },
     logout: (state) => {
-      Object.assign(state, initialState);
+      state._id = "";
+      state.firstname = "";
+      state.lastname = "";
+      state.email = "";
+      state.phonenumber = "";
+      state.role = "";
+      state.islogin = "";
     },
   },
 });
 
 export default loginslice.reducer;
-export const { login } = loginslice.actions;
+export const { login, logout } = loginslice.actions;
