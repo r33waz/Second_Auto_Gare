@@ -44,7 +44,7 @@ function Header() {
   ];
   return (
     <>
-      <div className="sticky top-0 z-50 flex items-center  justify-around p-4 bg-white shadow-md :bg--bg :shadow-sm :shadow-white">
+      <div className="sticky top-0 z-50 flex items-center justify-around p-4 bg-white shadow-md :bg--bg :shadow-sm :shadow-white">
         <div>
           <NavLink to="/">
             <img
