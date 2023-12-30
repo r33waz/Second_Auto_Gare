@@ -64,7 +64,7 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-50 flex items-center  justify-around p-4 bg-white shadow-md :bg--bg :shadow-sm :shadow-white">
+      <div className="sticky top-0 z-50 flex items-center justify-around p-4 bg-white shadow-md :bg--bg :shadow-sm :shadow-white">
         <div>
           <NavLink to="/">
             <img
@@ -99,15 +99,15 @@ function Header() {
 
         <div>
           {user?.islogin === true ? (
-            <div className="fixed top-2 right-20 w-56 text-right">
+            <div className="fixed w-56 text-right top-2 right-20">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-white">
+                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md">
                     {user?.photo ? (
                       <img
                         src={user?.photo}
                         alt="image"
-                        className="w-14 h-14 rounded-full"
+                        className="rounded-full w-14 h-14"
                       />
                     ) : (
                       <svg
@@ -155,7 +155,7 @@ function Header() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 mt-2 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-200 p-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                  <Menu.Items className="absolute right-0 p-1 mt-2 origin-top-right bg-gray-200 divide-y divide-gray-100 rounded-md shadow-lg w-72 ring-1 ring-black/5 focus:outline-none">
                     <div className="px-1 py-1 ">
                       <Menu.Item>
                         <div className="flex gap-2 ">
@@ -163,7 +163,7 @@ function Header() {
                             <img
                               src={user?.photo}
                               alt="image"
-                              className="w-14 h-14 rounded-full"
+                              className="rounded-full w-14 h-14"
                             />
                           ) : (
                             <svg
@@ -201,7 +201,7 @@ function Header() {
                             </svg>
                           )}
                           <div className="flex flex-col">
-                            <h1 className="font-semibold text-lg">
+                            <h1 className="text-lg font-semibold">
                               {user?.firstname + "" + user?.lastname}
                             </h1>
                             <span>{user?.email}</span>
