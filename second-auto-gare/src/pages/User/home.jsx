@@ -9,7 +9,6 @@ import luxuryCar from "../../assets/images/luxury.jpg";
 import SUV from "../../assets/images/toyota.jpg";
 import subSUV from "../../assets/images/kia.jpg";
 import sedan from "../../assets/images/sedan.png";
-import Flip from "react-reveal/Flip";
 import { Fade } from "react-reveal";
 import { Link } from "react-router-dom";
 
