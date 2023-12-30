@@ -93,6 +93,7 @@ export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    console.log(user);
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -100,7 +101,7 @@ export const Login = async (req, res) => {
       });
     }
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword && !user) {
+    if (!validPassword || !user) {
       return res.status(400).json({
         status: false,
         message: "Invalid Email or Password",
@@ -118,9 +119,14 @@ export const Login = async (req, res) => {
         status: true,
         /*Here we are using spread operator to copy all the data from the req.session.user and adding phonenumber property into it*/
         data: {
-          ...req.session.user,
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          role: user.role,
           phonenumber: user.phonenumber,
           islogin: true,
+          photo: user.photo,
         },
         message: `Welcome ${user.firstname + " " + user.lastname}!`,
       });
@@ -132,4 +138,42 @@ export const Login = async (req, res) => {
       message: "Internal server error",
     });
   }
+};
+
+//*API for user logout deleting session id
+export const Logoout = async (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({
+          status: false,
+          message: "Internal server error",
+        });
+      }
+    });
+
+    res.clearCookie("connect.sid");
+    return res.status(200).json({
+      status: true,
+      message: "Logout sucessfull",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+//*API for user update
+export const userUpdate = async (req, res) => {
+  try {
+    console.log("user");
+  } catch (error) {}
+};
+
+//*API for user update
+export const userDelete = async (req, res) => {
+  try {
+  } catch (error) {}
 };
