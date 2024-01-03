@@ -22,6 +22,7 @@ const loginslice = createSlice({
       state.phonenumber = action.payload.phonenumber;
       state.role = action.payload.role;
       state.islogin = action.payload.islogin;
+      state.photo = action.payload.photo;
     },
     logout: (state) => {
       state._id = "";

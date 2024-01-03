@@ -1,5 +1,5 @@
 import logo from "../../assets/images/kidmfond.jpg";
-import nexonImage from "../../assets/images/nexon.jpeg";
+import nexonImage from "../../assets/images/nexon.png";
 import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -159,10 +159,10 @@ function Home() {
                 </p>
               </div>
             </motion.div>
-            <div className="hidden lg:-right-96 -top-72 lg:absolute md:absolute lg:inline-block md:hidden lg:w-full ">
+            <div className="hidden lg:-right-80  lg:absolute md:absolute lg:inline-block md:hidden lg:w-full ">
               <img
                 alt="Mercedes Benz"
-                className=" lg:object-fill"
+                className=" lg:object-fill "
                 src={nexonImage}
                 style={{ filter: "drop-shadow(10px 0px 10px orange)" }}
               />
