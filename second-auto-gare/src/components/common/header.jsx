@@ -99,10 +99,10 @@ function Header() {
 
         <div>
           {user?.islogin === true ? (
-            <div className="fixed w-56 text-right top-2 right-20">
+            <div className=" w-56 text-right top-2 right-20">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md">
+                  <Menu.Button className=" justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md">
                     {user?.photo ? (
                       <img
                         src={user?.photo}

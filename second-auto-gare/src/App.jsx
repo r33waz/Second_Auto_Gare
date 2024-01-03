@@ -6,18 +6,21 @@ import Footer from "./components/common/footer";
 import Login from "./pages/auth/login";
 import Signup from "./pages/auth/signup";
 import { Provider } from "react-redux";
-import { store } from "../store/store";
+import { persist, store } from "../store/store";
+import { PersistGate } from "redux-persist/integration/react";
 function App() {
   return (
     <>
       <Provider store={store}>
-        <Header />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/home" element={<Home />} />
-        </Routes>
-        <Footer />
+        <PersistGate persistor={persist}>
+          <Header />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/home" element={<Home />} />
+          </Routes>
+          <Footer />
+        </PersistGate>
       </Provider>
     </>
   );

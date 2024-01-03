@@ -1,6 +1,12 @@
 import express from "express";
-import { Login, Logoout, Signup } from "../controller/user.controller.js";
-import { handleFileUpload, upload } from "../middleware/multter.middleware.js";
+import {
+  Login,
+  Logoout,
+  Signup,
+  userDelete,
+  userUpdate,
+} from "../controller/user.controller.js";
+import { upload } from "../middleware/multter.middleware.js";
 import {
   authentication,
   authorization,
@@ -8,9 +14,9 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", upload.single("photo"), handleFileUpload, Signup);
-router.post("/login",  Login);
-router.post("/logout",Logoout)
+router.post("/signup", upload.single("photo"), Signup);
+router.post("/login", Login);
+router.post("/logout", Logoout);
 router.post("/logout", Logoout);
 router.patch(
   "/updateuser/:id",
