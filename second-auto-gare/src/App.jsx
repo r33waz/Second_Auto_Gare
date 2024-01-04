@@ -5,6 +5,7 @@ import Home from "./pages/User/home";
 import Footer from "./components/common/footer";
 import Login from "./pages/auth/login";
 import Signup from "./pages/auth/signup";
+import Dashboard from "./pages/Admin/Dashboard"
 import { Provider } from "react-redux";
 import { persist, store } from "../store/store";
 import { PersistGate } from "redux-persist/integration/react";
@@ -13,8 +14,9 @@ function App() {
     <>
       <Provider store={store}>
         <PersistGate persistor={persist}>
-          <Header />
+          {/* <Header /> */}
           <Routes>
+            <Route path="/admin" element={<Dashboard/>}/>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
