@@ -33,7 +33,7 @@ export const Signup = async (req, res) => {
         message: "Email already exists",
       });
     }
-    
+
     const hashpassword = await bcrypt.hash(password, saltRounds);
     const newUser = new User({
       firstname,
