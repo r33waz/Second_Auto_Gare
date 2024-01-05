@@ -137,15 +137,121 @@ export const Logoout = async (req, res) => {
   }
 };
 
+//*API to get all user
+export const getAllUser = async (req, res) => {
+  try {
+    const user = await User.find();
+    if (user) {
+      return res.status(200).json({
+        status: true,
+        data: user,
+      });
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: "No users found",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+//*API to get userby id
+export const getUserById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "No user found",
+      });
+    } else {
+      return res.status(200).json({
+        status: true,
+        data: user,
+        message: `${user?.firstname + "" + user?.lastname}`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 //*API for user update
 export const userUpdate = async (req, res) => {
   try {
-    console.log("user");
-  } catch (error) {}
+    const id = req.params.id;
+    const user = await User.findById({ _id: id });
+    console.log(user);
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid Attemp",
+      });
+    } else {
+      const updateUser = await User.findByIdAndUpdate(
+        { _id: id },
+        { $set: { ...req.body } },
+        { new: true } //return updated document instead of original one
+      );
+
+      if (!updateUser) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid Attemp",
+        });
+      } else {
+        return res.status(200).json({
+          status: true,
+          data: updateUser,
+          message: `${
+            updateUser?.firstname + "" + updateUser?.lastname
+          } updated`,
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
 };
 
 //*API for user update
 export const userDelete = async (req, res) => {
   try {
-  } catch (error) {}
+    const id = req.params.id;
+    const user = await User.findById({ _id: id });
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "User not Found!",
+      });
+    } else {
+      const user = await User.findByIdAndDelete({ _id: id });
+      if (user) {
+        return res.status(200).json({
+          status: true,
+          data: user,
+          message: "User Deleted Successfully",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
 };
