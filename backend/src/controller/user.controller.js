@@ -243,7 +243,7 @@ export const userDelete = async (req, res) => {
         return res.status(200).json({
           status: true,
           data: user,
-          message: "User Deleted Successfully",
+          message: `${user.firstname + " " + user.lastname} deleted`,
         });
       }
     }

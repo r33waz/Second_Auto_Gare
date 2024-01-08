@@ -87,7 +87,7 @@ function Header() {
                 to={i.link}
                 className={
                   i.link === pathname
-                    ? "text-orange hover:text-orange font-medium underline underline-offset-4"
+                    ? "text-purple hover:text-purple font-medium underline underline-offset-4"
                     : ""
                 }
               >
@@ -99,10 +99,10 @@ function Header() {
 
         <div>
           {user?.islogin === true ? (
-            <div className=" w-56 text-right top-2 right-20">
+            <div className="w-56 text-right top-2 right-20">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className=" justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md">
+                  <Menu.Button className="justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md ">
                     {user?.photo ? (
                       <img
                         src={user?.photo}
@@ -212,7 +212,7 @@ function Header() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bg-orange text-white" : "text-gray-900"
+                              active ? "bg-purple text-white" : "text-gray-900"
                             } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-6`}
                           >
                             <svg
@@ -256,7 +256,7 @@ function Header() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bg-orange text-white" : "text-gray-900"
+                              active ? "bg-purple text-white" : "text-gray-900"
                             } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
@@ -320,7 +320,7 @@ function Header() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bg-orange text-white" : "text-gray-900"
+                              active ? "bg-purple text-white" : "text-gray-900"
                             } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
@@ -416,7 +416,7 @@ function Header() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bg-orange text-white" : "text-gray-900"
+                              active ? "bg-purple text-white" : "text-gray-900"
                             } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
@@ -523,7 +523,7 @@ function Header() {
                           <button
                             onClick={handleLogout}
                             className={`${
-                              active ? "bg-orange text-white" : "text-gray-900"
+                              active ? "bg-purple text-white" : "text-gray-900"
                             } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2 `}
                           >
                             Logout
@@ -596,7 +596,7 @@ function Header() {
                   <NavLink
                     key={idx}
                     to={i?.link}
-                    className="p-2 font-semibold text-white uppercase rounded-sm hover:scale-105 bg-orange"
+                    className="p-2 font-semibold text-white uppercase rounded-sm hover:scale-105 bg-purple"
                   >
                     {i.name}
                   </NavLink>
@@ -606,6 +606,19 @@ function Header() {
           )}
         </div>
       </div>
+      <marquee
+        width="100%"
+        direction="left"
+        height="45px"
+        style={{
+          fontSize: "30px",
+          color: "white",
+          backgroundColor: "#624bff",
+          fontWeight: "bold",
+        }}
+      >
+        Second Auto Gare
+      </marquee>
     </>
   );
 }

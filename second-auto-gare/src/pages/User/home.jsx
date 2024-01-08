@@ -1,6 +1,5 @@
 import logo from "../../assets/images/kidmfond.jpg";
 import nexonImage from "../../assets/images/nexon.png";
-import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -22,7 +21,7 @@ function Home() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="white"
-          className="w-12 h-12  rounded-full bg-orange bg-opacity-85 cursor-pointer hover:bg-orange absolute top-[40%] left-8 p-2 z-10 active:bg-orange "
+          className="w-12 h-12  rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] left-8 p-2 z-10 active:bg-purple "
         >
           <path
             strokeLinecap="round"
@@ -43,7 +42,7 @@ function Home() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="white"
-          className="w-12 h-12  rounded-full bg-orange bg-opacity-85 cursor-pointer hover:bg-orange absolute top-[40%] right-8 p-2 z-10 active:bg-orange "
+          className="w-12 h-12  rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] right-8 p-2 z-10 active:bg-purple "
         >
           <path
             strokeLinecap="round"
@@ -143,23 +142,17 @@ function Home() {
       <div className="text-white bg-black lg:h-[500px] md:h-[300px]">
         <div className="container px-6 py-12 mx-auto">
           <div className="relative flex flex-col h-[500px] items-center gap-4 lg:flex-row">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 2 }}
-            >
-              <div className="lg:w-3/5 from-white to-blue bg-gradient-to-tl bg-clip-text gradient_text">
-                <h1 className="mb-4 text-5xl font-bold">
-                  Second Auto Gare - Your Trusted Vehicle Rental Partner
-                </h1>
-                <p className="mb-32">
-                  In this website, we provide services like renting a vehicle,
-                  live chat between the customer and seller, category page, and
-                  also include the landing page of the website.
-                </p>
-              </div>
-            </motion.div>
-            <div className="hidden lg:-right-80  lg:absolute md:absolute lg:inline-block md:hidden lg:w-full ">
+            <div className="lg:w-3/5 from-white to-orange bg-gradient-to-tl bg-clip-text gradient_text animate__animated animate__slideInLeft">
+              <h1 className="mb-4 text-5xl font-bold">
+                Second Auto Gare - Your Trusted Vehicle Rental Partner
+              </h1>
+              <p className="mb-32">
+                In this website, we provide services like renting a vehicle,
+                live chat between the customer and seller, category page, and
+                also include the landing page of the website.
+              </p>
+            </div>
+            <div className="hidden lg:-right-96  lg:absolute md:absolute lg:inline-block md:hidden lg:w-full animate__animated animate__fadeInRight">
               <img
                 alt="Mercedes Benz"
                 className=" lg:object-fill "
@@ -209,7 +202,7 @@ function Home() {
                 </p>
                 <Link
                   href="/"
-                  className="px-2 py-1 text-white rounded bg-orange w-fit bg-opacity-90 hover:bg-opacity-100"
+                  className="px-2 py-1 text-white rounded bg-purple w-fit bg-opacity-90 hover:bg-opacity-100"
                 >
                   Read More →
                 </Link>
@@ -233,7 +226,7 @@ function Home() {
           <div className="lg:px-14 md:px-14 ">
             <div className="grid gap-10 px-5 text-black lg:p-0 md:p-0 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
               <Fade left>
-                <div className="flex gap-2 bg-gray-200 rounded-md felx-col hover:bg-orange hover:text-white hover:bg-opacity-80 ">
+                <div className="flex gap-2 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80 ">
                   <div className="p-5">
                     <h3>.1</h3>
                     <h1 className="text-3xl">Wide Range of Vehicles</h1>
@@ -245,7 +238,7 @@ function Home() {
                 </div>
               </Fade>
               <Fade right>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-orange hover:text-white hover:bg-opacity-80">
+                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.2</h3>
                     <h1 className="text-3xl">Live chat</h1>
@@ -257,7 +250,7 @@ function Home() {
                 </div>
               </Fade>
               <Fade left>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-orange hover:text-white hover:bg-opacity-80">
+                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.3</h3>
                     <h1 className="text-3xl">24/7 Customer Support</h1>
@@ -270,7 +263,7 @@ function Home() {
                 </div>
               </Fade>
               <Fade right>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-orange hover:text-white hover:bg-opacity-80">
+                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.4</h3>
                     <h1 className="text-3xl">Flexible Rental Periods</h1>
@@ -293,7 +286,7 @@ function Home() {
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-orange bg-opacity-90 hover:bg-opacity-100"
+                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
                   >
                     SUB-SUV
                   </Link>
@@ -309,7 +302,7 @@ function Home() {
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-orange bg-opacity-90 hover:bg-opacity-100"
+                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
                   >
                     SUV
                   </Link>
@@ -324,7 +317,7 @@ function Home() {
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-orange bg-opacity-90 hover:bg-opacity-100"
+                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
                   >
                     SUB-SUV
                   </Link>
@@ -339,7 +332,7 @@ function Home() {
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-orange bg-opacity-90 hover:bg-opacity-100"
+                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
                   >
                     Sedan
                   </Link>

@@ -35,9 +35,14 @@ function Login() {
   const onSumit = async (data) => {
     console.log(data);
     const resp = await postData("/api/v1/login", data);
-    if (resp?.status) {
+    if (resp?.status && resp.data.role === "user") {
       dispatch(login(resp.data));
       navigate("/home");
+      toast.success(resp.message);
+    }
+
+    if (resp?.status && resp.data.role === "admin") {
+      navigate("/admin");
       toast.success(resp.message);
     }
   };
@@ -106,7 +111,7 @@ function Login() {
               <div className="flex flex-col gap-5">
                 <button
                   type="submit"
-                  className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-orange"
+                  className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-purple"
                 >
                   Sign In
                 </button>
@@ -114,7 +119,7 @@ function Login() {
                   Don't have an account?{" "}
                   <NavLink
                     to="/signup"
-                    className="font-medium underline text-orange"
+                    className="font-medium underline text-purple"
                   >
                     Signup
                   </NavLink>
@@ -122,7 +127,7 @@ function Login() {
               </div>
               <div className="relative">
                 <hr></hr>
-                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-[170px] -top-3 text-orange">
+                <span className="absolute w-6 h-6 p-1 text-xs text-center placeholder-gray-500 bg-white rounded-full right-[170px] -top-3 text-purple">
                   or
                 </span>
               </div>
@@ -174,7 +179,7 @@ function Login() {
               </div>
             </div>
           </form>
-          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-orange">
+          <h1 className="absolute p-1 text-lg font-medium text-white border border-gray-500 rounded top-3 -left-7 bg-purple">
             Welcome Back
           </h1>
         </div>
