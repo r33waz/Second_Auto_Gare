@@ -132,7 +132,7 @@ function Footer() {
             <span className="font-light">second_gare@gmail.com</span>
           </div>
         </div>
-        <section className="font-light text-center text-orange">
+        <section className="font-light text-center text-purple">
           ©2023 Second Auto Gare Nepal Pvt.Ltd
         </section>
       </footer>

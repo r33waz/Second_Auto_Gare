@@ -7,12 +7,29 @@ module.exports = {
   ],
   Mode: "class",
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        marquee: "marquee 25s linear infinite",
+        marquee2: "marquee2 25s linear infinite",
+      },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        marquee2: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0%)" },
+        },
+      },
+    },
     colors: {
       black: "#000000",
       white: "#FFFFFF",
-      orange: "#FF7400",
+      purple: "#624BFF",
       green: "#36802D",
+      blue: "#0096FF",
+      sideNav: "#212B36",
       gray: {
         100: "#fafafa",
         200: "#f5f5f5",
