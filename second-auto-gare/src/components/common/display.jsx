@@ -15,12 +15,12 @@ function Display() {
     User();
   }, []);
   return (
-    <div className="relative w-full h-40 bg-purple">
+    <div className="relative w-full h-40 bg-purple z-50">
       <div className="absolute grid lg:top-20 md:top-12 top-12 lg:grid-cols-4 gap-8 lg:px-2 md:px-2 px-1 md:gris-cols-4 sm:grid-cols-1 place-items-center pt-10 w-full">
         <Card>
           <div className="flex flex-col animate__animated animate__fadeInUp">
             <div className="flex justify-between">
-              <h1 className="text-2xl">Total Normal User</h1>
+              <h1 className="text-2xl"> Normal User</h1>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -65,7 +65,7 @@ function Display() {
         <Card>
           <div className="flex flex-col animate__animated animate__fadeInUp">
             <div className="flex justify-between">
-              <h1 className="text-2xl">Total Dealer</h1>
+              <h1 className="text-2xl">Dealers</h1>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"

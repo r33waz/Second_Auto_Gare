@@ -6,6 +6,7 @@ import {
   getAllUser,
   getUserById,
   userDelete,
+  userSearchByEmail,
   userUpdate,
 } from "../controller/user.controller.js";
 import { upload } from "../middleware/multter.middleware.js";
@@ -34,5 +35,7 @@ router.delete(
   // authorization("admin"),
   userDelete
 );
+
+router.get("/user", userSearchByEmail);
 
 export default router;

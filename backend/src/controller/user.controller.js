@@ -255,3 +255,30 @@ export const userDelete = async (req, res) => {
     });
   }
 };
+
+//* Api for user search by email
+export const userSearchByEmail = async (req, res) => {
+  // console.log(req.query)
+  const user = req.query.email || "";
+  const query = { email: { $regex: user, $options: "i" } };
+  console.log(query)
+  try {
+    const emailUser = await User.find(query);
+    if (emailUser.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: `No users found`,
+      });
+    } else {
+      return res.status(200).json({
+        status: true,
+        data: emailUser,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
