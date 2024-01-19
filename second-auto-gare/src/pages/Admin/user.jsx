@@ -1,12 +1,14 @@
 import Display from "../../components/common/display";
 import { useState, useEffect } from "react";
 import { deleteData, getData } from "../../service/axiosservice";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function User() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState([]);
+  const [userSearch, setSearchUser] = useState("");
+  console.log(userSearch);
 
   const getUser = async () => {
     try {
@@ -30,151 +32,191 @@ function User() {
     navigate(`updateProfile/${id}`);
   };
 
+  const searchUser = async () => {
+    const resp = await getData(`api/v1/user/?email=${userSearch}`);
+    console.log(resp);
+    if (resp.status) {
+      setUserData(resp.data);
+    }
+  };
+
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    const debouncing = setTimeout(() => {
+      searchUser();
+    }, 700);
+    return () => clearTimeout(debouncing);
+  }, [userSearch]);
 
   return (
     <>
       <div className="flex flex-col justify-center items-center w-full">
         <Display />
-        
-        <div className="w-full overflow-x-auto lg:pt-20 md:pt-[450px] pt-[500px]">
-          <table className="table w-full pt-5 border-separate table-auto border-spacing-y-2">
-            <thead>
-              <tr className="text-xs  uppercase lg:text-xl md:text-lg text-black font-extralight ">
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>Email</th>
-                <th>PhoneNumber</th>
-                <th>Role</th>
-                <th>Created Date</th>
-                <th>Change</th>
-              </tr>
-            </thead>
-            <tbody className="text-xs text-center lg:text-lg md:text-sm ">
-              {userData.map((user, idx) => (
-                <tr
-                  key={idx}
-                  className=" h-12  shadow-[0px_0px_2px_2px_#00000024] "
-                >
-                  <td className="">{user.firstname}</td>
-                  <td className="">{user.lastname}</td>
-                  <td className="">{user.email}</td>
-                  <td className="">{user.phonenumber}</td>
-                  <td className="uppercase ">{user.role}</td>
-                  <td className="">{user.createdAt.slice(0, 10)}</td>
-                  <td className="flex gap-2 py-2 justify-evenly">
-                    <button
-                      onClick={() => updateUser(user._id)}
-                      className="w-full"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25"
-                        height="25"
-                        viewBox="0 0 24 24"
-                        className="w-full p-1 mt-3 text-white rounded-md bg-purple"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-dasharray="20"
-                            stroke-dashoffset="20"
-                            d="M3 21H21"
+        <div className="w-full  lg:pt-24 md:pt-[px] pt-[500px]">
+          <div className="relative">
+            <input
+              type="text"
+              className="border-2 outline-none border-gray-500 rounded-lg pl-8 h-10 ml-3 mt-2 lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
+              placeholder="Serach user"
+              onChange={(e) => setSearchUser(e.target.value)}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 256 256"
+              className="absolute top-5 left-5 text-purple"
+            >
+              <path
+                fill="currentColor"
+                d="m228.24 219.76l-51.38-51.38a86.15 86.15 0 1 0-8.48 8.48l51.38 51.38a6 6 0 0 0 8.48-8.48M38 112a74 74 0 1 1 74 74a74.09 74.09 0 0 1-74-74"
+              />
+            </svg>
+          </div>
+          <div className="w-full h-[100vh]">
+            <div className="grid lg:grid-cols-5 gap-5 md:grid-cols-2 sm:grid-cols-1 mt-5 px-2">
+              {userData.map((i, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className="w-full mb-6  shadow-[0px_2px_5px_1px_#00000024] p-3 rounded-xl"
+                  >
+                    <div className="">
+                      <div className="flex justify-center">
+                        {i?.photo ? (
+                          <img
+                            src={i?.photo}
+                            alt="User Image"
+                            className="h-20 w-20 shadow-soft-2xl rounded-full border-2 border-purple p-1"
+                          />
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="80"
+                            height="80"
+                            viewBox="0 0 24 24"
+                            className="border-2 border-purple rounded-full"
                           >
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.3s"
-                              values="20;0"
-                            />
-                          </path>
-                          <path
-                            stroke-dasharray="44"
-                            stroke-dashoffset="44"
-                            d="M7 17V13L17 3L21 7L11 17H7"
+                            <g
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-dasharray="28"
+                              stroke-dashoffset="28"
+                              stroke-linecap="round"
+                              stroke-width="1"
+                            >
+                              <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
+                                <animate
+                                  fill="freeze"
+                                  attributeName="stroke-dashoffset"
+                                  dur="0.4s"
+                                  values="28;0"
+                                />
+                              </path>
+                              <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
+                                <animate
+                                  fill="freeze"
+                                  attributeName="stroke-dashoffset"
+                                  begin="0.5s"
+                                  dur="0.4s"
+                                  values="28;0"
+                                />
+                              </path>
+                            </g>
+                          </svg>
+                        )}
+                      </div>
+                      <div className="flex-auto px-1 pt-6">
+                        <div className="flex justify-between">
+                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                            First name:{" "}
+                            <span className="text-base font-normal">
+                              {i?.firstname}
+                            </span>
+                          </p>
+                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                            Last name:{" "}
+                            <span className="text-base font-normal">
+                              {i?.lastname}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex flex-col justify-between gap-1">
+                          <p className=" z-10 mb-2 font-medium  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                            Role:{" "}
+                            <span className="text-base font-normal">
+                              {i?.role}
+                            </span>
+                          </p>
+                          <p className=" z-10 mb-2 font-medium  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                            Email:{" "}
+                            <span className="text-base font-normal">
+                              {i?.email}
+                            </span>
+                          </p>
+                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                            Phone number:{" "}
+                            <span className="text-base font-normal">
+                              {i?.phonenumber}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex justify-between w-full">
+                          <button
+                            onClick={() => deleteUser(i?._id)}
+                            type="button"
+                            className=" flex bg-red bg-opacity-70 rounded-lg text-white items-center gap-2  px-3 py-1 text-sm  font-bold text-center uppercase align-middle transition-all "
                           >
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.4s"
-                              dur="0.6s"
-                              values="44;0"
-                            />
-                          </path>
-                          <path
-                            stroke-dasharray="8"
-                            stroke-dashoffset="8"
-                            d="M14 6L18 10"
+                            Delete
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M14 11v6m-4-6v6M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7M4 7h16M7 7l2-4h6l2 4"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => updateUser(i?._id)}
+                            type="button"
+                            className=" flex bg-purple bg-opacity-70 rounded-lg text-white items-center gap-2  px-3 py-1 text-sm  font-bold text-center uppercase align-middle transition-all "
                           >
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="1s"
-                              dur="0.2s"
-                              values="8;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </button>
-                    <button
-                      className="w-full"
-                      onClick={() => deleteUser(user._id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25"
-                        height="25"
-                        viewBox="0 0 24 24"
-                        className="w-full p-1 mt-3 text-white rounded-md bg-red bg-opacity-80"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-dasharray="60"
-                            stroke-dashoffset="60"
-                            d="M18 3L16 21H7L5 3z"
-                          >
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.6s"
-                              values="60;0"
-                            />
-                          </path>
-                          <path
-                            stroke-dasharray="14"
-                            stroke-dashoffset="14"
-                            d="M6 7.67C6.6 7.3 7.22 7 8 7C10 7 11 9 13 9C14.64 9 15.6 7.66 17 7.17"
-                          >
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.7s"
-                              dur="0.2s"
-                              values="14;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                            Eidit
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 30 30"
+                            >
+                              <path
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="m30 7l-5-5L5 22l-2 7l7-2Zm-9-1l5 5ZM5 22l5 5Z"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </>
