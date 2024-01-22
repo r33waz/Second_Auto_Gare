@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.BASE_URL,
     credentials: true,
   })
 );
@@ -30,33 +30,6 @@ app.use(
     },
   })
 );
-// Example route to generate and retrieve session ID and token
-app.get('/generate-session', (req, res) => {
-  // Generate a session ID
-  const sessionId = req.sessionID;
-
-  // Generate a session token (optional)
-  const sessionToken = generateSessionToken();
-
-  res.json({
-    sessionId,
-    sessionToken,
-  });
-});
-
-// Helper function to generate a session token (you can customize this)
-function generateSessionToken() {
-  const tokenLength = 32; // Adjust the length as needed
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
-
-  for (let i = 0; i < tokenLength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    token += characters.charAt(randomIndex);
-  }
-
-  return token;
-}
 
 const PORT = process.env.PORT;
 app.use(mainRouter);

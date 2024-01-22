@@ -6,11 +6,7 @@ import { NavLink } from "react-router-dom";
 import { postImageData } from "../../service/axiosservice";
 function Signup() {
   const naviagte = useNavigate();
-  const [photo, setUserPhoto] = useState(null);
   const [showpassword, setShowpassword] = useState(false);
-  const onChangePicture = (e) => {
-    setUserPhoto(URL.createObjectURL(e.target.files[0]));
-  };
 
   const {
     register,
@@ -26,7 +22,6 @@ function Signup() {
     formData.append("phonenumber", data.phonenumber);
     formData.append("password", data.password);
     formData.append("category", data.category);
-    formData.append("photo", data.photo[0]);
     const resp = await postImageData("/api/v1/signup", formData);
     if (resp?.status) {
       naviagte("/login");
@@ -44,50 +39,40 @@ function Signup() {
           <form onSubmit={handleSubmit(OnSubmit)}>
             <div className="flex flex-col gap-5 ">
               <div className="flex justify-center">
-                {photo ? (
-                  <div className="">
-                    <img
-                      src={photo}
-                      alt="User Image"
-                      className="object-fill w-32 h-32 border-2 border-gray-700 rounded-full"
-                    />
-                  </div>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="100"
-                    height="100"
-                    viewBox="0 0 24 24"
-                    className="text-black border border-black rounded-full "
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100"
+                  height="100"
+                  viewBox="0 0 24 24"
+                  className="text-black border border-black rounded-full "
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    strokeDasharray="28"
+                    stroke-dashoffset="28"
+                    stroke-linecap="round"
+                    stroke-width="2"
                   >
-                    <g
-                      fill="none"
-                      stroke="currentColor"
-                      strokeDasharray="28"
-                      stroke-dashoffset="28"
-                      stroke-linecap="round"
-                      stroke-width="2"
-                    >
-                      <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          dur="0.4s"
-                          values="28;0"
-                        />
-                      </path>
-                      <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          begin="0.5s"
-                          dur="0.4s"
-                          values="28;0"
-                        />
-                      </path>
-                    </g>
-                  </svg>
-                )}
+                    <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        dur="0.4s"
+                        values="28;0"
+                      />
+                    </path>
+                    <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        begin="0.5s"
+                        dur="0.4s"
+                        values="28;0"
+                      />
+                    </path>
+                  </g>
+                </svg>
               </div>
               <div className="flex flex-wrap gap-5 lg:flex-nowrap md:flex-nowrap ">
                 <div className="flex flex-col w-full gap-1">
@@ -211,16 +196,7 @@ function Signup() {
                   </span>
                 </div>
               </div>
-              <input
-                id="photo"
-                type="file"
-                accept="image/jpg,image/jpeg,image/png"
-                placeholder="Upload Image"
-                className="w-full h-10 p-2 text-black placeholder-gray-500 bg-white border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
-                {...register("photo")}
-                onChange={onChangePicture}
-                autoComplete="off"
-              />
+
               <div className="flex flex-col gap-5">
                 <button
                   type="submit"

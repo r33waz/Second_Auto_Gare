@@ -132,15 +132,9 @@ function User() {
                       <div className="flex-auto px-1 pt-6">
                         <div className="flex justify-between">
                           <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
-                            First name:{" "}
+                            Full name:{" "}
                             <span className="text-base font-normal">
-                              {i?.firstname}
-                            </span>
-                          </p>
-                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
-                            Last name:{" "}
-                            <span className="text-base font-normal">
-                              {i?.lastname}
+                              {i?.firstname +" "+ i?.lastname}
                             </span>
                           </p>
                         </div>
