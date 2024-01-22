@@ -3,6 +3,7 @@ import {
   Login,
   Logoout,
   Signup,
+  TokenVerify,
   getAllUser,
   getUserById,
   userDelete,
@@ -17,12 +18,13 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", upload.single("photo"), Signup);
+router.post("/signup", upload.array("photo", 3), Signup);
 router.post("/login", Login);
 router.post("/logout", Logoout);
 router.post("/logout", Logoout);
 router.get("/users", getAllUser);
 router.get("/users/:id", getUserById);
+router.get("/:id/verify/:token", TokenVerify);
 router.patch(
   "/updateuser/:id",
   // authentication,
