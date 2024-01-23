@@ -305,6 +305,7 @@ export const userSearchByEmail = async (req, res) => {
     } else {
       return res.status(200).json({
         status: true,
+        data:emailUser
       });
     }
   } catch (error) {
