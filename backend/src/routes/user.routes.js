@@ -2,6 +2,7 @@ import express from "express";
 import {
   Login,
   Logoout,
+  SendOTP,
   Signup,
   TokenVerify,
   getAllUser,
@@ -15,6 +16,7 @@ import {
   authentication,
   authorization,
 } from "../middleware/auth.missleware.js";
+import otpVerification from "../utils/validation.js";
 
 const router = express.Router();
 
@@ -39,5 +41,6 @@ router.delete(
 );
 
 router.get("/user", userSearchByEmail);
+router.post("/send_otp",otpVerification,SendOTP)
 
 export default router;

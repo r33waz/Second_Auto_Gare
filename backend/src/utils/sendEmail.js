@@ -16,10 +16,10 @@ export const sendEmail = async (email, subject, text) => {
       },
     });
     await transporter.sendMail({
-      from: process.env.USERNAME,
+      from: process.env.USER_NAME,
       to: email,
       subject: subject,
-      text: text,
+      html: text,
     });
     console.log("Email sent successfully");
   } catch (error) {
