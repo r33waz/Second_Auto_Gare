@@ -4,7 +4,7 @@ import {
   Logoout,
   SendOTP,
   Signup,
-  TokenVerify,
+  VerifyOtp,
   getAllUser,
   getUserById,
   userDelete,
@@ -16,7 +16,7 @@ import {
   authentication,
   authorization,
 } from "../middleware/auth.missleware.js";
-import otpVerification from "../utils/validation.js";
+import { otpVerification, verifyOtpValidation } from "../utils/validation.js";
 
 const router = express.Router();
 
@@ -26,7 +26,6 @@ router.post("/logout", Logoout);
 router.post("/logout", Logoout);
 router.get("/users", getAllUser);
 router.get("/users/:id", getUserById);
-router.get("/:id/verify/:token", TokenVerify);
 router.patch(
   "/updateuser/:id",
   // authentication,
@@ -41,6 +40,7 @@ router.delete(
 );
 
 router.get("/user", userSearchByEmail);
-router.post("/send_otp",otpVerification,SendOTP)
+router.post("/send_otp", otpVerification, SendOTP)
+router.post("/verify_otp",verifyOtpValidation,VerifyOtp)
 
 export default router;
