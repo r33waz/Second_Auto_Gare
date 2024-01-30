@@ -3,9 +3,8 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../config/cloudinary.js";
 import Token from "../models/token.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
-import crypto from "crypto";
 import { validationResult } from "express-validator";
-import { OTPexpire } from "../utils/otpvalidation.js";
+import { OTPexpire, TwominOTPexpire } from "../utils/otpvalidation.js";
 
 export const Signup = async (req, res) => {
   const saltRounds = 10;
@@ -29,18 +28,11 @@ export const Signup = async (req, res) => {
       phonenumber,
       role: category,
     });
-
-    const savedUser = await newUser.save();
-    const token = await new Token({
-      userId: savedUser._id,
-      token: crypto.randomBytes(32).toString("hex"),
-    }).save();
-    const url = `${process.env.BASE_URL}user/${savedUser._id}/verify/${token.token}`;
-    await sendEmail(savedUser.email, "Email verification", url);
+    let result = await newUser.save();
     return res.status(200).json({
       status: true,
-      message: "Verify your email",
-    });
+      message: "User signup sucessfully"
+    })
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -50,37 +42,7 @@ export const Signup = async (req, res) => {
   }
 };
 
-//*API to get token and verfy and update user
-export const TokenVerify = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await User.findOne({ _id: id });
-    if (!user) {
-      return res.status(400).json({
-        status: false,
-        message: "Invalid Link",
-      });
-    }
-    const token = await Token.findOne({
-      userId: user._id,
-      token: req.params.token,
-    });
-    //Checking whether the token is already used or not
-    if (!token) {
-      return res.status(400).json({
-        status: false,
-        message: "Link is Expired or Invalid!",
-      });
-    }
 
-    await User.updateOne({ _id: user._id, verified: true });
-    await token.remove();
-    return res.status(200).json({
-      status: true,
-      message: "User Verified Successfully!",
-    });
-  } catch (error) { }
-};
 //*API to Login user ussing session
 export const Login = async (req, res) => {
   try {
@@ -96,26 +58,7 @@ export const Login = async (req, res) => {
 
     const validPassword = await bcrypt.compare(password, user.password);
 
-    if (!validPassword || !user.verified) {
-      if (!user.verified) {
-        let token = await Token.findOne({ userId: user._id });
-
-        if (!token) {
-          token = await new Token({
-            userId: user._id,
-            token: crypto.randomBytes(32).toString("hex"),
-          }).save();
-        }
-
-        const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
-        await sendEmail(user.email, "Email verification", url);
-
-        return res.status(400).json({
-          status: false,
-          message: "Verification email sent.",
-        });
-      }
-
+    if (!validPassword) {
       return res.status(400).json({
         status: false,
         message: "Invalid Email or Password",
@@ -326,7 +269,7 @@ export const SendOTP = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         status: false,
-        message: 'Invalid request parameters',
+        message: 'Enter a valid email',
         errors: errors.array()
       });
     }
@@ -347,7 +290,7 @@ export const SendOTP = async (req, res) => {
       });
     }
     const generateOTP = () => {
-      return Math.floor(100000 + Math.random() * 999999); // Generate a random number between 1000
+      return Math.floor(100000 + Math.random() * 999999);
     }
     const OTP = generateOTP();
 
@@ -357,7 +300,7 @@ export const SendOTP = async (req, res) => {
       if (!sendAnotherOtp) {
         return res.status(400).json({
           status: false,
-          message:"Try againg after some minutes!"
+          message: "Try againg after some minutes!"
         })
       }
     }
@@ -367,7 +310,7 @@ export const SendOTP = async (req, res) => {
       { upsert: true, new: true, setDefaultsOnInsert: true }
     )
     console.log(OTP)
-    
+
 
     const message = `<p>Hi ${user.firstname} ${user.lastname},</p>
 <p>Your OTP is:<h3> <b>${OTP}</b></h3></p>
@@ -386,3 +329,49 @@ export const SendOTP = async (req, res) => {
     });
   }
 };
+
+// @route   POST api/auth/verifyotp
+export const VerifyOtp = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: false,
+        message: 'Input fields are empty',
+        errors: errors.array()
+      });
+    }
+
+    const { userId, token } = req.body
+    console.log(userId, token)
+    const otpData = await Token.findOne({ userId, token })
+    //*Checking if the otp exist or not
+    if (!otpData) {
+      return res.status(401).json({
+        status: false,
+        message: 'Invalid or expired OTP'
+      })
+    }
+    //*checking the time of the otp
+    const isExpired = await TwominOTPexpire(otpData.createdAt)
+    if (isExpired) {
+      return res.status(400).json({
+        status: false,
+        message: "OTP already expired!"
+      })
+    }
+    await User.findByIdAndUpdate({ _id: userId }, {
+      $set: { verified: true }
+    })
+    return res.status(200).json({
+      status: true,
+      message: 'OTP verified successfully!'
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error"
+    })
+  }
+}
