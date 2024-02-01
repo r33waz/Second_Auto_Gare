@@ -3,7 +3,7 @@ import Vehicle from "../models/vehicle.model.js";
 export const Addvehicle = async (req, res) => {
     try {
         let {
-            model, brand, year, color, mileage, fuel_type,
+            model, brand, year, color, displacement, mileage, fuel_type,
             transmission, imageUrl, doors, price, number_of_people
         } = req.body;
         console.log(req.body)
@@ -29,6 +29,12 @@ export const Addvehicle = async (req, res) => {
             return res.status(400).json({
                 status: false,
                 message: 'Year is required'
+            });
+        }
+        if (!displacement) {
+            return res.status(400).json({
+                status: false,
+                message: `Displacement is required`
             });
         }
         if (!fuel_type) {
@@ -69,7 +75,7 @@ export const Addvehicle = async (req, res) => {
         }
 
         const newvehicle = new Vehicle({
-            model, brand, year, color, mileage, fuel_type,
+            model, brand, year, color, displacement, mileage, fuel_type,
             transmission, imageUrl, doors, price, number_of_people
         });
         // Save vehicle to database
@@ -188,4 +194,111 @@ export const updateVehicle = async (req, res) => {
             message: "Internal server error"
         })
     }
+}
+
+//search vehicle according to model
+export const searchByModel = async (req, res) => {
+    const vehiclemodel = req.query.model || ""
+    const query = { model: { $regex: vehiclemodel, $options: "i" } }
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (vehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: `No vehicles found with the model ${vehiclemodel}`
+            })
+        } else {
+            return res.status(200).json({
+                status: true,
+                count: vehicle.length,
+                data: vehicle,
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+}
+//get vehicle accordin to color
+export const getColorVehicles = async (req, res) => {
+    const vehicolor = req.query.color || ""
+    const query = { color: { $regex: vehicolor, $options: "i" } }
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (vehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: `No vehicles available in this color`
+            })
+        } else {
+            return res.status(200).json({
+                status: true,
+                data: vehicle
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+//find vehicle according to its displacement
+export const findDisplacementVehicles = async (req, res) => {
+    const vehicleDisplacement = req.query.displacement || ""
+    console.log(vehicleDisplacement)
+    const query = { displacement: { $regex: vehicleDisplacement, $options: "i" } }
+    console.log(query)
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (!vehicle.length === 0) {
+            return res.status(404).json({
+                status: false,
+                message: 'No vehicle found'
+            });
+        }
+        else {
+            return res.status(200).json({
+                status: true,
+                data: vehicle
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+}
+// find vehicle by transmission
+export const findTransmissionVehicles = async (req, res) => {
+    const vehicleTransmission = req.query.transmission || ""
+    const query = { transmission: { $regex: vehicleTransmission, $options: "i" } }
+    console.log(query)
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (vehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: `No ${vehicleTransmission} vehicle is available`
+            })
+        } else {
+            return res.status(200).json({
+                status: true,
+                data: vehicle,
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+
 }
