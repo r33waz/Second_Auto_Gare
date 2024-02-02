@@ -4,7 +4,7 @@ export const Addvehicle = async (req, res) => {
     try {
         let {
             model, brand, year, color, displacement, mileage, fuel_type,
-            transmission, imageUrl, doors, price, number_of_people
+            transmission, imageUrl, doors, price, number_of_people, category
         } = req.body;
         console.log(req.body)
         if (!model) {
@@ -73,10 +73,16 @@ export const Addvehicle = async (req, res) => {
                 message: 'Number of people is required'
             });
         }
+        if (!category) {
+            return res.status(400).json({
+                status: false,
+                message: 'Select your category'
+            });
+        }
 
         const newvehicle = new Vehicle({
             model, brand, year, color, displacement, mileage, fuel_type,
-            transmission, imageUrl, doors, price, number_of_people
+            transmission, imageUrl, doors, price, number_of_people, category
         });
         // Save vehicle to database
         await newvehicle.save()
