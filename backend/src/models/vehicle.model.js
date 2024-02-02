@@ -12,7 +12,9 @@ const vehicleSchema = new mongoose.Schema({
   imageUrl: [{ type: String }],
   doors: { type: Number, required: true },
   price: { type: Number, required: true },
-  number_of_people: { type: String, require: true },
+  number_of_people: { type: String, required: true },
+  category: { type: String, enum: ['sell', 'rent'], required: true }
 });
+
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
 export default Vehicle;
