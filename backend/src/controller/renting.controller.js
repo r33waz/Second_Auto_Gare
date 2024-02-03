@@ -77,10 +77,18 @@ export const getAllRentingsVehicle = async (req, res) => {
             .populate('user', '_id firstname lastname email phonenumber')
             .populate('vehicle', '_id model brand color imageUrl number_of_people')
             .sort("startDate");
-        return res.status(200).json({
-            status: true,
-            data: bookedvehicle
-        })
+        if (bookedvehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: 'No Booking Found'
+            })
+       }else{
+            return res.status(200).json({
+                status: true,
+                count:bookedvehicle.length,
+                data: bookedvehicle
+            })
+        }
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -117,7 +125,7 @@ export const deleteRentingsVehicle = async (req, res) => {
             .populate('vehicle', '_id model brand color imageUrl number_of_people')
         return res.status(200).json({
             status: true,
-            data: bookedvehicle,
+            data: deletevehicle,
             message: 'Vehicle deleted successfully'
         })
     } catch (error) {
