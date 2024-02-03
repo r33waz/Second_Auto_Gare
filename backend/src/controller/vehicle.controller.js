@@ -112,6 +112,7 @@ export const getAllVehicle = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
+                count: vehicles.length,
                 data: vehicles,
             })
         }
@@ -307,4 +308,85 @@ export const findTransmissionVehicles = async (req, res) => {
         })
     }
 
+}
+//find by category
+export const findByCategory = async (req, res) => {
+    const cat_id = req.query.category || "";
+    console.log("category :", cat_id)
+    let query;
+    if (cat_id === 'suv') {
+        query = { category: 'suv' };
+    } else if (cat_id === 'compactsuv') {
+        query = { category: 'compactsuv' };
+    } else {
+        query = { category: { $regex: cat_id, $options: "i" } };
+    }
+    console.log(query)
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (vehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: 'No vehicles found'
+            })
+        } else {
+            return res.status(200).json({
+                stauts: false,
+                count: vehicle.length,
+                data: vehicle
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+//filter vehicle by status
+export const vehicleByStatus = async (req, res) => {
+    try {
+        let statuses = req.query.status || "";
+        //console.log("Categories", categories);
+
+        // Construct query to match categories for selling or renting
+        const query = { status: { $in: ["sell", "rent"] } };
+
+        if (statuses) {
+            // If categories are provided, filter by those categories
+            query.status = { $in: statuses.split(',') };
+        }
+
+        // Find vehicles matching the query
+        const vehicles = await Vehicle.find(query);
+
+        // Check if vehicles are found for selling or renting
+        if (vehicles.length === 0) {
+            if (query.status.$in.includes("sell")) {
+                return res.status(403).json({
+                    status: false,
+                    message: "No vehicles available for selling"
+                });
+            } else if (query.status.$in.includes("rent")) {
+                return res.status(400).json({
+                    status: false,
+                    message: 'No vehicles available for renting'
+                });
+            }
+        }
+        // Return the found vehicles
+        return res.status(200).json({
+            status: true,
+            count: vehicles.length,
+            data: vehicles
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+    }
 }

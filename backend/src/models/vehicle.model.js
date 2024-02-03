@@ -13,7 +13,14 @@ const vehicleSchema = new mongoose.Schema({
   doors: { type: Number, required: true },
   price: { type: Number, required: true },
   number_of_people: { type: String, required: true },
-  category: { type: String, enum: ['sell', 'rent'], required: true }
+  category: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ["sell", "rent"],
+  }
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
