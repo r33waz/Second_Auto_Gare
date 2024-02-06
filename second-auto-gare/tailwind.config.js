@@ -27,7 +27,7 @@ module.exports = {
       black: "#000000",
       white: "#FFFFFF",
       purple: "#624BFF",
-      green: "#36802D",
+      green: "#00b300",
       blue: "#0096FF",
       sideNav: "#212B36",
       gray: {
@@ -41,7 +41,7 @@ module.exports = {
         800: "#292929",
         900: "#1b1b1b",
       },
-      red: "#FF3939",
+      red: "#e50000",
     },
   },
   plugins: [],
