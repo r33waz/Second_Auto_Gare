@@ -12,6 +12,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import User from "./pages/Admin/user";
 import SideNav from "./components/common/SlideNav";
 import UpdateUser from "./pages/Admin/updateUser";
+import Vehicle from "./pages/Admin/vehicle";
 function App() {
   const paths = [
     "/login",
@@ -39,7 +40,7 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="user" element={<User />} />
                     <Route path="updateProfile/:id" element={<UpdateUser />} />
-                    <Route path="/vehicle"></Route>
+                    <Route path="/vehicle" element={<Vehicle />}></Route>
                   </Routes>
                 </div>
               }

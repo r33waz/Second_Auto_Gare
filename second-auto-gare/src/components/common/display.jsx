@@ -1,4 +1,3 @@
-import { Fade } from "react-reveal";
 import { Card } from "./card";
 import { useEffect, useState } from "react";
 import { getData } from "../../service/axiosservice";
