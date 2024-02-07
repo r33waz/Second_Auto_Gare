@@ -5,7 +5,7 @@ const vehicleSchema = new mongoose.Schema({
   brand: { type: String, required: true },
   color: { type: String, required: true },
   year: { type: Number, required: true },
-  fuel_type: { type: String, required: true },
+  fule_type: { type: String, required: true },
   displacement: { type: String, required: true },
   mileage: { type: Number, required: true },
   transmission: { type: String, required: true },

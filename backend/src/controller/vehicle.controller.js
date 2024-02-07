@@ -205,14 +205,14 @@ export const updateVehicle = async (req, res) => {
 
 //search vehicle according to model
 export const searchByModel = async (req, res) => {
-    const vehiclemodel = req.query.model || ""
-    const query = { model: { $regex: vehiclemodel, $options: "i" } }
+    const vehiclebrand = req.query.brand || ""
+    const query = { brand: { $regex: vehiclebrand, $options: "i" } }
     try {
         const vehicle = await Vehicle.find(query)
         if (vehicle.length === 0) {
             return res.status(400).json({
                 status: false,
-                message: `No vehicles found with the model ${vehiclemodel}`
+                message: `No vehicles found with the model ${vehiclebrand}`
             })
         } else {
             return res.status(200).json({
@@ -242,6 +242,7 @@ export const getColorVehicles = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
+                count: vehicle.length,
                 data: vehicle
             })
         }
@@ -253,6 +254,34 @@ export const getColorVehicles = async (req, res) => {
         })
     }
 }
+
+//find vehicle by theri fuletype
+export const getvehicleFuletype = async (req, res) => {
+    const vehiclefule = req.query.fule_type || ""
+    const query = { fule_type: { $regex: vehiclefule, $options: "i" } }
+    try {
+        const vehicle = await Vehicle.find(query)
+        if (vehicle.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: `No vehicles available `
+            })
+        } else {
+            return res.status(200).json({
+                status: true,
+                count: vehicle.length,
+                data: vehicle
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        })
+    }
+}
+
 
 //find vehicle according to its displacement
 export const findDisplacementVehicles = async (req, res) => {
@@ -271,6 +300,7 @@ export const findDisplacementVehicles = async (req, res) => {
         else {
             return res.status(200).json({
                 status: true,
+                count: vehicle.length,
                 data: vehicle
             })
         }
@@ -327,7 +357,7 @@ export const findByCategory = async (req, res) => {
         if (vehicle.length === 0) {
             return res.status(400).json({
                 status: false,
-                message: 'No vehicles found'
+                // message: 'No vehicles found'
             })
         } else {
             return res.status(200).json({

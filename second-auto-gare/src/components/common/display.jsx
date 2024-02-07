@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from "./card";
 import { useEffect, useState } from "react";
 import { getData } from "../../service/axiosservice";
@@ -14,8 +15,8 @@ function Display() {
     User();
   }, []);
   return (
-    <div className="relative w-full h-40 bg-purple z-50">
-      <div className="absolute grid lg:top-20 md:top-12 top-12 lg:grid-cols-4 gap-8 lg:px-2 md:px-2 px-1 md:gris-cols-4 sm:grid-cols-1 place-items-center pt-10 w-full">
+    <div className="relative z-50 w-full h-40 bg-purple">
+      <div className="absolute grid w-full gap-8 px-1 pt-10 lg:top-20 md:top-12 top-12 lg:grid-cols-4 lg:px-2 md:px-2 md:gris-cols-4 sm:grid-cols-1 place-items-center">
         <Card>
           <div className="flex flex-col animate__animated animate__fadeInUp">
             <div className="flex justify-between">
@@ -25,7 +26,7 @@ function Display() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="bg-purple bg-opacity-20  p-2 rounded-md text-purple"
+                className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
               >
                 <g
                   fill="none"
@@ -55,7 +56,7 @@ function Display() {
                 </g>
               </svg>
             </div>
-            <h1 className=" text-5xl text-purple">
+            <h1 className="text-5xl text-purple">
               {users.filter((user) => user.role === "user").length}
             </h1>
           </div>
@@ -70,7 +71,7 @@ function Display() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="bg-purple bg-opacity-20  p-2 rounded-md text-purple"
+                className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
               >
                 <g
                   fill="none"
@@ -100,7 +101,7 @@ function Display() {
                 </g>
               </svg>
             </div>
-            <h1 className=" text-5xl text-purple ">
+            <h1 className="text-5xl text-purple">
               {users.filter((user) => user.role === "dealer").length}
             </h1>
           </div>
@@ -114,7 +115,7 @@ function Display() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="bg-purple bg-opacity-20  p-2 rounded-md text-purple"
+                className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
               >
                 <g
                   fill="none"
@@ -144,7 +145,7 @@ function Display() {
                 </g>
               </svg>
             </div>
-            <h1 className=" text-5xl text-purple">10</h1>
+            <h1 className="text-5xl text-purple">10</h1>
           </div>
         </Card>
         <Card>
@@ -156,7 +157,7 @@ function Display() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="bg-purple bg-opacity-20  p-2 rounded-md text-purple"
+                className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
               >
                 <g
                   fill="none"
@@ -186,7 +187,7 @@ function Display() {
                 </g>
               </svg>
             </div>
-            <h1 className=" text-5xl text-purple">10</h1>
+            <h1 className="text-5xl text-purple">10</h1>
           </div>
         </Card>
       </div>
