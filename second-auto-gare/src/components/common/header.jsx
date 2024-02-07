@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState } from "react";
 import Logo from "../../assets/images/kidmfond.jpg";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -16,7 +18,6 @@ function Header() {
   const navigate = useNavigate();
   //*Storing the links in form of array of object
   const [islogin, setIslogin] = useState(false);
-  // eslint-disable-next-line no-sparse-arrays
   const Links = [
     {
       name: "Home",
@@ -26,17 +27,17 @@ function Header() {
       name: "About",
       link: "/about",
     },
-    ,
+    
     {
       name: "Booking",
       link: "/booking",
     },
-    ,
+    
     {
       name: "Category",
       link: "/category",
     },
-    ,
+    
     {
       name: "Contact",
       link: "/contact",

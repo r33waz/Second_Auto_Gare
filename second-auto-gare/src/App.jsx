@@ -1,5 +1,6 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
+import React from "react";
 import Header from "./components/common/header";
 import Home from "./pages/User/home";
 import Footer from "./components/common/footer";
@@ -38,8 +39,8 @@ function App() {
                   <SideNav />
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
-                    <Route path="user" element={<User />} />
-                    <Route path="updateProfile/:id" element={<UpdateUser />} />
+                    <Route path="/user" element={<User />} />
+                    <Route path="/updateProfile/:id" element={<UpdateUser />} />
                     <Route path="/vehicle" element={<Vehicle />}></Route>
                   </Routes>
                 </div>

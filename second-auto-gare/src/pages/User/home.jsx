@@ -1,3 +1,4 @@
+import React from 'react';
 import logo from "../../assets/images/kidmfond.jpg";
 import nexonImage from "../../assets/images/nexon.png";
 import Slider from "react-slick";
@@ -8,7 +9,6 @@ import luxuryCar from "../../assets/images/luxury.jpg";
 import SUV from "../../assets/images/toyota.jpg";
 import subSUV from "../../assets/images/kia.jpg";
 import sedan from "../../assets/images/sedan.png";
-import { Fade } from "react-reveal";
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -152,10 +152,10 @@ function Home() {
                 also include the landing page of the website.
               </p>
             </div>
-            <div className="hidden lg:-right-96  lg:absolute md:absolute lg:inline-block md:hidden lg:w-full animate__animated animate__fadeInRight">
+            <div className="hidden lg:-right-96 lg:absolute md:absolute lg:inline-block md:hidden lg:w-full animate__animated animate__fadeInRight">
               <img
                 alt="Mercedes Benz"
-                className=" lg:object-fill "
+                className=" lg:object-fill"
                 src={nexonImage}
                 style={{ filter: "drop-shadow(10px 0px 10px orange)" }}
               />
@@ -188,7 +188,6 @@ function Home() {
                 className="h-full lg:object-cover md:object-cover"
               />
             </div>
-            <Fade bottom cascade>
               <div className="flex flex-col justify-center gap-5 ">
                 <h1 className="text-2xl font-bold">About Second Auto Gare</h1>
                 <p className="text-sm italic text-justify w-fit lg:w-full md:w-3/3 ">
@@ -207,9 +206,7 @@ function Home() {
                   Read More →
                 </Link>
               </div>
-            </Fade>
           </div>
-          <Fade bottom cascade>
             <div className="flex flex-col pb-5 mt-5 text-center">
               <h1 className="text-3xl font-bold break-words">
                 Why Choose Second Auto Gare?
@@ -220,12 +217,10 @@ function Home() {
                 Here are some of the benefits of choosing Second Auto Gare:
               </p>
             </div>
-          </Fade>
         </section>
         <section className="pt-5 :bg--bg">
           <div className="lg:px-14 md:px-14 ">
             <div className="grid gap-10 px-5 text-black lg:p-0 md:p-0 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
-              <Fade left>
                 <div className="flex gap-2 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80 ">
                   <div className="p-5">
                     <h3>.1</h3>
@@ -236,8 +231,6 @@ function Home() {
                     </p>
                   </div>
                 </div>
-              </Fade>
-              <Fade right>
                 <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.2</h3>
@@ -248,8 +241,6 @@ function Home() {
                     </p>
                   </div>
                 </div>
-              </Fade>
-              <Fade left>
                 <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.3</h3>
@@ -261,8 +252,6 @@ function Home() {
                     </p>
                   </div>
                 </div>
-              </Fade>
-              <Fade right>
                 <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                   <div className="p-5">
                     <h3>.4</h3>
@@ -274,7 +263,6 @@ function Home() {
                     </p>
                   </div>
                 </div>
-              </Fade>
             </div>
           </div>
         </section>
@@ -282,7 +270,6 @@ function Home() {
           <div className="uppercase lg:px-14 md:px-14">
             <h1 className="text-3xl ">Cars Category</h1>
             <div className="grid gap-10 pt-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
-              <Fade left>
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
@@ -296,9 +283,7 @@ function Home() {
                     className="object-fill w-full h-56 lg:object-cover md:object-cover"
                   />
                 </div>
-              </Fade>
 
-              <Fade right>
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
@@ -312,8 +297,6 @@ function Home() {
                     className="object-fill w-full h-56 lg:object-cover md:object-cover"
                   />
                 </div>
-              </Fade>
-              <Fade left>
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
@@ -327,8 +310,6 @@ function Home() {
                     className="object-fill w-full h-56 lg:object-cover md:object-cover"
                   />
                 </div>
-              </Fade>
-              <Fade right>
                 <div className="flex flex-col w-full gap-2 image">
                   <Link
                     to=""
@@ -342,7 +323,6 @@ function Home() {
                     className="object-fill w-full h-56 lg:object-cover md:object-cover"
                   />
                 </div>
-              </Fade>
             </div>
           </div>
         </section>

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Display from "../../components/common/display";
 import { useState, useEffect } from "react";
 import { deleteData, getData } from "../../service/axiosservice";
@@ -53,13 +55,13 @@ function User() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full">
+      <div className="flex flex-col items-center justify-center w-full">
         <Display />
         <div className="w-full  lg:pt-24 md:pt-[px] pt-[500px]">
           <div className="relative">
             <input
               type="text"
-              className="border-2 outline-none border-gray-500 rounded-lg pl-8 h-10 ml-3 mt-2 lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
+              className="h-10 pl-8 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
               placeholder="Serach user"
               onChange={(e) => setSearchUser(e.target.value)}
             />
@@ -77,7 +79,7 @@ function User() {
             </svg>
           </div>
           <div className="w-full h-[100vh]">
-            <div className="grid lg:grid-cols-5 gap-5 md:grid-cols-2 sm:grid-cols-1 mt-5 px-2">
+            <div className="grid gap-5 px-2 mt-5 lg:grid-cols-5 md:grid-cols-2 sm:grid-cols-1">
               {userData.map((i, idx) => {
                 return (
                   <div
@@ -90,7 +92,7 @@ function User() {
                           <img
                             src={i?.photo}
                             alt="User Image"
-                            className="h-20 w-20 shadow-soft-2xl rounded-full border-2 border-purple p-1"
+                            className="w-20 h-20 p-1 border-2 rounded-full shadow-soft-2xl border-purple"
                           />
                         ) : (
                           <svg
@@ -98,7 +100,7 @@ function User() {
                             width="80"
                             height="80"
                             viewBox="0 0 24 24"
-                            className="border-2 border-purple rounded-full"
+                            className="border-2 rounded-full border-purple"
                           >
                             <g
                               fill="none"
@@ -131,7 +133,7 @@ function User() {
                       </div>
                       <div className="flex-auto px-1 pt-6">
                         <div className="flex justify-between">
-                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                          <p className="z-10 mb-2 text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Full name:{" "}
                             <span className="text-base font-normal">
                               {i?.firstname +" "+ i?.lastname}
@@ -139,19 +141,19 @@ function User() {
                           </p>
                         </div>
                         <div className="flex flex-col justify-between gap-1">
-                          <p className=" z-10 mb-2 font-medium  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                          <p className="z-10 mb-2 font-medium text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Role:{" "}
                             <span className="text-base font-normal">
                               {i?.role}
                             </span>
                           </p>
-                          <p className=" z-10 mb-2 font-medium  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800  bg-clip-text">
+                          <p className="z-10 mb-2 font-medium text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Email:{" "}
                             <span className="text-base font-normal">
                               {i?.email}
                             </span>
                           </p>
-                          <p className=" z-10 mb-2  text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                          <p className="z-10 mb-2 text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Phone number:{" "}
                             <span className="text-base font-normal">
                               {i?.phonenumber}
@@ -162,7 +164,7 @@ function User() {
                           <button
                             onClick={() => deleteUser(i?._id)}
                             type="button"
-                            className=" flex bg-red bg-opacity-70 rounded-lg text-white items-center gap-2  px-3 py-1 text-sm  font-bold text-center uppercase align-middle transition-all "
+                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg  bg-red bg-opacity-70"
                           >
                             Delete
                             <svg
@@ -184,7 +186,7 @@ function User() {
                           <button
                             onClick={() => updateUser(i?._id)}
                             type="button"
-                            className=" flex bg-purple bg-opacity-70 rounded-lg text-white items-center gap-2  px-3 py-1 text-sm  font-bold text-center uppercase align-middle transition-all "
+                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg  bg-purple bg-opacity-70"
                           >
                             Eidit
                             <svg

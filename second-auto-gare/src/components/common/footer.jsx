@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/kidmfond.jpg";
 
@@ -11,7 +13,7 @@ function Footer() {
             <img
               src={logo}
               alt="logo"
-              className="object-contain rounded-full w-20 h-20"
+              className="object-contain w-20 h-20 rounded-full"
             />
             <p className="w-full lg:w-2/3 md:w-2/3">
               Follow us on social media and stay updated with our latest offers
