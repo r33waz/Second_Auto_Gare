@@ -14,6 +14,7 @@ import User from "./pages/Admin/user";
 import SideNav from "./components/common/SlideNav";
 import UpdateUser from "./pages/Admin/updateUser";
 import Vehicle from "./pages/Admin/vehicle";
+import Contact from "./pages/User/contact";
 function App() {
   const paths = [
     "/login",
@@ -49,6 +50,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/contact" element={<Contact/>} />
           </Routes>
           {!pathname && <Footer />}
         </PersistGate>

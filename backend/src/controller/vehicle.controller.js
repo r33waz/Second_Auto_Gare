@@ -1,12 +1,35 @@
+import cloudinary from "../config/cloudinary.js";
 import Vehicle from "../models/vehicle.model.js";
+import fs from "fs"
 
 export const Addvehicle = async (req, res) => {
     try {
-        let {
-            model, brand, year, color, displacement, mileage, fuel_type,
-            transmission, imageUrl, doors, price, number_of_people, category
+        const {
+            model, brand, year, color, displacement, mileage, fule_type,
+            transmission, doors, price, number_of_people, category
         } = req.body;
+        if (!req.file) {
+            return res.status(400).json({
+                status: false,
+                message: 'No file uploaded'
+            });
+        }
+        let result;
+        if (req.file.mimetype === 'image/jpeg'
+            || req.file.mimetype === 'image/png'
+            || req.file.mimetype === 'image/jpg') {
+            result = await cloudinary.v2.uploader.upload(req.file.path);
+            // delete the local file to free up disk space
+            fs.unlinkSync(req.file.path)
+            console.log('File has been uploaded', result)
+        } else {
+            return res.status(400).json({
+                status: false,
+                message: 'Invalid file type. Only jpeg, png, and jpg files are allowed.'
+            });
+        }
         console.log(req.body)
+        console.log(req.file)
         if (!model) {
             return res.status(400).json({
                 status: false,
@@ -37,7 +60,7 @@ export const Addvehicle = async (req, res) => {
                 message: `Displacement is required`
             });
         }
-        if (!fuel_type) {
+        if (!fule_type) {
             return res.status(400).json({
                 status: false,
                 message: 'Fuel type is required'
@@ -49,12 +72,12 @@ export const Addvehicle = async (req, res) => {
                 message: 'Transmission is required'
             });
         }
-        if (!imageUrl) {
-            return res.status(400).json({
-                status: false,
-                message: 'Image URL is required'
-            });
-        }
+        // if (!imageUrl) {
+        //     return res.status(400).json({
+        //         status: false,
+        //         message: 'Image URL is required'
+        //     });
+        // }
         if (!doors) {
             return res.status(400).json({
                 status: false,
@@ -81,8 +104,8 @@ export const Addvehicle = async (req, res) => {
         }
 
         const newvehicle = new Vehicle({
-            model, brand, year, color, displacement, mileage, fuel_type,
-            transmission, imageUrl, doors, price, number_of_people, category
+            model, brand, year, color, displacement, mileage, fule_type,
+            transmission, imageUrl: result.secure_url, doors, price, number_of_people, category
         });
         // Save vehicle to database
         await newvehicle.save()

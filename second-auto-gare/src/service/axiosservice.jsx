@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import { main_uri, photo_url } from ".";
-import { ReducerType } from "@reduxjs/toolkit";
 
 export const postData = async (url, data) => {
   try {
