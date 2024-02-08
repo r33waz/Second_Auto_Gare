@@ -17,7 +17,6 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //*Storing the links in form of array of object
-  const [islogin, setIslogin] = useState(false);
   const Links = [
     {
       name: "Home",
@@ -607,19 +606,6 @@ function Header() {
           )}
         </div>
       </div>
-      <marquee
-        width="100%"
-        direction="left"
-        height="45px"
-        style={{
-          fontSize: "30px",
-          color: "white",
-          backgroundColor: "#624bff",
-          fontWeight: "bold",
-        }}
-      >
-        Second Auto Gare
-      </marquee>
     </>
   );
 }

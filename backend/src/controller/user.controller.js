@@ -11,7 +11,7 @@ export const Signup = async (req, res) => {
   try {
     const { firstname, lastname, email, phonenumber, password, category } =
       req.body;
-
+    
     const existingUserEmail = await User.findOne({ email });
     if (existingUserEmail) {
       return res.status(400).json({
