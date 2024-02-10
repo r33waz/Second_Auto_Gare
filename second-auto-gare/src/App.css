@@ -5,12 +5,7 @@
 
 
 /* Css for landing page */
-.gradient_text {
-  background: #21fff8;
-  background: linear-gradient(to bottom, #21fff8 0%, #150ecf 68%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+
 
 .drop-shadow {
   filter: drop-shadow(0px 5px 3px #000000);
@@ -41,6 +36,3 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.vehicle-sell{
-  
-}

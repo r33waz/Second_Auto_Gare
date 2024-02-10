@@ -15,6 +15,7 @@ import SideNav from "./components/common/SlideNav";
 import UpdateUser from "./pages/Admin/updateUser";
 import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/User/contact";
+import Noroute from "./pages/auth/noroute";
 function App() {
   const paths = [
     "/login",
@@ -24,6 +25,7 @@ function App() {
     "/admin/user",
     "/admin/bookings",
     "/admin/updateProfile/:id",
+    "*"
   ];
   const location = useLocation();
   const pathname = paths.includes(location.pathname);
@@ -47,10 +49,12 @@ function App() {
                 </div>
               }
             />
+
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/contact" element={<Contact/>} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<Noroute />} />
           </Routes>
           {!pathname && <Footer />}
         </PersistGate>

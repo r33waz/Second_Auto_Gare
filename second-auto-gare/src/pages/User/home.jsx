@@ -10,6 +10,9 @@ import SUV from "../../assets/images/toyota.jpg";
 import subSUV from "../../assets/images/kia.jpg";
 import sedan from "../../assets/images/sedan.png";
 import { Link } from "react-router-dom";
+import rightRevel from "../../assets/images/rightrevel.png"
+import leftRevel from "../../assets/images/leftrevel.png"
+import centerRevel from "../../assets/images/center.png"
 
 function Home() {
   function LeftArrow({ onClick }) {
@@ -21,7 +24,7 @@ function Home() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="white"
-          className="w-12 h-12  rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] left-8 p-2 z-10 active:bg-purple "
+          className="lg:w-12 md:h-12 w-8 h-8 rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] left-8 p-2 z-10 active:bg-purple "
         >
           <path
             strokeLinecap="round"
@@ -42,7 +45,7 @@ function Home() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="white"
-          className="w-12 h-12  rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] right-8 p-2 z-10 active:bg-purple "
+          className="lg:w-12 md:h-12 w-8 h-8  rounded-full bg-purple bg-opacity-85 cursor-pointer hover:bg-purple absolute top-[40%] right-8 p-2 z-10 active:bg-purple "
         >
           <path
             strokeLinecap="round"
@@ -137,35 +140,31 @@ function Home() {
       logo: "https://www.carlogos.org/logo/Kia-symbol-640x321.jpg",
     },
   ];
+
+
   return (
     <>
-      <div className="text-white bg-black lg:h-[500px] md:h-[300px]">
-        <div className="container px-6 py-12 mx-auto">
-          <div className="relative flex flex-col h-[500px] items-center gap-4 lg:flex-row">
-            <div className="lg:w-3/5 from-white to-orange bg-gradient-to-tl bg-clip-text gradient_text animate__animated animate__slideInLeft">
-              <h1 className="mb-4 text-5xl font-bold">
-                Second Auto Gare - Your Trusted Vehicle Rental Partner
+      <div className="text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[475px] ">
+        <div className="container px-6 mx-auto py-">
+          <div className="relative flex flex-col h-[500px] items-center pt-6 gap-4 ">
+            <div className="flex flex-col items-center justify-center lg:w-3/5 from-white">
+              <h1 className="mb-4 text-5xl font-bold animate__animated animate__fadeIn animate__delay-0.6s">
+                Second Auto Gare
               </h1>
-              <p className="mb-32">
-                In this website, we provide services like renting a vehicle,
-                live chat between the customer and seller, category page, and
-                also include the landing page of the website.
-              </p>
-            </div>
-            <div className="hidden lg:-right-96 lg:absolute md:absolute lg:inline-block md:hidden lg:w-full animate__animated animate__fadeInRight">
-              <img
-                alt="Mercedes Benz"
-                className=" lg:object-fill"
-                src={nexonImage}
-                style={{ filter: "drop-shadow(10px 0px 10px orange)" }}
-              />
+              <h2 className="mb-4 text-4xl font-bold animate__animated animate__fadeIn animate__delay-0.7s">Your Trusted Vehicle Rental Partner</h2>
+              <div className="justify-around -bottom-32 lg:absolute md:absolute lg:inline-block md:hidden">
+                <div className='items-center hidden lg:flex md:flex justify-evenly'>
+                  <img src={rightRevel} className='object-contain animate__animated animate__fadeInLeft animate__delay-1s' />
+                  <img src={centerRevel} className='object-contain animate__animated animate__fadeIn animate__delay-0.8s' />
+                  <img src={leftRevel} className='object-contain animate__animated animate__fadeInRight animate__delay-1s' />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="container mx-auto mt-20">
-        <section className="">
+      <div className="container mx-auto mt-20 lg:mt-32 md:mt-32">
+        <section>
           <Slider {...settings}>
             {carLogos.map((i, idx) => {
               return (
@@ -188,81 +187,81 @@ function Home() {
                 className="h-full lg:object-cover md:object-cover"
               />
             </div>
-              <div className="flex flex-col justify-center gap-5 ">
-                <h1 className="text-2xl font-bold">About Second Auto Gare</h1>
-                <p className="text-sm italic text-justify w-fit lg:w-full md:w-3/3 ">
-                  Seconds Auto Gare is your one-stop destination for renting
-                  vehicles that cater to your specific needs. Our online
-                  platform provides easy access to a wide range of cars,
-                  including SUVs, sedans, and luxury vehicles, all maintained to
-                  the highest standards. We also offer a live chat feature that
-                  connects you directly with our team, ensuring a seamless
-                  rental experience.
-                </p>
-                <Link
-                  href="/"
-                  className="px-2 py-1 text-white rounded bg-purple w-fit bg-opacity-90 hover:bg-opacity-100"
-                >
-                  Read More →
-                </Link>
-              </div>
-          </div>
-            <div className="flex flex-col pb-5 mt-5 text-center">
-              <h1 className="text-3xl font-bold break-words">
-                Why Choose Second Auto Gare?
-              </h1>
-              <p className="text-justify w-fit lg:w-fit md:w-full lg:text-center">
-                We’re committed to providing quality service to our customers,
-                ensuring that each rental experience is smooth and hassle-free.
-                Here are some of the benefits of choosing Second Auto Gare:
+            <div className="flex flex-col justify-center gap-5 ">
+              <h1 className="text-2xl font-bold">About Second Auto Gare</h1>
+              <p className="text-sm italic text-justify w-fit lg:w-full md:w-3/3 ">
+                Seconds Auto Gare is your one-stop destination for renting
+                vehicles that cater to your specific needs. Our online
+                platform provides easy access to a wide range of cars,
+                including SUVs, sedans, and luxury vehicles, all maintained to
+                the highest standards. We also offer a live chat feature that
+                connects you directly with our team, ensuring a seamless
+                rental experience.
               </p>
+              <Link
+                href="/"
+                className="px-2 py-1 text-white rounded bg-purple w-fit bg-opacity-90 hover:bg-opacity-100"
+              >
+                Read More →
+              </Link>
             </div>
+          </div>
+          <div className="flex flex-col pb-5 mt-5 text-center">
+            <h1 className="text-3xl font-bold break-words">
+              Why Choose Second Auto Gare?
+            </h1>
+            <p className="text-justify w-fit lg:w-fit md:w-full lg:text-center">
+              We’re committed to providing quality service to our customers,
+              ensuring that each rental experience is smooth and hassle-free.
+              Here are some of the benefits of choosing Second Auto Gare:
+            </p>
+          </div>
         </section>
         <section className="pt-5 :bg--bg">
           <div className="lg:px-14 md:px-14 ">
             <div className="grid gap-10 px-5 text-black lg:p-0 md:p-0 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
-                <div className="flex gap-2 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80 ">
-                  <div className="p-5">
-                    <h3>.1</h3>
-                    <h1 className="text-3xl">Wide Range of Vehicles</h1>
-                    <p className="pt-2">
-                      We offer a diverse range of cars, including SUVs, sedans,
-                      and luxury vehicles, to cater to your specific needs 🚗.
-                    </p>
-                  </div>
+              <div className="flex gap-2 duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80 ">
+                <div className="p-5">
+                  <h3>.1</h3>
+                  <h1 className="text-3xl">Wide Range of Vehicles</h1>
+                  <p className="pt-2">
+                    We offer a diverse range of cars, including SUVs, sedans,
+                    and luxury vehicles, to cater to your specific needs 🚗.
+                  </p>
                 </div>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
-                  <div className="p-5">
-                    <h3>.2</h3>
-                    <h1 className="text-3xl">Live chat</h1>
-                    <p className="pt-2">
-                      We offer a live chat option to the user to directly
-                      contact with the buyer and seller 💬.
-                    </p>
-                  </div>
+              </div>
+              <div className="flex duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
+                <div className="p-5">
+                  <h3>.2</h3>
+                  <h1 className="text-3xl">Live chat</h1>
+                  <p className="pt-2">
+                    We offer a live chat option to the user to directly
+                    contact with the buyer and seller 💬.
+                  </p>
                 </div>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
-                  <div className="p-5">
-                    <h3>.3</h3>
-                    <h1 className="text-3xl">24/7 Customer Support</h1>
-                    <p className="pt-2">
-                      Our team is available around the clock to assist you with
-                      any queries or concerns you may have, ensuring a seamless
-                      rental experience 📞.
-                    </p>
-                  </div>
+              </div>
+              <div className="flex duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
+                <div className="p-5">
+                  <h3>.3</h3>
+                  <h1 className="text-3xl">24/7 Customer Support</h1>
+                  <p className="pt-2">
+                    Our team is available around the clock to assist you with
+                    any queries or concerns you may have, ensuring a seamless
+                    rental experience 📞.
+                  </p>
                 </div>
-                <div className="flex bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
-                  <div className="p-5">
-                    <h3>.4</h3>
-                    <h1 className="text-3xl">Flexible Rental Periods</h1>
-                    <p className="pt-2">
-                      We offer flexible rental periods, catering to your
-                      specific needs, whether it’s a short-term or long-term
-                      rental ⏳.
-                    </p>
-                  </div>
+              </div>
+              <div className="flex duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
+                <div className="p-5">
+                  <h3>.4</h3>
+                  <h1 className="text-3xl">Flexible Rental Periods</h1>
+                  <p className="pt-2">
+                    We offer flexible rental periods, catering to your
+                    specific needs, whether it’s a short-term or long-term
+                    rental ⏳.
+                  </p>
                 </div>
+              </div>
             </div>
           </div>
         </section>
@@ -270,59 +269,59 @@ function Home() {
           <div className="uppercase lg:px-14 md:px-14">
             <h1 className="text-3xl ">Cars Category</h1>
             <div className="grid gap-10 pt-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
-                <div className="flex flex-col w-full gap-2 image">
-                  <Link
-                    to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
-                  >
-                    SUB-SUV
-                  </Link>
-                  <img
-                    src={luxuryCar}
-                    alt="SUBsuv image"
-                    className="object-fill w-full h-56 lg:object-cover md:object-cover"
-                  />
-                </div>
+              <div className="flex flex-col w-full gap-2 image ">
+                <Link
+                  to=""
+                  className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
+                >
+                  SUB-SUV
+                </Link>
+                <img
+                  src={luxuryCar}
+                  alt="SUBsuv image"
+                  className="object-fill w-full h-56 lg:object-cover md:object-cover"
+                />
+              </div>
 
-                <div className="flex flex-col w-full gap-2 image">
-                  <Link
-                    to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
-                  >
-                    SUV
-                  </Link>
-                  <img
-                    src={SUV}
-                    alt="SUBsuv image"
-                    className="object-fill w-full h-56 lg:object-cover md:object-cover"
-                  />
-                </div>
-                <div className="flex flex-col w-full gap-2 image">
-                  <Link
-                    to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
-                  >
-                    SUB-SUV
-                  </Link>
-                  <img
-                    src={subSUV}
-                    alt="SUBsuv image"
-                    className="object-fill w-full h-56 lg:object-cover md:object-cover"
-                  />
-                </div>
-                <div className="flex flex-col w-full gap-2 image">
-                  <Link
-                    to=""
-                    className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
-                  >
-                    Sedan
-                  </Link>
-                  <img
-                    src={sedan}
-                    alt="Sedan Image"
-                    className="object-fill w-full h-56 lg:object-cover md:object-cover"
-                  />
-                </div>
+              <div className="flex flex-col w-full gap-2 image">
+                <Link
+                  to=""
+                  className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
+                >
+                  SUV
+                </Link>
+                <img
+                  src={SUV}
+                  alt="SUBsuv image"
+                  className="object-fill w-full h-56 lg:object-cover md:object-cover"
+                />
+              </div>
+              <div className="flex flex-col w-full gap-2 image">
+                <Link
+                  to=""
+                  className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
+                >
+                  SUB-SUV
+                </Link>
+                <img
+                  src={subSUV}
+                  alt="SUBsuv image"
+                  className="object-fill w-full h-56 lg:object-cover md:object-cover"
+                />
+              </div>
+              <div className="flex flex-col w-full gap-2 image">
+                <Link
+                  to=""
+                  className="w-32 px-2 py-1 text-center text-white bg-purple bg-opacity-90 hover:bg-opacity-100"
+                >
+                  Sedan
+                </Link>
+                <img
+                  src={sedan}
+                  alt="Sedan Image"
+                  className="object-fill w-full h-56 lg:object-cover md:object-cover"
+                />
+              </div>
             </div>
           </div>
         </section>
