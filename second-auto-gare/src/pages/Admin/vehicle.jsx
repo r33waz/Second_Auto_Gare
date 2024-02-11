@@ -2,8 +2,8 @@ import React from 'react';
 import { Card } from "../../components/common/card"
 import { getData } from "../../service/axiosservice"
 import { useEffect, useState } from "react"
-import { Button } from "../../radix_component/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../radix_component/ui/tabs"
+import { Button } from "../../shadcn_ui/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn_ui/ui/tabs"
 
 function Vehicle() {
     const [vehicle, setVehicle] = useState()

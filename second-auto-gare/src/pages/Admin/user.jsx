@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Display from "../../components/common/display";
 import { useState, useEffect } from "react";
 import { deleteData, getData } from "../../service/axiosservice";
@@ -133,27 +132,27 @@ function User() {
                       </div>
                       <div className="flex-auto px-1 pt-6">
                         <div className="flex justify-between">
-                          <p className="z-10 mb-2 text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                          <p className="z-10 mb-2 text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Full name:{" "}
                             <span className="text-base font-normal">
-                              {i?.firstname +" "+ i?.lastname}
+                              {i?.firstname + " " + i?.lastname}
                             </span>
                           </p>
                         </div>
                         <div className="flex flex-col justify-between gap-1">
-                          <p className="z-10 mb-2 font-medium text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                          <p className="z-10 mb-2 font-medium text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Role:{" "}
                             <span className="text-base font-normal">
                               {i?.role}
                             </span>
                           </p>
-                          <p className="z-10 mb-2 font-medium text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                          <p className="z-10 mb-2 font-medium text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Email:{" "}
                             <span className="text-base font-normal">
                               {i?.email}
                             </span>
                           </p>
-                          <p className="z-10 mb-2 text-transparent  bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
+                          <p className="z-10 mb-2 text-transparent bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text">
                             Phone number:{" "}
                             <span className="text-base font-normal">
                               {i?.phonenumber}
@@ -164,7 +163,7 @@ function User() {
                           <button
                             onClick={() => deleteUser(i?._id)}
                             type="button"
-                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg  bg-red bg-opacity-70"
+                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg bg-red bg-opacity-70"
                           >
                             Delete
                             <svg
@@ -186,7 +185,7 @@ function User() {
                           <button
                             onClick={() => updateUser(i?._id)}
                             type="button"
-                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg  bg-purple bg-opacity-70"
+                            className="flex items-center gap-2 px-3 py-1 text-sm font-bold text-center text-white uppercase align-middle transition-all rounded-lg bg-purple bg-opacity-70"
                           >
                             Eidit
                             <svg

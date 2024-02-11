@@ -1,20 +1,29 @@
-import React, { useState } from 'react'
-import rightRevel from "../../assets/images/rightrevel.png"
-import leftRevel from "../../assets/images/leftrevel.png"
-import centerRevel from "../../assets/images/center.png"
-import { Fade } from "react-awesome-reveal";
+import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form";
+import { postData } from '../../service/axiosservice';
+import { toast } from 'react-toastify';
 
 function Contact() {
     const [isOpen, setisOpen] = useState(false)
     const handelOpen = () => {
         setisOpen(!isOpen)
     }
-    const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm()
+    const { register, handleSubmit,reset, formState: { isSubmitting, errors,isSubmitSuccessful} } = useForm()
 
-    const Onsubmit = (value) => {
+    const Onsubmit = async(value) => {
         console.log(value)
+        const resp = await postData("/api/v1/feedback", value)
+        console.log(resp)
+        if (resp.status) {
+            toast.success(resp.message);
+        }
     }
+
+    useEffect(() => {
+        if (isSubmitSuccessful) {
+            reset();
+        }
+    }, [isSubmitSuccessful, reset]);
     return (
         <div className='container mx-auto'>
             <section>
@@ -125,7 +134,7 @@ function Contact() {
                             <div className='flex flex-col p-2 '>
                                 <div className='flex border border-gray-500 items-center gap-2 p-2 lg:w-[450px] w-full'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" className='text-purple'><path fill="currentColor" d="M5 5h13a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3m0 1c-.5 0-.94.17-1.28.47l7.78 5.03l7.78-5.03C18.94 6.17 18.5 6 18 6zm6.5 6.71L3.13 7.28C3.05 7.5 3 7.75 3 8v9a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8c0-.25-.05-.5-.13-.72z" /></svg>
-                                    <input id='email' type='text' placeholder='Your fullname' className='w-full outline-none' {...register("email", { required: true })} />
+                                    <input id='email' type='text' placeholder='Your email' className='w-full outline-none' {...register("email", { required: true })} />
                                 </div>
                                 {errors.fullname && <small className='text-xs text-red'>Enter your email </small>}
                             </div>
@@ -133,7 +142,7 @@ function Contact() {
                                 <div className='flex border border-gray-500 items-center gap-2 p-2 lg:w-[450px] w-full'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" className='text-purple' viewBox="0 0 24 24"><path fill="currentColor" d="M19.5 22a1.5 1.5 0 0 0 1.5-1.5V17a1.5 1.5 0 0 0-1.5-1.5c-1.17 0-2.32-.18-3.42-.55a1.51 1.51 0 0 0-1.52.37l-1.44 1.44a14.772 14.772 0 0 1-5.89-5.89l1.43-1.43c.41-.39.56-.97.38-1.53c-.36-1.09-.54-2.24-.54-3.41A1.5 1.5 0 0 0 7 3H3.5A1.5 1.5 0 0 0 2 4.5C2 14.15 9.85 22 19.5 22M3.5 4H7a.5.5 0 0 1 .5.5c0 1.28.2 2.53.59 3.72c.05.14.04.34-.12.5L6 10.68c1.65 3.23 4.07 5.65 7.31 7.32l1.95-1.97c.14-.14.33-.18.51-.13c1.2.4 2.45.6 3.73.6a.5.5 0 0 1 .5.5v3.5a.5.5 0 0 1-.5.5C10.4 21 3 13.6 3 4.5a.5.5 0 0 1 .5-.5" /></svg>
 
-                                    <input id='phonenumber' type='text' placeholder='Your fullname' className='w-full outline-none' {...register("phonenumber", { required: true })} />
+                                    <input id='phonenumber' type='text' placeholder='Your number' className='w-full outline-none' {...register("phonenumber", { required: true })} />
                                 </div>
                                 {errors.fullname && <small className='text-xs text-red'>Enter your phonenumber</small>}
                             </div>

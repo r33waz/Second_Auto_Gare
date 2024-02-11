@@ -10,13 +10,18 @@ export const createReview = async (req, res) => {
         // Checking the length of the inputs
         if (message.length > 250) {
             return res.status(400).json({
-                error: "Messsage should be 200  characters or less"
+                message: "Messsage should be 200  characters or less"
+            })
+        }
+        if (phonenumber.length > 10) {
+            return res.status(400).json({
+                message: "Phone number must be 10 digits only"
             })
         }
         let review = new Review({ fullname, email, phonenumber, message });
         await review.save()
         return res.status(201).json({
-            success: true,
+            status: true,
             message: "Thankyou for feedback"
         })
     } catch (error) {

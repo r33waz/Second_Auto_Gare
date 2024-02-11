@@ -16,6 +16,7 @@ import UpdateUser from "./pages/Admin/updateUser";
 import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/User/contact";
 import Noroute from "./pages/auth/noroute";
+import About from "./pages/User/about";
 function App() {
   const paths = [
     "/login",
@@ -54,6 +55,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
             <Route path="*" element={<Noroute />} />
           </Routes>
           {!pathname && <Footer />}
