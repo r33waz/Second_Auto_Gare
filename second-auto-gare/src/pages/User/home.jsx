@@ -145,7 +145,7 @@ function Home() {
   return (
     <>
       <div className="text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[475px] ">
-        <div className="container px-6 mx-auto py-">
+        <div className="">
           <div className="relative flex flex-col h-[500px] items-center pt-6 gap-4 ">
             <div className="flex flex-col items-center justify-center lg:w-3/5 from-white">
               <h1 className="mb-4 text-5xl font-bold animate__animated animate__fadeIn animate__delay-0.6s">
@@ -163,7 +163,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto mt-20 lg:mt-32 md:mt-32">
+      <div className="mt-20  lg:mt-32 md:mt-32">
         <section>
           <Slider {...settings}>
             {carLogos.map((i, idx) => {

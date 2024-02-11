@@ -88,11 +88,11 @@ function SideNav() {
 
   return (
     <>
-      <section className="flex gap-6">
-        <div className="sticky left-0 z-50 flex gap-4">
+      <section className="flex gap-6 ">
+        <div className="flex gap-4 ">
           <div
             className={`min-h-screen bg-sideNav ${
-              open ? "lg:w-72 md:w-60 w-48" : "lg:w-16 md:w-16 w-10"
+              open ? "lg:w-72 md:w-60 w-48 sticky z-50 " : "lg:w-16 md:w-16 w-10 sticky z-50 "
             } duration-700`}
           >
             <div
