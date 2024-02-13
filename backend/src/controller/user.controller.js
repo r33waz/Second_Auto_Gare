@@ -1,17 +1,18 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import cloudinary from "../config/cloudinary.js";
 import Token from "../models/token.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { validationResult } from "express-validator";
 import { OTPexpire, TwominOTPexpire } from "../utils/otpvalidation.js";
+import cloudinary from "../config/cloudinary.js";
+import fs from "fs"
 
 export const Signup = async (req, res) => {
   const saltRounds = 10;
   try {
     const { firstname, lastname, email, phonenumber, password, category } =
       req.body;
-    
+
     const existingUserEmail = await User.findOne({ email });
     if (existingUserEmail) {
       return res.status(400).json({
@@ -169,7 +170,9 @@ export const getUserById = async (req, res) => {
 export const userUpdate = async (req, res) => {
   try {
     const id = req.params.id;
+
     const user = await User.findById({ _id: id });
+    //?checking if the user is not present
     console.log(user);
     if (!user) {
       return res.status(400).json({
@@ -177,11 +180,39 @@ export const userUpdate = async (req, res) => {
         message: "Invalid Attemp",
       });
     } else {
+      if (!req.files) {
+        //updating without image
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: id },
+          { ...req.body }
+        );
+      }
+      //update the image in cloudinary
+
+      let results = [];
+      for (let file of req.files) {
+        let result;
+        if (file.mimetype === 'image/jpeg'
+          || file.mimetype === 'image/png'
+          || file.mimetype === 'image/jpg') {
+          result = await cloudinary.v2.uploader.upload(file.path);
+        }
+        results.push({ public_id: result.public_id, url: result.secure_url });
+        fs.unlinkSync(file.path);
+      }
+
+      if (user?.photo) {
+        //deleting old images from cloudinary
+        for (let photo of user.photo) {
+          await cloudinary.v2.uploader.destroy(photo?.public_id);
+        }
+      }
       const updateUser = await User.findByIdAndUpdate(
         { _id: id },
-        { $set: { ...req.body } },
-        { new: true } //return updated document instead of original one
+        { $set: { ...req.body, photo: results } },
+        { new: true }
       );
+
 
       if (!updateUser) {
         return res.status(400).json({
@@ -196,6 +227,7 @@ export const userUpdate = async (req, res) => {
         });
       }
     }
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({

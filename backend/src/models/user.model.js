@@ -29,11 +29,14 @@ const UserSchema = new mongoose.Schema(
       enum: ["admin", "user", "dealer"],
     },
     verified: { type: Boolean, default: false },
-    photo: [
-      {
+    photo: [{
+      public_id: {
         type: String,
       },
-    ],
+      url: {
+        type: String,
+      }
+    }],
     posts: [
       {
         type: mongoose.Types.ObjectId,

@@ -20,7 +20,7 @@ import { otpVerification, verifyOtpValidation } from "../utils/validation.js";
 
 const router = express.Router();
 
-router.post("/signup", upload.array("photo", 3), Signup);
+router.post("/signup", Signup);
 router.post("/login", Login);
 router.post("/logout", Logoout);
 router.post("/logout", Logoout);
@@ -30,6 +30,7 @@ router.patch(
   "/updateuser/:id",
   // authentication,
   // authorization("admin"),
+  upload.array("photo", 3),
   userUpdate
 );
 router.delete(
