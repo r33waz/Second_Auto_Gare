@@ -9,7 +9,14 @@ const vehicleSchema = new mongoose.Schema({
   displacement: { type: String, required: true },
   mileage: { type: Number, required: true },
   transmission: { type: String, required: true },
-  imageUrl: [{ type: String }],
+  imageUrl: [{
+    public_id: {
+      type: String,
+    },
+    url: {
+      type: String,
+    }
+  }],
   doors: { type: Number, required: true },
   price: { type: Number, required: true },
   number_of_people: { type: String, required: true },

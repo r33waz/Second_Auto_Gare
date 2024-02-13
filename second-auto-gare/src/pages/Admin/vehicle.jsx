@@ -4,6 +4,13 @@ import { getData } from "../../service/axiosservice"
 import { useEffect, useState } from "react"
 import { Button } from "../../shadcn_ui/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn_ui/ui/tabs"
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Keyboard, Pagination, Navigation } from 'swiper/modules';
 
 function Vehicle() {
     const [vehicle, setVehicle] = useState()
@@ -149,14 +156,36 @@ function Vehicle() {
                             <TabsTrigger value="password" className='w-full h-8 vehicle-rent rounded-md data-[state=active]:bg-green data-[state=active]:text-white text-lg duration-300' >Rent</TabsTrigger>
                         </TabsList>
                         {
-                            vehicle ? <><TabsContent value="account"><div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
+                            vehicle ? <>
+                            <TabsContent value="account"><div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
                                 {vehicle?.data.filter((e) => e.status === "sell").map((i) => {
                                     return <div key={i.id} className="flex flex-col items-center w-full gap-3 px-2 border shadow-[0px_0px_6px_2px_#00000024]">
                                         <div>
                                             <div>Car Details</div>
                                         </div>
                                         <div className="grid gap-4">
-                                            <img alt="Car" className="object-cover mx-auto h-28 aspect-square" src="/placeholder.svg" />
+                                            <Swiper
+                                                slidesPerView={1}
+                                                spaceBetween={30}
+                                                keyboard={{
+                                                    enabled: true,
+                                                }}
+                                                pagination={{
+                                                    clickable: true,
+                                                }}
+                                                navigation={true}
+                                                modules={[Keyboard, Pagination, Navigation]}
+                                                className="mySwiper"
+                                            >
+                                                {
+                                                    i?.imageUrl.map((e) => {
+                                                        return <SwiperSlide key={e.id} className='h-40'>
+                                                            <img src={e} className='object-contain' />
+                                                        </SwiperSlide>
+                                                    })
+                                                }
+
+                                            </Swiper>
                                             <div className="text-center">
                                                 <h2 className="text-2xl font-semibold">{i?.model}</h2>
                                                 <p className="text-gray-500 dark:text-gray-400">Rs-{i?.price}</p>
@@ -237,7 +266,7 @@ function Vehicle() {
                                                         className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                                         id="doors"
                                                         type="text"
-                                                        value="4" />
+                                                        defaultValue={i?.doors} />
                                                 </div>
                                                     <div className="space-y-1">
                                                         <label className="text-sm font-semibold" htmlFor="people">
@@ -247,7 +276,7 @@ function Vehicle() {
                                                             className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                                             id="people"
                                                             type="text"
-                                                            value="5" />
+                                                            defaultValue={i?.number_of_people} />
                                                     </div></div>
 
                                                 <div className='grid grid-cols-2 gap-1'><div className="space-y-1">
@@ -258,7 +287,7 @@ function Vehicle() {
                                                         className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                                         id="displacement"
                                                         type="text"
-                                                        value="1200" />
+                                                        defaultValue={i?.displacement} />
                                                 </div>
                                                     <div className="space-y-1">
                                                         <label className="text-sm font-semibold" htmlFor="category">
@@ -268,7 +297,7 @@ function Vehicle() {
                                                             className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                                             id="category"
                                                             type="text"
-                                                            value="compactsuv" />
+                                                            defaultValue={i?.category} />
                                                     </div></div>
 
                                                 <div className="space-y-1">
@@ -276,6 +305,7 @@ function Vehicle() {
                                                         Status
                                                     </label>
                                                     <select className='w-full h-8 pl-2 '>
+                                                        <option disabled selected defaultValue={i?.status}>{i?.status}</option>
                                                         <option value="sell">Sell</option>
                                                         <option value="rent">Rent</option>
                                                     </select>
@@ -289,123 +319,169 @@ function Vehicle() {
                                         </div>
                                     </div>;
                                 })}
-                            </div></TabsContent><TabsContent value="password"> <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-4 md:gris-cols-4 sm:grid-cols-1">
-                                {vehicle?.data.filter((e) => e.status === "rent").map((i) => {
-                                    return <div key={i.id} className="flex flex-col items-center w-full gap-3 px-2 border shadow-[0px_0px_6px_2px_#00000024]">
-                                        <form className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="brand">
-                                                    Brand
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="brand"
-                                                    type="text"
-                                                    value="KIA" />
+                            </div></TabsContent>
+                                
+                                <TabsContent value="password"> <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
+                                    {vehicle?.data.filter((e) => e.status === "rent").map((i) => {
+                                        return <div key={i.id} className="flex flex-col items-center w-full gap-3 px-2 border shadow-[0px_0px_6px_2px_#00000024]">
+                                            <div>
+                                                <div>Car Details</div>
                                             </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="color">
-                                                    Color
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="color"
-                                                    type="text"
-                                                    value="Grey" />
+                                            <div className="grid gap-4">
+                                                <Swiper
+                                                    slidesPerView={1}
+                                                    spaceBetween={30}
+                                                    keyboard={{
+                                                        enabled: true,
+                                                    }}
+                                                    pagination={{
+                                                        clickable: true,
+                                                    }}
+                                                    navigation={true}
+                                                    modules={[Keyboard, Pagination, Navigation]}
+                                                    className="mySwiper"
+                                                >
+                                                    {
+                                                        i?.imageUrl.map((e) => {
+                                                            return <SwiperSlide key={e.id} className='h-40'>
+                                                                <img src={e} className='object-contain' />
+                                                            </SwiperSlide>
+                                                        })
+                                                    }
+
+                                                </Swiper>
+                                                <div className="text-center">
+                                                    <h2 className="text-2xl font-semibold">{i?.model}</h2>
+                                                    <p className="text-gray-500 dark:text-gray-400">Rs-{i?.price}</p>
+                                                </div>
+                                                <form className="flex flex-col gap-2">
+                                                    <div className='grid grid-cols-2 gap-1'>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold">
+                                                                Brand
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="brand"
+                                                                type="text"
+                                                                defaultValue={i?.brand} />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="color">
+                                                                Color
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="color"
+                                                                type="text"
+                                                                defaultValue={capitalizeFirstLetter(i?.color)} />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='grid grid-cols-2 gap-1'>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="year">
+                                                                Year of Manufacture
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="year"
+                                                                type="text"
+                                                                value="2020" />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="mileage">
+                                                                Mileage
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="mileage"
+                                                                type="text"
+                                                                value="15" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='grid grid-cols-2 gap-1'><div className="space-y-1">
+                                                        <label className="text-sm font-semibold" htmlFor="fuel_type">
+                                                            Fuel Type
+                                                        </label>
+                                                        <input
+                                                            className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                            id="fuel_type"
+                                                            type="text"
+                                                            defaultValue="Petrol" />
+                                                    </div>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="transmission">
+                                                                Transmission Type
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="transmission"
+                                                                type="text"
+                                                                defaultValue={i?.transmission} />
+                                                        </div></div>
+
+                                                    <div className='grid grid-cols-2 gap-1'><div className="space-y-1">
+                                                        <label className="text-sm font-semibold" htmlFor="doors">
+                                                            Number of Doors
+                                                        </label>
+                                                        <input
+                                                            className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                            id="doors"
+                                                            type="text"
+                                                            value="4" />
+                                                    </div>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="people">
+                                                                Number of People
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="people"
+                                                                type="text"
+                                                                value="5" />
+                                                        </div></div>
+
+                                                    <div className='grid grid-cols-2 gap-1'><div className="space-y-1">
+                                                        <label className="text-sm font-semibold" htmlFor="displacement">
+                                                            Displacement
+                                                        </label>
+                                                        <input
+                                                            className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                            id="displacement"
+                                                            type="text"
+                                                            value="1200" />
+                                                    </div>
+                                                        <div className="space-y-1">
+                                                            <label className="text-sm font-semibold" htmlFor="category">
+                                                                Category
+                                                            </label>
+                                                            <input
+                                                                className="w-full h-8 p-2 border border-gray-300 rounded-md"
+                                                                id="category"
+                                                                type="text"
+                                                                value="compactsuv" />
+                                                        </div></div>
+
+                                                    <div className="space-y-1">
+                                                        <label className="text-sm font-semibold" htmlFor="status">
+                                                            Status
+                                                        </label>
+                                                        <select className='w-full h-8 pl-2 '>
+                                                            <option value="sell">Sell</option>
+                                                            <option value="rent">Rent</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="flex w-full gap-2">
+
+                                                        <Button className="w-full h-8 text-white rounded bg-blue">Update</Button>
+                                                        <Button className="w-full h-8 text-white rounded bg-red">Delete</Button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="year">
-                                                    Year of Manufacture
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="year"
-                                                    type="number"
-                                                    value="2020" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="mileage">
-                                                    Mileage
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="mileage"
-                                                    type="number"
-                                                    value="15" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="fuel_type">
-                                                    Fuel Type
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="fuel_type"
-                                                    type="text"
-                                                    value="Petrol" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="transmission">
-                                                    Transmission Type
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="transmission"
-                                                    type="text"
-                                                    value="Manual" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="doors">
-                                                    Number of Doors
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="doors"
-                                                    type="number"
-                                                    value="4" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="people">
-                                                    Number of People
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="people"
-                                                    type="number"
-                                                    value="5" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="displacement">
-                                                    Displacement
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="displacement"
-                                                    type="text"
-                                                    value="1200" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="category">
-                                                    Category
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="category"
-                                                    type="text"
-                                                    value="compactsuv" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-sm font-semibold" htmlFor="status">
-                                                    Status
-                                                </label>
-                                                <input
-                                                    className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                                    id="status"
-                                                    type="text"
-                                                    value="rent" />
-                                            </div>
-                                        </form>
-                                    </div>;
-                                })}
+                                        </div>;
+                                    })}
                             </div></TabsContent></> : <div className='flex justify-center'>No vehicle found🚗</div>
                         }
 
