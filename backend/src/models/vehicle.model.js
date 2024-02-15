@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const vehicleSchema = new mongoose.Schema({
+  user: {type: mongoose.Types.ObjectId, ref: 'User'},
   model: { type: String, required: true },
   brand: { type: String, required: true },
   color: { type: String, required: true },
@@ -27,7 +28,14 @@ const vehicleSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["sell", "rent"],
-  }
+  },
+  
+  comments: [{
+    type: mongoose.Types.ObjectId,
+    ref: 'Comment'
+  }]
+}, {
+  timestamps: true,
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);

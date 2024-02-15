@@ -37,12 +37,10 @@ const UserSchema = new mongoose.Schema(
         type: String,
       }
     }],
-    posts: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Vehicle",
-      },
-    ],
+    post: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Vehicle'
+    }]
   },
   {
     timestamps: true,

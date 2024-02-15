@@ -1,4 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
+import User from "../models/user.model.js";
 import Vehicle from "../models/vehicle.model.js";
 import fs from "fs"
 
@@ -10,11 +11,12 @@ export const Addvehicle = async (req, res) => {
                 message: "No file found",
             });
         }
+
         const {
-            model, brand, year, color, displacement, mileage, fule_type,
+            user, model, brand, year, color, displacement, mileage, fule_type,
             transmission, doors, price, number_of_people, category, status
         } = req.body;
-
+        const userObj = await User.findById(user);
         let results = [];
         for (let file of req.files) {
             let result;
@@ -100,9 +102,11 @@ export const Addvehicle = async (req, res) => {
         }
 
         const newvehicle = new Vehicle({
-            model, brand, year, color, displacement, mileage, fule_type,
+            user, model, brand, year, color, displacement, mileage, fule_type,
             transmission, imageUrl: results, doors, price, number_of_people, category, status
         });
+        userObj.post.push(newvehicle._id);
+        await userObj.save();
         // Save vehicle to database
         await newvehicle.save()
         return res.status(200).json({
@@ -123,6 +127,23 @@ export const Addvehicle = async (req, res) => {
 export const getAllVehicle = async (req, res) => {
     try {
         const vehicles = await Vehicle.find()
+            .populate({
+                path: 'comments',
+                model: "Comment",
+                populate: {
+                    path: 'author',
+                    select: '_id firstname lastname'
+                },
+
+            })
+            // .populate({
+            //     path: 'comments',
+            //     model: "Comment",
+            //     populate: {
+            //         path: 'post',
+            //         select: '_id model brand color imageUrl number_of_people'
+            //     }
+            // })
         if (!vehicles) {
             return res.status(400).json({
                 status: false,
@@ -147,7 +168,15 @@ export const getAllVehicle = async (req, res) => {
 export const getVehicleById = async (req, res) => {
     try {
         const id = req.params.id
-        const singleVehicle = await Vehicle.findById({ _id: id })
+        const singleVehicle = await Vehicle.findById({ _id: id }).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+
+        })
         if (!singleVehicle) {
             return res.status(404).json({
                 status: false,
