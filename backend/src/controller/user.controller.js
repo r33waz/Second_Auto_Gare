@@ -29,7 +29,7 @@ export const Signup = async (req, res) => {
       phonenumber,
       role: category,
     });
-    let result = await newUser.save();
+    await newUser.save();
     return res.status(200).json({
       status: true,
       message: "User signup sucessfully"
@@ -80,6 +80,7 @@ export const Login = async (req, res) => {
         email: user.email,
         role: user.role,
         islogin: true,
+        posts: user?.post,
         verified: user.verified,
       },
       message: `Welcome ${user.firstname + " " + user.lastname}!`,
@@ -121,7 +122,8 @@ export const Logoout = async (req, res) => {
 //*API to get all user
 export const getAllUser = async (req, res) => {
   try {
-    const user = await User.find();
+    const user = await User.find()
+      .populate('post', 'model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status')
     if (user) {
       return res.status(200).json({
         status: true,
@@ -143,8 +145,9 @@ export const getAllUser = async (req, res) => {
 //*API to get userby id
 export const getUserById = async (req, res) => {
   try {
-    const id = req.params.id;
-    const user = await User.findOne({ _id: id });
+    const id = req.params.id
+    const user = await User.findById({ _id: id })
+      .populate('post', 'model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status')
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -154,8 +157,7 @@ export const getUserById = async (req, res) => {
       return res.status(200).json({
         status: true,
         data: user,
-        message: `${user?.firstname + "" + user?.lastname}`,
-      });
+      })
     }
   } catch (error) {
     console.log(error);
@@ -164,7 +166,7 @@ export const getUserById = async (req, res) => {
       message: "Internal Server Error",
     });
   }
-};
+}
 
 //*API for user update
 export const userUpdate = async (req, res) => {
@@ -269,7 +271,6 @@ export const userDelete = async (req, res) => {
 
 //* Api for user search by email
 export const userSearchByEmail = async (req, res) => {
-  // console.log(req.query)
   const user = req.query.email || "";
   const query = { email: { $regex: user, $options: "i" } };
   console.log(query);

@@ -35,7 +35,7 @@ export const createBooking = async (req, res) => {
         }
         // check if the user exists in database
         const existingUser = await User.findOne({ _id: user });
-        if (existingUser.verified) {
+        if (!existingUser.verified) {
             return res.status(400).json({
                 status: false,
                 message: 'Verify your account'
@@ -82,10 +82,10 @@ export const getAllRentingsVehicle = async (req, res) => {
                 status: false,
                 message: 'No Booking Found'
             })
-       }else{
+        } else {
             return res.status(200).json({
                 status: true,
-                count:bookedvehicle.length,
+                count: bookedvehicle.length,
                 data: bookedvehicle
             })
         }
@@ -141,9 +141,38 @@ export const deleteRentingsVehicle = async (req, res) => {
 export const filterByDates = async (req, res) => {
     //get the start and end date from query params
     let { startDate, endDate } = req.query;
+
     try {
-    
+
     } catch (error) {
-        
+
     }
 }
+
+//find booking according the paticularr user 
+export const findBookingByUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const bookings = await Renting.find({ user: userId })
+            .populate({
+                path: "vehicle",
+                select:'_id model brand color imageUrl number_of_people'
+            })
+        if (bookings.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: 'No bookings found for this user',
+            });
+        }
+        return res.status(200).json({
+            status: true,
+            bookings: bookings,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: 'Internal server error',
+        });
+    }
+};

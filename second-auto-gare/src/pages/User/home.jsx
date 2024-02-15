@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import rightRevel from "../../assets/images/rightrevel.png"
 import leftRevel from "../../assets/images/leftrevel.png"
 import centerRevel from "../../assets/images/center.png"
+import { Fade } from 'react-awesome-reveal';
 
 function Home() {
   function LeftArrow({ onClick }) {
@@ -154,16 +155,16 @@ function Home() {
               <h2 className="mb-4 text-4xl font-bold animate__animated animate__fadeIn animate__delay-0.7s">Your Trusted Vehicle Rental Partner</h2>
               <div className="justify-around -bottom-32 lg:absolute md:absolute lg:inline-block md:hidden">
                 <div className='items-center hidden lg:flex md:flex justify-evenly'>
-                  <img src={rightRevel} className='object-contain animate__animated animate__fadeInLeft animate__delay-1s' />
+                  <img src={rightRevel} className='object-contain animate__animated animate__fadeInLeft animate__delay-0.8s' />
                   <img src={centerRevel} className='object-contain animate__animated animate__fadeIn animate__delay-0.8s' />
-                  <img src={leftRevel} className='object-contain animate__animated animate__fadeInRight animate__delay-1s' />
+                  <img src={leftRevel} className='object-contain animate__animated animate__fadeInRight animate__delay-0.8s' />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-20  lg:mt-32 md:mt-32">
+      <div className="mt-20 lg:mt-32 md:mt-32">
         <section>
           <Slider {...settings}>
             {carLogos.map((i, idx) => {
@@ -217,9 +218,10 @@ function Home() {
             </p>
           </div>
         </section>
-        <section className="pt-5 :bg--bg">
+        <section className="pt-5">
           <div className="lg:px-14 md:px-14 ">
             <div className="grid gap-10 px-5 text-black lg:p-0 md:p-0 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
+              <Fade direction='left' damping={1} >
               <div className="flex gap-2 duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80 ">
                 <div className="p-5">
                   <h3>.1</h3>
@@ -230,7 +232,7 @@ function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
+              <div className="flex h-full duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                 <div className="p-5">
                   <h3>.2</h3>
                   <h1 className="text-3xl">Live chat</h1>
@@ -239,7 +241,9 @@ function Home() {
                     contact with the buyer and seller 💬.
                   </p>
                 </div>
-              </div>
+                </div>
+              </Fade>
+              <Fade direction='right' damping={1}>
               <div className="flex duration-300 bg-gray-200 rounded-md felx-col hover:bg-purple hover:text-white hover:bg-opacity-80">
                 <div className="p-5">
                   <h3>.3</h3>
@@ -261,7 +265,8 @@ function Home() {
                     rental ⏳.
                   </p>
                 </div>
-              </div>
+                </div>
+              </Fade>
             </div>
           </div>
         </section>
@@ -269,6 +274,7 @@ function Home() {
           <div className="uppercase lg:px-14 md:px-14">
             <h1 className="text-3xl ">Cars Category</h1>
             <div className="grid gap-10 pt-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
+              <Fade damping={2.5} direction='down' duration={1000}>
               <div className="flex flex-col w-full gap-2 image ">
                 <Link
                   to=""
@@ -295,7 +301,9 @@ function Home() {
                   alt="SUBsuv image"
                   className="object-fill w-full h-56 lg:object-cover md:object-cover"
                 />
-              </div>
+                </div>
+              </Fade>
+              <Fade direction='up' damping={2.5} duration={1000}>
               <div className="flex flex-col w-full gap-2 image">
                 <Link
                   to=""
@@ -321,7 +329,8 @@ function Home() {
                   alt="Sedan Image"
                   className="object-fill w-full h-56 lg:object-cover md:object-cover"
                 />
-              </div>
+                </div>
+              </Fade>
             </div>
           </div>
         </section>
