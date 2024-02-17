@@ -1,8 +1,6 @@
 import React from 'react';
-
-import { useState } from "react";
 import Logo from "../../assets/images/kidmfond.jpg";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import {  NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -23,20 +21,17 @@ function Header() {
       link: "/home",
     },
     {
-      name: "About",
-      link: "/about",
+      name: "Category",
+      link: "/category",
     },
-    
     {
       name: "Booking",
       link: "/booking",
     },
-    
     {
-      name: "Category",
-      link: "/category",
+      name: "About",
+      link: "/about",
     },
-    
     {
       name: "Contact",
       link: "/contact",
@@ -64,7 +59,7 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-50 flex items-center justify-around p-4 bg-white shadow-md :bg--bg :shadow-sm :shadow-white">
+      <div className="sticky top-0 z-50 flex items-center p-4 bg-white shadow-md justify-evenly :bg--bg :shadow-sm :shadow-white">
         <div>
           <NavLink to="/home">
             <img

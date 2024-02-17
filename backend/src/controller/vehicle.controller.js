@@ -201,8 +201,15 @@ export const getVehicleById = async (req, res) => {
 export const deleteVechile = async (req, res) => {
     try {
         const id = req.params.id
-        const vehicle = await Vehicle.findById({ _id: id })
-        if (!vehicle) {
+        const singleVehicle = await Vehicle.findById({ _id: id }).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (!singleVehicle) {
             return res.status(404).json({
                 status: false,
                 message: "Vehicle not found!"
@@ -284,8 +291,15 @@ export const searchByModel = async (req, res) => {
     const vehiclebrand = req.query.brand || ""
     const query = { brand: { $regex: vehiclebrand, $options: "i" } }
     try {
-        const vehicle = await Vehicle.find(query)
-        if (vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (singleVehicle.length === 0) {
             return res.status(400).json({
                 status: false,
                 message: `No vehicles found with the model ${vehiclebrand}`
@@ -309,8 +323,15 @@ export const getColorVehicles = async (req, res) => {
     const vehicolor = req.query.color || ""
     const query = { color: { $regex: vehicolor, $options: "i" } }
     try {
-        const vehicle = await Vehicle.find(query)
-        if (vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (singleVehicle.length === 0) {
             return res.status(400).json({
                 status: false,
                 message: `No vehicles available in this color`
@@ -318,8 +339,7 @@ export const getColorVehicles = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
-                count: vehicle.length,
-                data: vehicle
+                data: singleVehicle
             })
         }
     } catch (error) {
@@ -336,8 +356,15 @@ export const getvehicleFuletype = async (req, res) => {
     const vehiclefule = req.query.fule_type || ""
     const query = { fule_type: { $regex: vehiclefule, $options: "i" } }
     try {
-        const vehicle = await Vehicle.find(query)
-        if (vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (singleVehicle.length === 0) {
             return res.status(400).json({
                 status: false,
                 message: `No vehicles available `
@@ -345,8 +372,8 @@ export const getvehicleFuletype = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
-                count: vehicle.length,
-                data: vehicle
+                count: singleVehicle.length,
+                data: singleVehicle
             })
         }
     } catch (error) {
@@ -366,8 +393,15 @@ export const findDisplacementVehicles = async (req, res) => {
     const query = { displacement: { $regex: vehicleDisplacement, $options: "i" } }
     console.log(query)
     try {
-        const vehicle = await Vehicle.find(query)
-        if (!vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (!singleVehicle.length === 0) {
             return res.status(404).json({
                 status: false,
                 message: 'No vehicle found'
@@ -376,8 +410,7 @@ export const findDisplacementVehicles = async (req, res) => {
         else {
             return res.status(200).json({
                 status: true,
-                count: vehicle.length,
-                data: vehicle
+                data: singleVehicle
             })
         }
     } catch (error) {
@@ -394,8 +427,15 @@ export const findTransmissionVehicles = async (req, res) => {
     const query = { transmission: { $regex: vehicleTransmission, $options: "i" } }
     console.log(query)
     try {
-        const vehicle = await Vehicle.find(query)
-        if (vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (singleVehicle.length === 0) {
             return res.status(400).json({
                 status: false,
                 message: `No ${vehicleTransmission} vehicle is available`
@@ -403,7 +443,7 @@ export const findTransmissionVehicles = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
-                data: vehicle,
+                data: singleVehicle,
             })
         }
     } catch (error) {
@@ -429,8 +469,15 @@ export const findByCategory = async (req, res) => {
     }
     console.log(query)
     try {
-        const vehicle = await Vehicle.find(query)
-        if (vehicle.length === 0) {
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
+        if (singleVehicle.length === 0) {
             return res.status(400).json({
                 status: false,
                 // message: 'No vehicles found'
@@ -438,8 +485,7 @@ export const findByCategory = async (req, res) => {
         } else {
             return res.status(200).json({
                 stauts: false,
-                count: vehicle.length,
-                data: vehicle
+                data: singleVehicle
             })
         }
     } catch (error) {
@@ -456,20 +502,23 @@ export const vehicleByStatus = async (req, res) => {
     try {
         let statuses = req.query.status || "";
         //console.log("Categories", categories);
-
         // Construct query to match categories for selling or renting
         const query = { status: { $in: ["sell", "rent"] } };
-
         if (statuses) {
             // If categories are provided, filter by those categories
             query.status = { $in: statuses.split(',') };
         }
-
         // Find vehicles matching the query
-        const vehicles = await Vehicle.find(query);
-
+        const singleVehicle = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
         // Check if vehicles are found for selling or renting
-        if (vehicles.length === 0) {
+        if (singleVehicle.length === 0) {
             if (query.status.$in.includes("sell")) {
                 return res.status(403).json({
                     status: false,
@@ -485,8 +534,7 @@ export const vehicleByStatus = async (req, res) => {
         // Return the found vehicles
         return res.status(200).json({
             status: true,
-            count: vehicles.length,
-            data: vehicles
+            data: singleVehicle
         });
     } catch (error) {
         console.error(error);
