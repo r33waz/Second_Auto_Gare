@@ -47,8 +47,8 @@ export const CreateComment = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
   try {
-    const commentId = req.params.commentId; // Assuming commentId is the parameter for comment ID
-    const vehicleId = req.params.vehicleId; // Assuming vehicleId is the parameter for vehicle ID
+    const commentId = req.params.commentId; 
+    const vehicleId = req.params.vehicleId; 
     // Check if the comment exists
     const comment = await Comment.findById(commentId);
     if (!comment) {
@@ -58,8 +58,6 @@ export const deleteComment = async (req, res) => {
     if (comment.post.toString() !== vehicleId) {
       return res.status(403).json({ message: "Comment is not associated with this vehicle" });
     }
-    //comented user and the post owner can delete the commentt
-    
     // Update the vehicle's comment array (if necessary)
     await Vehicle.findByIdAndUpdate(vehicleId, {
       $pull: { comments: commentId }
