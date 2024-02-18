@@ -88,8 +88,8 @@ function Home() {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          slidesToShow: 2,
+          slidesToScroll: 2,
         },
       },
     ],
@@ -145,8 +145,7 @@ function Home() {
 
   return (
     <>
-      <div className="text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[475px] ">
-        <div className="">
+      <div className="text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[300px] ">
           <div className="relative flex flex-col h-[500px] items-center pt-6 gap-4 ">
             <div className="flex flex-col items-center justify-center lg:w-3/5 from-white">
               <h1 className="mb-4 text-5xl font-bold animate__animated animate__fadeIn animate__delay-0.6s">
@@ -162,7 +161,6 @@ function Home() {
               </div>
             </div>
           </div>
-        </div>
       </div>
       <div className="mt-20 lg:mt-32 md:mt-32">
         <section>
@@ -173,7 +171,7 @@ function Home() {
                   key={idx}
                   src={i?.logo}
                   alt={i?.name}
-                  className="w-20 p-16 h-60"
+                  className="w-20 p-12 lg:p-16 md:p-14 lg:h-60 md:h-60 "
                 />
               );
             })}
