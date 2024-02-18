@@ -136,14 +136,14 @@ export const getAllVehicle = async (req, res) => {
                 },
 
             })
-            // .populate({
-            //     path: 'comments',
-            //     model: "Comment",
-            //     populate: {
-            //         path: 'post',
-            //         select: '_id model brand color imageUrl number_of_people'
-            //     }
-            // })
+        // .populate({
+        //     path: 'comments',
+        //     model: "Comment",
+        //     populate: {
+        //         path: 'post',
+        //         select: '_id model brand color imageUrl number_of_people'
+        //     }
+        // })
         if (!vehicles) {
             return res.status(400).json({
                 status: false,
@@ -307,8 +307,8 @@ export const searchByModel = async (req, res) => {
         } else {
             return res.status(200).json({
                 status: true,
-                count: vehicle.length,
-                data: vehicle,
+                count: singleVehicle.length,
+                data: singleVehicle,
             })
         }
     } catch (error) {
@@ -318,6 +318,91 @@ export const searchByModel = async (req, res) => {
         })
     }
 }
+//get vehicle accordeng tha schema
+export const searchVehicle = async (req, res) => {
+    let { model, brand, color, year, fule_type,  displacement, min, max, transmission, category, doors, status } = req.query;
+    try {
+        const query = {
+            model: { $regex: model, $options: "i" } || { $exists: true },
+            brand: { $regex: brand, $options: "i" } || { $exists: true },
+            color: { $regex: color, $options: "i" } || { $exists: true },
+            year: year ? parseInt(year) : { $gte: 1900 },
+            fule_type: { $regex: fule_type, $options: "i" } || { $exists: true },
+            displacement: { $regex: displacement, $options: "i" } || { $exists: true },
+            transmission: { $regex: transmission, $options: "i" } || { $exists: true },
+            doors: doors ? parseInt(doors) : { $gte: 2 },
+            price: { $gte: parseInt(min) || 0, $lte: parseInt(max) || Infinity },
+            category: { $regex: category, $options: "i" } || { $exists: true },
+            status: { $regex: status, $options: "i" } || { $exists: true },
+
+        };
+        const vehicles = await Vehicle.find(query).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        }).sort([['price', 'ascending']]);
+        if (vehicles.length === 0) {
+            return res.status(400).json({
+                status: false,
+                message: 'No matching results were found'
+            });
+        } else {
+            const formattedVehicles = vehicles.map(vehicle => ({
+                ...vehicle._doc,
+                imageUrl: vehicle.imageUrl.map(image => image.url)
+            }));
+            return res.status(200).json({
+                status: true,
+                data: formattedVehicles,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+    }
+};
+
+
+//get vehicle according to max and min value
+export const getPriceRange = async (req, res) => {
+    let { min, max } = req.query;
+    [min, max] = [parseInt(min), parseInt(max)];
+    // Check for valid input
+    if (!min || !max || isNaN(min) || isNaN(max)) {
+        return res.status(400).json({
+            status: false,
+            message: "Invalid price range values provided."
+        });
+    }
+    try {
+        const vehiclesInRange = await Vehicle.find({
+            price: { $gte: min, $lte: max }
+        }).sort([['price', 'ascending']])
+        if (vehiclesInRange.length === 0 && vehiclesInRange) {
+            return res.status(400).json({
+                status: false,
+                message: "No cars in given price range."
+            });
+        } else {
+            return res.status(200).json({
+                status: true,
+                count: vehiclesInRange.length,
+                data: vehiclesInRange
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server Error"
+        });
+    }
+};
 //get vehicle accordin to color
 export const getColorVehicles = async (req, res) => {
     const vehicolor = req.query.color || ""

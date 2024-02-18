@@ -4,11 +4,20 @@ import Review from "../models/review.model.js";
 export const createReview = async (req, res) => {
     try {
         const { fullname, email, phonenumber, message } = req.body
-        if (!fullname || !email || !phonenumber || !message) {
-            return res.status(400).json({ error: 'Please provide all fields' })
+        if (!fullname) {
+            return res.status(400).json({ status: false, message: 'Please provide fullname' })
+        }
+        if (!email) {
+            return res.status(400).json({ status: false, message: 'Please provide email' })
+        }
+        if (!phonenumber) {
+            return res.status(400).json({ status: false, message: 'Please provide phonenumber' })
+        }
+        if (!message) {
+            return res.status(400).json({ status: false, message: 'Please provide message' })
         }
         // Checking the length of the inputs
-        if (message.length > 250) {
+        if (message.length > 250) {  
             return res.status(400).json({
                 message: "Messsage should be 200  characters or less"
             })

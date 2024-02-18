@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import Logo from "../../assets/images/kidmfond.jpg";
-import {  NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -10,6 +10,7 @@ import { logout } from "../../pages/auth/loginslice";
 
 function Header() {
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(false);
   const pathname = location.pathname;
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -48,6 +49,19 @@ function Header() {
       link: "/signup",
     },
   ];
+  const handelOpen = () => {
+    setIsMobile(!isMobile)
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsMobile(false);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleLogout = async () => {
     const resp = await postData("/api/v1/logout");
@@ -59,21 +73,16 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-50 flex items-center p-4 bg-white shadow-md justify-evenly :bg--bg :shadow-sm :shadow-white">
-        <div>
-          <NavLink to="/home">
-            <img
-              src={Logo}
-              alt="Logo"
-              width={50}
-              height={50}
-              className="rounded-full drop-shadow-2xl"
-              title="Second Auto Gare"
-            />
-          </NavLink>
-        </div>
-
-        <nav className="flex gap-16 uppercase">
+      <div className="sticky top-0 z-50 flex items-center justify-between gap-4 py-4 bg-white shadow-md lg:justify-around md:justify-around">
+        <NavLink to="/home">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="w-16 h-16 rounded-full drop-shadow-2xl"
+            title="Second Auto Gare"
+          />
+        </NavLink>
+        <nav className="justify-between hidden gap-10 uppercase md:flex lg:flex">
           {/* Maping the above array of links */}
           {Links.map((i, idx) => {
             return (
@@ -91,8 +100,36 @@ function Header() {
             );
           })}
         </nav>
-
-        <div>
+        <div className="flex items-center justify-end">
+          <button onClick={handelOpen} className={`lg:hidden md:hidden duration-1000 ${isMobile ? "rotate-180" : ""}`}>
+            {isMobile ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                className="transition-all duration-1000 "
+              >
+                <path
+                  fill="currentColor"
+                  d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                className="transition-all duration-1000 "
+              >
+                <path
+                  fill="currentColor"
+                  d="M4 18q-.425 0-.712-.288T3 17q0-.425.288-.712T4 16h16q.425 0 .713.288T21 17q0 .425-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12q0-.425.288-.712T4 11h16q.425 0 .713.288T21 12q0 .425-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7q0-.425.288-.712T4 6h16q.425 0 .713.288T21 7q0 .425-.288.713T20 8z"
+                />
+              </svg>
+            )}
+          </button>
           {user?.islogin === true ? (
             <div className="w-56 text-right top-2 right-20">
               <Menu as="div" className="relative inline-block text-left">
@@ -206,9 +243,8 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${
-                              active ? "bg-purple text-white" : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-6`}
+                            className={`${active ? "bg-purple text-white" : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-6`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -250,9 +286,8 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${
-                              active ? "bg-purple text-white" : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${active ? "bg-purple text-white" : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -314,9 +349,8 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${
-                              active ? "bg-purple text-white" : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${active ? "bg-purple text-white" : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -410,9 +444,8 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${
-                              active ? "bg-purple text-white" : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${active ? "bg-purple text-white" : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -517,9 +550,8 @@ function Header() {
                         {({ active }) => (
                           <button
                             onClick={handleLogout}
-                            className={`${
-                              active ? "bg-purple text-white" : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2 `}
+                            className={`${active ? "bg-purple text-white" : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2 `}
                           >
                             Logout
                             <svg
@@ -585,13 +617,13 @@ function Header() {
               </Menu>
             </div>
           ) : (
-            <div className="flex gap-4">
+            <div className="flex gap-1 ">
               {page.map((i, idx) => {
                 return (
                   <NavLink
                     key={idx}
                     to={i?.link}
-                    className="p-2 font-semibold text-white uppercase rounded-sm hover:scale-105 bg-purple"
+                    className="p-2 text-sm text-white uppercase rounded-sm lg:text-lg md:text-lg hover:scale-105 bg-purple"
                   >
                     {i.name}
                   </NavLink>
@@ -600,7 +632,30 @@ function Header() {
             </div>
           )}
         </div>
+
       </div>
+      {
+        isMobile && <>
+          <div className={`sticky z-50 p-3 bg-white top-20 duration-1000 transition-all ${isMobile ? "h-40" : "h-0"}`}>
+            <nav className="flex flex-col gap-3 uppercase ">
+              {/* Maping the above array of links */}
+              {Links.map((i, idx) => {
+                return (
+                  <NavLink
+                    key={idx}
+                    to={i.link}
+                    className={i.link === pathname
+                      ? "text-purple hover:text-purple font-medium underline underline-offset-4 w-20"
+                      : ""}
+                  >
+                    {i.name}
+                  </NavLink>
+                );
+              })}
+            </nav>
+
+          </div></>
+      }
     </>
   );
 }

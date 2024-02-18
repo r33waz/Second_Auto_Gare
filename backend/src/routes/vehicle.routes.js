@@ -1,5 +1,5 @@
 import express from "express"
-import { Addvehicle, deleteVechile,findByCategory,findDisplacementVehicles, findTransmissionVehicles, getAllVehicle, getColorVehicles, getVehicleById, getvehicleFuletype, searchByModel, updateVehicle, vehicleByStatus } from "../controller/vehicle.controller.js"
+import { Addvehicle, deleteVechile,findByCategory,findDisplacementVehicles, findTransmissionVehicles, getAllVehicle, getColorVehicles, getPriceRange, getVehicleById, getvehicleFuletype, searchByModel, searchVehicle, updateVehicle, vehicleByStatus } from "../controller/vehicle.controller.js"
 import { upload } from "../middleware/multter.middleware.js"
 const router = express.Router()
 router.post("/add_vehicle", upload.array("imageUrl",5), Addvehicle)
@@ -14,6 +14,8 @@ router.get("/vehicle/transmission/", findTransmissionVehicles)
 router.get("/vehicle/category/",findByCategory)
 router.get("/vehicle/status/", vehicleByStatus)
 router.get("/vehicle/fule_type/", getvehicleFuletype)
+router.get("/vehicles/search", searchVehicle)
+router.get("/vehicles", getPriceRange);
 
 
 
