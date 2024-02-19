@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Router, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import React from "react";
 import Header from "./components/common/header";
@@ -17,6 +17,7 @@ import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/User/contact";
 import Noroute from "./pages/auth/noroute";
 import About from "./pages/User/about";
+import Category from "./pages/User/category";
 function App() {
   const paths = [
     "/login",
@@ -56,6 +57,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
+            <Route path="/category" element={<Category />} />
             <Route path="*" element={<Noroute />} />
           </Routes>
           {!pathname && <Footer />}
