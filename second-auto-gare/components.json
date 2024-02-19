@@ -10,7 +10,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@/radix_component",
+    "components": "@/shadcn_ui",
     "utils": "@/lib/utils"
   }
 }
