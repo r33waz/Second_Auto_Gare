@@ -30,6 +30,7 @@ module.exports = {
       green: "#00b300",
       blue: "#0096FF",
       sideNav: "#212B36",
+      "light-bg": "#EEF1FB",
       gray: {
         100: "#fafafa",
         200: "#f5f5f5",
