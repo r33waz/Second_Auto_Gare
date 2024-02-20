@@ -4,7 +4,7 @@ function CategorySearch() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="flex items-center lg:flex-nowrap gap-4 md:flex-nowrap flex-wrap lg:w-[1000px] md:w-[900-px] w-full  justify-between border-2 lg:rounded-full py-4 px-6">
+      <div className="bg-white flex items-center lg:flex-nowrap gap-4 md:flex-nowrap flex-wrap lg:w-[1000px] md:w-[900-px] w-full  justify-between border-2 shadow-md border-gray-400 lg:rounded-full py-4 px-6">
         <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
           <select className="w-full bg-white">
             <option value="" disabled selected>
