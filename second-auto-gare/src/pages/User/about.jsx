@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 import SliderHook from '../../hooks/sliderhook.jsx';
 
 function About() {
-  const { data, isLoading, error } = useSWR('/api/v1/feedbacks', url => getData(url).then(res => res));
+  const { data, isLoading } = useSWR('/api/v1/feedbacks', url => getData(url).then(res => res));
   console.log(data)
   return (
     <div className='container '>

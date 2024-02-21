@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { postData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
 import { logout } from "../../pages/auth/loginslice";
+import { Primary_btn } from "./button";
 
 function Header() {
   const location = useLocation();
@@ -45,7 +46,7 @@ function Header() {
       link: "/login",
     },
     {
-      name: "signup",
+      name: "Signup",
       link: "/signup",
     },
   ];
@@ -73,7 +74,7 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-50 flex items-center justify-between gap-4 py-4 bg-white shadow-md lg:justify-around md:justify-around">
+      <div className="sticky top-0 z-50 px-5 flex items-center justify-between gap-4 py-4 bg-white shadow-md lg:justify-around md:justify-around">
         <NavLink to="/home">
           <img
             src={Logo}
@@ -82,7 +83,7 @@ function Header() {
             title="Second Auto Gare"
           />
         </NavLink>
-        <nav className="justify-between hidden gap-10 uppercase md:flex lg:flex">
+        <nav className="justify-between hidden gap-10  md:flex lg:flex">
           {/* Maping the above array of links */}
           {Links.map((i, idx) => {
             return (
@@ -108,7 +109,7 @@ function Header() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="transition-all duration-1000 "
+                className="transition-all duration-700 "
               >
                 <path
                   fill="currentColor"
@@ -121,7 +122,7 @@ function Header() {
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
-                className="transition-all duration-1000 "
+                className="transition-all duration-700 "
               >
                 <path
                   fill="currentColor"
@@ -617,16 +618,16 @@ function Header() {
               </Menu>
             </div>
           ) : (
-            <div className="flex gap-1 ">
+            <div className="md:flex hidden gap-1 ">
               {page.map((i, idx) => {
                 return (
-                  <NavLink
-                    key={idx}
-                    to={i?.link}
-                    className="p-2 text-sm text-white uppercase rounded-sm lg:text-lg md:text-lg hover:scale-105 bg-purple"
-                  >
-                    {i.name}
-                  </NavLink>
+                  <Primary_btn key={idx}>
+                    <NavLink
+                      to={i?.link}
+                    >
+                      {i.name}
+                    </NavLink>
+                  </Primary_btn>
                 );
               })}
             </div>
@@ -635,26 +636,39 @@ function Header() {
 
       </div>
       {
-        isMobile && <>
-          <div className={`sticky z-50 p-3 bg-white top-20 duration-1000 transition-all ${isMobile ? "h-40" : "h-0"}`}>
-            <nav className="flex flex-col gap-3 uppercase ">
-              {/* Maping the above array of links */}
-              {Links.map((i, idx) => {
-                return (
+        <div className={`bg-white   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${isMobile ? "h-60 w-full p-4" : "h-0"
+          }
+              rounded-lg overflow-hidden`}>
+          <nav className="flex flex-col gap-3  ">
+            {/* Maping the above array of links */}
+            {Links.map((i, idx) => {
+              return (
+                <NavLink
+                  key={idx}
+                  to={i.link}
+                  className={i.link === pathname
+                    ? "text-purple hover:text-purple font-medium underline underline-offset-4 w-20"
+                    : ""}
+                >
+                  {i.name}
+                </NavLink>
+              );
+            })}
+          </nav>
+          <div className="flex gap-x-4 mt-2">
+            {page.map((i, idx) => {
+              return (
+                <Primary_btn key={idx}>
                   <NavLink
-                    key={idx}
-                    to={i.link}
-                    className={i.link === pathname
-                      ? "text-purple hover:text-purple font-medium underline underline-offset-4 w-20"
-                      : ""}
+                    to={i?.link}
                   >
                     {i.name}
                   </NavLink>
-                );
-              })}
-            </nav>
-
-          </div></>
+                </Primary_btn>
+              );
+            })}
+          </div>
+        </div>
       }
     </>
   );
