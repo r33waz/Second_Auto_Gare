@@ -31,6 +31,7 @@ module.exports = {
       blue: "#0096FF",
       sideNav: "#212B36",
       "light-bg": "#EEF1FB",
+      card: "#050B20",
       gray: {
         100: "#fafafa",
         200: "#f5f5f5",

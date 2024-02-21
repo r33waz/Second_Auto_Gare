@@ -7,3 +7,12 @@ export const Card = ({ children }) => {
     </div>
   );
 };
+
+
+export const CarCard = ({ children }) => {
+  return (
+    <div className='h-fit rounded-2xl border-2 bg-card'>
+      {children}
+    </div>
+  )
+} 

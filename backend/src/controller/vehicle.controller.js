@@ -13,7 +13,7 @@ export const Addvehicle = async (req, res) => {
         }
 
         const {
-            user, model, brand, year, color, displacement, mileage, fule_type,
+            user, model, brand, year, color, displacement, mileage, fule_type, kilometer, drivetype,
             transmission, doors, price, number_of_people, category, status
         } = req.body;
         const userObj = await User.findById(user);
@@ -64,6 +64,18 @@ export const Addvehicle = async (req, res) => {
                 message: 'Fuel type is required'
             });
         }
+        if (!kilometer) {
+            return res.status(400).json({
+                status: false,
+                message: 'Kilometers is required'
+            })
+        }
+        if (!drivetype) {
+            return res.status(400).json({
+                status: false,
+                message: 'Drive Type is required'
+            })
+        }
         if (!transmission) {
             return res.status(400).json({
                 status: false,
@@ -102,7 +114,7 @@ export const Addvehicle = async (req, res) => {
         }
 
         const newvehicle = new Vehicle({
-            user, model, brand, year, color, displacement, mileage, fule_type,
+            user, model, brand, year, color, displacement, mileage, fule_type, kilometer, drivetype,
             transmission, imageUrl: results, doors, price, number_of_people, category, status
         });
         userObj.post.push(newvehicle._id);
@@ -135,7 +147,7 @@ export const getAllVehicle = async (req, res) => {
                     select: '_id firstname lastname'
                 },
 
-            })
+            }).sort([["createdAt",-1]])
         // .populate({
         //     path: 'comments',
         //     model: "Comment",
@@ -320,7 +332,7 @@ export const searchByModel = async (req, res) => {
 }
 //get vehicle accordeng tha schema
 export const searchVehicle = async (req, res) => {
-    let { model, brand, color, year, fule_type,  displacement, min, max, transmission, category, doors, status } = req.query;
+    let { model, brand, color, year, fule_type, displacement, min, max, transmission, category, doors, status } = req.query;
     try {
         const query = {
             model: { $regex: model, $options: "i" } || { $exists: true },
@@ -383,7 +395,14 @@ export const getPriceRange = async (req, res) => {
     try {
         const vehiclesInRange = await Vehicle.find({
             price: { $gte: min, $lte: max }
-        }).sort([['price', 'ascending']])
+        }).sort([['price', 'ascending']]).populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'author',
+                select: '_id firstname lastname'
+            },
+        })
         if (vehiclesInRange.length === 0 && vehiclesInRange) {
             return res.status(400).json({
                 status: false,

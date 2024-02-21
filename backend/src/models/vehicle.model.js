@@ -10,7 +10,9 @@ const vehicleSchema = new mongoose.Schema({
   displacement: { type: String, required: true },
   mileage: { type: Number, required: true },
   transmission: { type: String, required: true },
-  driveType:{type:String,required:true},
+  kilometer: { type: Number, required: true },
+  drivetype: { type: String, required: true },
+  description:{type:String,required:true},
   imageUrl: [{
     public_id: {
       type: String,
@@ -30,7 +32,7 @@ const vehicleSchema = new mongoose.Schema({
     type: String,
     enum: ["sell", "rent"],
   },
-  likes: [{ type:mongoose.Types.ObjectId, ref: "User" }],
+  likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   comments: [{
     type: mongoose.Types.ObjectId,
     ref: 'Comment'
