@@ -1,6 +1,6 @@
 import { Route, Router, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/common/header";
 import Home from "./pages/User/home";
 import Footer from "./components/common/footer";
@@ -18,6 +18,7 @@ import Contact from "./pages/User/contact";
 import Noroute from "./pages/auth/noroute";
 import About from "./pages/User/about";
 import Category from "./pages/User/category";
+import tyre from "./assets/images/tyre.png";
 function App() {
   const paths = [
     "/login",
@@ -27,42 +28,58 @@ function App() {
     "/admin/user",
     "/admin/bookings",
     "/admin/updateProfile/:id",
-    "*"
+    "*",
   ];
   const location = useLocation();
   const pathname = paths.includes(location.pathname);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+    setTimeout(() => {
+      setLoading(true);
+    }, 2000);
+  }, []);
   return (
     <>
-      <Provider store={store}>
-        <PersistGate persistor={persist}>
-          {!pathname && <Header />}
-          <Routes>
-            <Route
-              path="/admin/*"
-              element={
-                <div className="flex">
-                  <SideNav />
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/user" element={<User />} />
-                    <Route path="/updateProfile/:id" element={<UpdateUser />} />
-                    <Route path="/vehicle" element={<Vehicle />}></Route>
-                  </Routes>
-                </div>
-              }
-            />
+      {loading ? (
+        <Provider store={store}>
+          <PersistGate persistor={persist}>
+            {!pathname && <Header />}
+            <Routes>
+              <Route
+                path="/admin/*"
+                element={
+                  <div className="flex">
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/user" element={<User />} />
+                      <Route
+                        path="/updateProfile/:id"
+                        element={<UpdateUser />}
+                      />
+                      <Route path="/vehicle" element={<Vehicle />}></Route>
+                    </Routes>
+                  </div>
+                }
+              />
 
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/category" element={<Category />} />
-            <Route path="*" element={<Noroute />} />
-          </Routes>
-          {!pathname && <Footer />}
-        </PersistGate>
-      </Provider>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/category" element={<Category />} />
+              <Route path="*" element={<Noroute />} />
+            </Routes>
+            {!pathname && <Footer />}
+          </PersistGate>
+        </Provider>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <img src={tyre} className="animate-spin h-40 w-40" />
+        </div>
+      )}
     </>
   );
 }
