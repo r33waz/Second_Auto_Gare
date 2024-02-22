@@ -102,7 +102,12 @@ function Header() {
           })}
         </nav>
         <div className="flex items-center justify-end">
-          <button onClick={handelOpen} className={`lg:hidden md:hidden duration-1000 ${isMobile ? "rotate-180" : ""}`}>
+          <button
+            onClick={handelOpen}
+            className={`lg:hidden md:hidden duration-1000 ${
+              isMobile ? "rotate-180" : ""
+            }`}
+          >
             {isMobile ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -244,8 +249,9 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${active ? "bg-purple text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-6`}
+                            className={`${
+                              active ? "bg-purple text-white" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-6`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -287,8 +293,9 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${active ? "bg-purple text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${
+                              active ? "bg-purple text-white" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -350,8 +357,9 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${active ? "bg-purple text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${
+                              active ? "bg-purple text-white" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -445,8 +453,9 @@ function Header() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            className={`${active ? "bg-purple text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
+                            className={`${
+                              active ? "bg-purple text-white" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -551,8 +560,9 @@ function Header() {
                         {({ active }) => (
                           <button
                             onClick={handleLogout}
-                            className={`${active ? "bg-purple text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2 `}
+                            className={`${
+                              active ? "bg-purple text-white" : "text-gray-900"
+                            } group flex w-full items-center rounded-md px-2 py-2  gap-2 text-lg mt-2 `}
                           >
                             Logout
                             <svg
@@ -622,23 +632,21 @@ function Header() {
               {page.map((i, idx) => {
                 return (
                   <Primary_btn key={idx}>
-                    <NavLink
-                      to={i?.link}
-                    >
-                      {i.name}
-                    </NavLink>
+                    <NavLink to={i?.link}>{i.name}</NavLink>
                   </Primary_btn>
                 );
               })}
             </div>
           )}
         </div>
-
       </div>
       {
-        <div className={`bg-white   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${isMobile ? "h-60 w-full p-4" : "h-0"
+        <div
+          className={` bg-white z-50 sticky top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
+            isMobile ? "   h-60 w-full p-4 " : "h-0"
           }
-              rounded-lg overflow-hidden`}>
+              rounded-lg overflow-hidden`}
+        >
           <nav className="flex flex-col gap-3  ">
             {/* Maping the above array of links */}
             {Links.map((i, idx) => {
@@ -646,9 +654,11 @@ function Header() {
                 <NavLink
                   key={idx}
                   to={i.link}
-                  className={i.link === pathname
-                    ? "text-purple hover:text-purple font-medium underline underline-offset-4 w-20"
-                    : ""}
+                  className={
+                    i.link === pathname
+                      ? "text-purple hover:text-purple font-medium underline underline-offset-4 w-20"
+                      : ""
+                  }
                 >
                   {i.name}
                 </NavLink>
@@ -659,11 +669,7 @@ function Header() {
             {page.map((i, idx) => {
               return (
                 <Primary_btn key={idx}>
-                  <NavLink
-                    to={i?.link}
-                  >
-                    {i.name}
-                  </NavLink>
+                  <NavLink to={i?.link}>{i.name}</NavLink>
                 </Primary_btn>
               );
             })}
