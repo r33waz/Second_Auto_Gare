@@ -17,8 +17,9 @@ import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/User/contact";
 import Noroute from "./pages/auth/noroute";
 import About from "./pages/User/about";
-import Category from "./pages/User/category";
+import Vehicles from "./pages/User/vehicles";
 import tyre from "./assets/images/tyre.png";
+import Category from "./pages/User/categoty";
 function App() {
   const paths = [
     "/login",
@@ -46,38 +47,39 @@ function App() {
         <Provider store={store}>
           <PersistGate persistor={persist}>
             {!pathname && <Header />}
-            <Routes>
-              <Route
-                path="/admin/*"
-                element={
-                  <div className="flex">
-                    <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/user" element={<User />} />
-                      <Route
-                        path="/updateProfile/:id"
-                        element={<UpdateUser />}
-                      />
-                      <Route path="/vehicle" element={<Vehicle />}></Route>
-                    </Routes>
-                  </div>
-                }
-              />
+              <Routes>
+                <Route
+                  path="/admin/*"
+                  element={
+                    <div className="flex">
+                      <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/user" element={<User />} />
+                        <Route
+                          path="/updateProfile/:id"
+                          element={<UpdateUser />}
+                        />
+                        <Route path="/vehicle" element={<Vehicle />}></Route>
+                      </Routes>
+                    </div>
+                  }
+                />
 
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/category" element={<Category />} />
-              <Route path="*" element={<Noroute />} />
-            </Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/category" element={<Vehicles />} />
+                <Route path="/car/:vehicle" element={<Category />} />
+                <Route path="*" element={<Noroute />} />
+              </Routes>
             {!pathname && <Footer />}
           </PersistGate>
         </Provider>
       ) : (
-        <div className="flex justify-center items-center h-screen">
-          <img src={tyre} className="animate-spin h-40 w-40" />
+        <div className="flex items-center justify-center h-screen">
+          <img src={tyre} className="w-40 h-40 animate-spin" />
         </div>
       )}
     </>
