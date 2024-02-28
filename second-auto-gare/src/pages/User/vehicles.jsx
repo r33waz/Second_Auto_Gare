@@ -20,7 +20,7 @@ import { CarCard } from "../../components/common/card";
 import useSWR from "swr";
 import { getData } from "../../service/axiosservice";
 import FilterCarTabs from "../../components/filtercar";
-function Category() {
+function Vehicle() {
   const [open, setOpen] = useState(false);
   const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
     getData(url).then((res) => res)
@@ -99,13 +99,13 @@ function Category() {
                 </div>
                 <div
                   className={`flex gap-2  duration-700 ${
-                    open ? "lg:w-full md:w-full w-60" : "w-0 "
+                    open ? "lg:w-full md:w-full w-60" : "overflow-hidden w-0"
                   }`}
                 >
                   <input
                     type="text"
                     className={` rounded outline-none  placeholder-purple placeholder-opacity-75 text-purple ${
-                      open ? "visible overflow-hidden" : "overflow-hidden"
+                      open ? "visible overflow-x-hidden " : "overflow-x-hidden "
                     }`}
                     placeholder="Search vehicle"
                   />
@@ -163,7 +163,7 @@ function Category() {
         >
           <SwiperSlide className="z-30 w-20 h-10">
             <Link
-              to="/carlisting"
+              to="/car/suv"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Suv
@@ -173,7 +173,7 @@ function Category() {
           </SwiperSlide>
           <SwiperSlide>
             <Link
-              to="/carlisting"
+              to="/car/sedan"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Sedan
@@ -182,7 +182,7 @@ function Category() {
           </SwiperSlide>
           <SwiperSlide>
             <Link
-              to="/carlisting"
+              to="/car/hatchback"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Hatchback
@@ -191,7 +191,7 @@ function Category() {
           </SwiperSlide>
           <SwiperSlide>
             <Link
-              to="/carlisting"
+              to="/car/hybrid"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Hybrid
@@ -200,7 +200,7 @@ function Category() {
           </SwiperSlide>
           <SwiperSlide>
             <Link
-              to="/carlisting"
+              to="/car/van"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Van
@@ -209,7 +209,7 @@ function Category() {
           </SwiperSlide>
           <SwiperSlide>
             <Link
-              to="/carlisting"
+              to="/car/truck"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Truck
@@ -219,7 +219,7 @@ function Category() {
           <SwiperSlide>
             {" "}
             <Link
-              to="/carlisting"
+              to="/car/electric"
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Electric
@@ -235,8 +235,8 @@ function Category() {
       {/*  */}
       <section>
         <Fade duration={2000}>
-          <div className="flex justify-evenly items-center lg:flex-nowrap md:flex-nowrap gap-10 flex-wrap md:mt-16 mt-8 lg:px-12 md:px-12 px-2">
-            <div className="w-full rounded-md bg-red bg-opacity-20 lg:p-16 md:p-12 p-8 shadow-xl">
+          <div className="flex flex-wrap items-center gap-10 px-2 mt-8 justify-evenly lg:flex-nowrap md:flex-nowrap md:mt-16 lg:px-12 md:px-12">
+            <div className="w-full p-8 rounded-md shadow-xl bg-red bg-opacity-20 lg:p-16 md:p-12">
               <div className="relative flex flex-col gap-7">
                 <h1 className="font-semibold lg:text-4xl md:text-2xl w-72">
                   Are You Looking For a Car ?
@@ -247,19 +247,19 @@ function Category() {
                 </span>
                 <Link
                   to="/"
-                  className="bg-black text-white px-6 py-2 h-10 w-fit  rounded-lg"
+                  className="h-10 px-6 py-2 text-white bg-black rounded-lg w-fit"
                 >
                   Get Started →
                 </Link>
                 <img
                   src={searchCar}
-                  className="w-32 h-32 absolute right-10 -bottom-5 lg:opacity-100 md:opacity-100 opacity-0"
+                  className="absolute w-32 h-32 opacity-0 right-10 -bottom-5 lg:opacity-100 md:opacity-100"
                 />
               </div>
             </div>
-            <div className="w-full rounded-md bg-purple bg-opacity-20 lg:p-16 md:p-12 p-8 shadow-xl">
+            <div className="w-full p-8 rounded-md shadow-xl bg-purple bg-opacity-20 lg:p-16 md:p-12">
               <div className="relative flex flex-col gap-7">
-                <h1 className="font-semibold lg:text-4xl md:text-2xl w-64">
+                <h1 className="w-64 font-semibold lg:text-4xl md:text-2xl">
                   Do You Want to Sell a Car ?
                 </h1>
                 <span className="lg:w-[400px]">
@@ -268,13 +268,13 @@ function Category() {
                 </span>
                 <Link
                   to="/"
-                  className="bg-black text-white px-6 py-2 h-10 w-fit  rounded-lg"
+                  className="h-10 px-6 py-2 text-white bg-black rounded-lg w-fit"
                 >
                   Get Started →
                 </Link>
                 <img
                   src={sellCar}
-                  className="w-32 h-32 absolute right-10 -bottom-5 lg:opacity-100 md:opacity-100 opacity-0"
+                  className="absolute w-32 h-32 opacity-0 right-10 -bottom-5 lg:opacity-100 md:opacity-100"
                 />
               </div>
             </div>
@@ -283,7 +283,7 @@ function Category() {
       </section>
       {/*latest cars*/}
       {isLoading ? (
-        <div className="flex justify-center items-center h-60">
+        <div className="flex items-center justify-center h-60">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100"
@@ -291,7 +291,7 @@ function Category() {
             viewBox="0 0 24 24"
             className="text-purple animate-spin"
           >
-            <g fill="none" stroke="currentColor" stroke-width="2">
+            <g fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="4" cy="12" r="1" />
               <circle cx="12" cy="12" r="1" />
               <circle cx="20" cy="12" r="1" />
@@ -299,7 +299,7 @@ function Category() {
           </svg>
         </div>
       ) : (
-        <section className="md:mt-16 mt-8 lg:px-12 md:px-12 px-2">
+        <section className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
           <HeroTitle>
             <h1 className="text-center">Latest Cars</h1>
           </HeroTitle>
@@ -329,7 +329,7 @@ function Category() {
                 },
               }}
               modules={[Autoplay, Pagination, Navigation]}
-              className=" py-10"
+              className="py-10 "
             >
               {data?.data?.slice(0, 10).map((e, index) => (
                 <SwiperSlide key={index}>
@@ -338,16 +338,16 @@ function Category() {
                       <img
                         src={e.imageUrl[0]?.url}
                         alt={`Image ${index}`}
-                        className="h-48 object-cover rounded-tr-2xl rounded-tl-2xl"
+                        className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"
                       />
                       <div className="flex flex-col py-2 px-2.5 gap-3">
                         <NavLink
-                          to={`/car/${e._id}`}
-                          className="text-white text-lg font-medium hover:underline hover:underline-offset-4"
+                          to={`/vehicle/${e._id}`}
+                          className="text-lg font-medium text-white hover:underline hover:underline-offset-4"
                         >
                           {e?.model + " - " + e?.year}
                         </NavLink>
-                        <p className="text-white text-sm">
+                        <p className="text-sm text-white">
                           {e?.description
                             ? e?.description.slice(0, 40) + "..."
                             : "..."}
@@ -405,10 +405,10 @@ function Category() {
                           </div>
                         </div>
                         <hr></hr>
-                        <div className="flex justify-between text-white py-2">
+                        <div className="flex justify-between py-2 text-white">
                           <p>
                             Rs{":"}
-                            <span className=" font-semibold">{e?.price}</span>
+                            <span className="font-semibold ">{e?.price}</span>
                           </p>
                           <NavLink to={`/car/${e._id}`}>View Details →</NavLink>
                         </div>
@@ -425,4 +425,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default Vehicle;

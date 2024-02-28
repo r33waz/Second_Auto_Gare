@@ -23,7 +23,7 @@ function Header() {
       link: "/home",
     },
     {
-      name: "Category",
+      name: "Vehicle",
       link: "/category",
     },
     {
@@ -74,7 +74,7 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-50 px-5 flex items-center justify-between gap-4 py-4 bg-white shadow-md lg:justify-around md:justify-around">
+      <div className="sticky top-0 z-50 flex items-center justify-between gap-4 px-5 py-4 bg-white shadow-md lg:justify-around md:justify-around">
         <NavLink to="/home">
           <img
             src={Logo}
@@ -83,7 +83,7 @@ function Header() {
             title="Second Auto Gare"
           />
         </NavLink>
-        <nav className="justify-between hidden gap-10  md:flex lg:flex">
+        <nav className="justify-between hidden gap-10 md:flex lg:flex">
           {/* Maping the above array of links */}
           {Links.map((i, idx) => {
             return (
@@ -92,8 +92,8 @@ function Header() {
                 to={i.link}
                 className={
                   i.link === pathname
-                    ? "text-purple hover:text-purple font-medium underline underline-offset-4"
-                    : ""
+                    ? "text-purple hover:text-purple font-medium underline underline-offset-4 text-sm tracking-widest"
+                    : "text-sm tracking-widest"
                 }
               >
                 {i.name}
@@ -157,15 +157,15 @@ function Header() {
                         <g
                           fill="none"
                           stroke="currentColor"
-                          stroke-dasharray="20"
-                          stroke-dashoffset="20"
-                          stroke-linecap="round"
-                          stroke-width="2"
+                          strokeDasharray="20"
+                          strokeDashoffset="20"
+                          strokeLinecap="round"
+                          strokeWidth="2"
                         >
                           <path d="M6 19V18C6 15.7909 7.79086 14 10 14H14C16.2091 14 18 15.7909 18 18V19">
                             <animate
                               fill="freeze"
-                              attributeName="stroke-dashoffset"
+                              attributeName="strokeDashoffset"
                               dur="0.4s"
                               values="20;0"
                             />
@@ -173,7 +173,7 @@ function Header() {
                           <path d="M12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z">
                             <animate
                               fill="freeze"
-                              attributeName="stroke-dashoffset"
+                              attributeName="strokeDashoffset"
                               begin="0.5s"
                               dur="0.4s"
                               values="20;0"
@@ -213,15 +213,15 @@ function Header() {
                               <g
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-dasharray="20"
-                                stroke-dashoffset="20"
-                                stroke-linecap="round"
-                                stroke-width="2"
+                                strokeDasharray="20"
+                                strokeDashoffset="20"
+                                strokeLinecap="round"
+                                strokeWidth="2"
                               >
                                 <path d="M6 19V18C6 15.7909 7.79086 14 10 14H14C16.2091 14 18 15.7909 18 18V19">
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     dur="0.4s"
                                     values="20;0"
                                   />
@@ -229,7 +229,7 @@ function Header() {
                                 <path d="M12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z">
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.5s"
                                     dur="0.4s"
                                     values="20;0"
@@ -262,15 +262,15 @@ function Header() {
                               <g
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-dasharray="28"
-                                stroke-dashoffset="28"
-                                stroke-linecap="round"
-                                stroke-width="2"
+                                strokeDasharray="28"
+                                strokeDashoffset="28"
+                                strokeLinecap="round"
+                                strokeWidth="2"
                               >
                                 <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     dur="0.4s"
                                     values="28;0"
                                   />
@@ -278,7 +278,7 @@ function Header() {
                                 <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.5s"
                                     dur="0.4s"
                                     values="28;0"
@@ -306,43 +306,43 @@ function Header() {
                               <g
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                               >
                                 <path
-                                  stroke-dasharray="20"
-                                  stroke-dashoffset="20"
+                                  strokeDasharray="20"
+                                  strokeDashoffset="20"
                                   d="M3 21H21"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     dur="0.3s"
                                     values="20;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="44"
-                                  stroke-dashoffset="44"
+                                  strokeDasharray="44"
+                                  strokeDashoffset="44"
                                   d="M7 17V13L17 3L21 7L11 17H7"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.4s"
                                     dur="0.6s"
                                     values="44;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="8"
-                                  stroke-dashoffset="8"
+                                  strokeDasharray="8"
+                                  strokeDashoffset="8"
                                   d="M14 6L18 10"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="1s"
                                     dur="0.2s"
                                     values="8;0"
@@ -379,51 +379,51 @@ function Header() {
                                   height="16"
                                   x="4"
                                   y="4"
-                                  stroke-dasharray="64"
-                                  stroke-dashoffset="64"
+                                  strokeDasharray="64"
+                                  strokeDashoffset="64"
                                   rx="1"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     dur="0.5s"
                                     values="64;0"
                                   />
                                 </rect>
                                 <path
-                                  stroke-dasharray="6"
-                                  stroke-dashoffset="6"
+                                  strokeDasharray="6"
+                                  strokeDashoffset="6"
                                   d="M7 4V2M17 4V2"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.5s"
                                     dur="0.2s"
                                     values="6;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="12"
-                                  stroke-dashoffset="12"
+                                  strokeDasharray="12"
+                                  strokeDashoffset="12"
                                   d="M7 11H17"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.8s"
                                     dur="0.2s"
                                     values="12;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="9"
-                                  stroke-dashoffset="9"
+                                  strokeDasharray="9"
+                                  strokeDashoffset="9"
                                   d="M7 15H14"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="1s"
                                     dur="0.2s"
                                     values="9;0"
@@ -470,14 +470,14 @@ function Header() {
                                 stroke-linejoin="round"
                               >
                                 <g
-                                  stroke-dasharray="10"
-                                  stroke-dashoffset="10"
+                                  strokeDasharray="10"
+                                  strokeDashoffset="10"
                                   stroke-width="2"
                                 >
                                   <path d="M3 5L5 7L9 3">
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       dur="0.2s"
                                       values="10;0"
                                     />
@@ -485,7 +485,7 @@ function Header() {
                                   <path d="M3 12L5 14L9 10">
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       begin="0.5s"
                                       dur="0.2s"
                                       values="10;0"
@@ -494,14 +494,14 @@ function Header() {
                                   <path d="M3 19L5 21L9 17">
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       begin="1s"
                                       dur="0.2s"
                                       values="10;0"
                                     />
                                   </path>
                                 </g>
-                                <g stroke-dasharray="22" stroke-dashoffset="22">
+                                <g strokeDasharray="22" strokeDashoffset="22">
                                   <rect
                                     width="9"
                                     height="3"
@@ -511,7 +511,7 @@ function Header() {
                                   >
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       begin="0.2s"
                                       dur="0.5s"
                                       values="22;0"
@@ -526,7 +526,7 @@ function Header() {
                                   >
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       begin="0.7s"
                                       dur="0.5s"
                                       values="22;0"
@@ -541,7 +541,7 @@ function Header() {
                                   >
                                     <animate
                                       fill="freeze"
-                                      attributeName="stroke-dashoffset"
+                                      attributeName="strokeDashoffset"
                                       begin="1.2s"
                                       dur="0.5s"
                                       values="22;0"
@@ -580,38 +580,38 @@ function Header() {
                                 stroke-width="2"
                               >
                                 <path
-                                  stroke-dasharray="20"
-                                  stroke-dashoffset="20"
+                                  strokeDasharray="20"
+                                  strokeDashoffset="20"
                                   d="M3 3V21"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     dur="0.3s"
                                     values="20;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="15"
-                                  stroke-dashoffset="15"
+                                  strokeDasharray="15"
+                                  strokeDashoffset="15"
                                   d="M21 12H7.5"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.4s"
                                     dur="0.2s"
                                     values="15;0"
                                   />
                                 </path>
                                 <path
-                                  stroke-dasharray="12"
-                                  stroke-dashoffset="12"
+                                  strokeDasharray="12"
+                                  strokeDashoffset="12"
                                   d="M7 12L14 19M7 12L14 5"
                                 >
                                   <animate
                                     fill="freeze"
-                                    attributeName="stroke-dashoffset"
+                                    attributeName="strokeDashoffset"
                                     begin="0.6s"
                                     dur="0.2s"
                                     values="12;0"
@@ -628,7 +628,7 @@ function Header() {
               </Menu>
             </div>
           ) : (
-            <div className="md:flex hidden gap-1 ">
+            <div className="hidden gap-1 md:flex ">
               {page.map((i, idx) => {
                 return (
                   <Primary_btn key={idx}>
@@ -642,12 +642,12 @@ function Header() {
       </div>
       {
         <div
-          className={` bg-white z-50 sticky top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
+          className={` bg-white z-50 fixed top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
             isMobile ? "   h-60 w-full p-4 " : "h-0"
           }
               rounded-lg overflow-hidden`}
         >
-          <nav className="flex flex-col gap-3  ">
+          <nav className="flex flex-col gap-3 ">
             {/* Maping the above array of links */}
             {Links.map((i, idx) => {
               return (
@@ -665,7 +665,7 @@ function Header() {
               );
             })}
           </nav>
-          <div className="flex gap-x-4 mt-2">
+          <div className="flex mt-2 gap-x-4">
             {page.map((i, idx) => {
               return (
                 <Primary_btn key={idx}>
