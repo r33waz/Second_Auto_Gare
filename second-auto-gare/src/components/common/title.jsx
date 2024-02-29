@@ -1,7 +1,9 @@
-import React from 'react'
+import React from "react";
 
 export const HeroTitle = ({ children }) => {
-    return (
-        <div className='md:text-4xl font-semibold '>{children}</div>
-    )
-}
+  return <div className="font-semibold md:text-4xl ">{children}</div>;
+};
+
+export const HeroSubtitle = ({ children }) => {
+  return <div className="font-semibold md:text-3xl ">{children}</div>;
+};
