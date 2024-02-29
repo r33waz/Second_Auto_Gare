@@ -79,7 +79,7 @@ function Header() {
           <img
             src={Logo}
             alt="Logo"
-            className="w-16 h-16 rounded-full drop-shadow-2xl"
+            className="w-16 h-16 rounded-full shadow-md"
             title="Second Auto Gare"
           />
         </NavLink>
