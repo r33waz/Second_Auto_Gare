@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export const Card = ({ children }) => {
   return (
@@ -8,11 +8,14 @@ export const Card = ({ children }) => {
   );
 };
 
-
 export const CarCard = ({ children }) => {
+  return <div className="border-2 h-fit rounded-2xl bg-card">{children}</div>;
+};
+
+export const SmallCard = ({ children }) => {
   return (
-    <div className='h-fit rounded-2xl border-2 bg-card'>
+    <div className="px-2.5 py-2 text-sm text-purple rounded-2xl bg-purple bg-opacity-20">
       {children}
     </div>
-  )
-} 
+  );
+};

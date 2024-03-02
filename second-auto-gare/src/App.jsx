@@ -1,4 +1,4 @@
-import { Route, Router, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import Header from "./components/common/header";
@@ -11,7 +11,6 @@ import { Provider } from "react-redux";
 import { persist, store } from "../store/store";
 import { PersistGate } from "redux-persist/integration/react";
 import User from "./pages/Admin/user";
-import SideNav from "./components/common/SlideNav";
 import UpdateUser from "./pages/Admin/updateUser";
 import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/User/contact";
@@ -20,6 +19,7 @@ import About from "./pages/User/about";
 import Vehicles from "./pages/User/vehicles";
 import tyre from "./assets/images/tyre.png";
 import Category from "./pages/User/categoty";
+import SingleVehicle from "./pages/User/singleVehicle";
 function App() {
   const paths = [
     "/login",
@@ -47,33 +47,34 @@ function App() {
         <Provider store={store}>
           <PersistGate persistor={persist}>
             {!pathname && <Header />}
-              <Routes>
-                <Route
-                  path="/admin/*"
-                  element={
-                    <div className="flex">
-                      <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/user" element={<User />} />
-                        <Route
-                          path="/updateProfile/:id"
-                          element={<UpdateUser />}
-                        />
-                        <Route path="/vehicle" element={<Vehicle />}></Route>
-                      </Routes>
-                    </div>
-                  }
-                />
+            <Routes>
+              <Route
+                path="/admin/*"
+                element={
+                  <div className="flex">
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/user" element={<User />} />
+                      <Route
+                        path="/updateProfile/:id"
+                        element={<UpdateUser />}
+                      />
+                      <Route path="/vehicle" element={<Vehicle />}></Route>
+                    </Routes>
+                  </div>
+                }
+              />
 
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/category" element={<Vehicles />} />
-                <Route path="/car/:vehicle" element={<Category />} />
-                <Route path="*" element={<Noroute />} />
-              </Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/category" element={<Vehicles />} />
+              <Route path="/car/:vehicle" element={<Category />} />
+              <Route path="/vehicle/:vehicle" element={<SingleVehicle />} />
+              <Route path="*" element={<Noroute />} />
+            </Routes>
             {!pathname && <Footer />}
           </PersistGate>
         </Provider>
