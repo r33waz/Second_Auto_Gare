@@ -211,14 +211,16 @@ export const getAllVehicle = async (req, res) => {
 export const getVehicleById = async (req, res) => {
   try {
     const id = req.params.id;
-    const singleVehicle = await Vehicle.findById({ _id: id }).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
+    const singleVehicle = await Vehicle.findById({ _id: id })
+      .populate({
+        path: "comments",
+        model: "Comment",
+        populate: {
+          path: "author",
+          select: "_id firstname lastname",
+        },
+      })
+      .populate("user", "_id firstname lastname email phonenumber photo");
     if (!singleVehicle) {
       return res.status(404).json({
         status: false,
@@ -698,6 +700,7 @@ export const vehicleByStatus = async (req, res) => {
     // Return the found vehicles
     return res.status(200).json({
       status: true,
+      count: singleVehicle.length,
       data: singleVehicle,
     });
   } catch (error) {

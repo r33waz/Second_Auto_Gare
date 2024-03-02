@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HeroSubtitle } from "../../components/common/title";
 import Loading from "../../components/common/loading";
 import { getData } from "../../service/axiosservice";
@@ -9,9 +9,12 @@ import { CarCard } from "../../components/common/card";
 
 function Category() {
   const category = useParams();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+  console.log(selectedValue);
   const [vehicle, setVehicle] = useState([]);
   const [itemsPerPage] = useState(12);
+  const inputRef = useRef();
 
   const { data, isLoading } = useSWR(
     `api/v1/vehicle/category/?category=${
@@ -19,7 +22,28 @@ function Category() {
     }&max=${""}&min=${""}`,
     (url) => getData(url).then((res) => res)
   );
-  console.log(vehicle);
+  // console.log(vehicle);
+
+  const handelOpen = () => {
+    const inputField = inputRef.current;
+    const currentWidth = inputField.offsetWidth;
+
+    if (currentWidth === 0) {
+      inputField.style.width = "200px";
+      inputField.style.border = "gray";
+    } else {
+      inputField.style.width = "0";
+      inputField.style.border = "none";
+    }
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleOptionClick = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     setVehicle(data?.data);
@@ -32,7 +56,9 @@ function Category() {
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = vehicle?.slice(itemOffset, endOffset);
+  const currentItems = vehicle
+    ?.filter((vehicle) => vehicle.status === "sell")
+    .slice(itemOffset, endOffset);
   const pageCount = Math.ceil(vehicle?.length / itemsPerPage);
   console.log(currentItems);
   // Invoke when user click to request another page.
@@ -58,6 +84,66 @@ function Category() {
 
   return (
     <div className="container mx-auto">
+      {/* <div className="relative">
+        <button
+          className="w-full px-4 py-2 text-left bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+          aria-haspopup="listbox"
+          aria-expanded="true"
+          aria-labelledby="listbox-label"
+          onClick={toggleDropdown}
+        >
+          <svg
+            className="w-5 h-5 ml-2 -mr-1 text-gray-400"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 10l4 4 4-4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <ul className="absolute z-10 w-full mt-1 overflow-auto bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <li
+              className="relative py-2 pl-3 text-gray-900 cursor-default select-none pr-9"
+              aria-disabled="true"
+              tabIndex="-1"
+            >
+              -- Select an option --
+            </li>
+
+            <li
+              value="Hello"
+              className="cursor-pointer"
+              onClick={(e) => setSelectedValue(e.target.value)}
+            >
+              Category 1
+            </li>
+
+            <li
+              value="Car"
+              className="cursor-pointer"
+              onClick={(e) => setSelectedValue(e.target.value)}
+            >
+              Category 2
+            </li>
+
+            <li
+              value="Jeep"
+              className="cursor-pointer"
+              onClick={(e) => setSelectedValue(e.target.value)}
+            >
+              Category 3
+            </li>
+          </ul>
+        )}
+      </div> */}
       <div className="px-2 md:mt-16 lg:px-12 md:px-12">
         <div className="flex items-center justify-start gap-3">
           <Link to="/home">
@@ -78,17 +164,6 @@ function Category() {
             Vehicles / {category?.vehicle}
           </span>
         </div>
-        <section className="mt-4 md:mt-8">
-          <div className="flex flex-col gap-4">
-            <HeroSubtitle className="hidden md:visible ">
-              Collection of{" "}
-              <span className="uppercase text-purple">{category?.vehicle}</span>
-            </HeroSubtitle>
-            <p className="text-sm">
-              Showing all {vehicle ? vehicle.length : 0} results{" "}
-            </p>
-          </div>
-        </section>
         <section className="flex justify-center">
           <div className="bg-white flex items-center lg:flex-nowrap gap-4 md:flex-nowrap flex-wrap lg:w-[1000px] md:w-[900-px] w-full  justify-between border-2 shadow-md border-gray-400 lg:rounded-full py-4 px-6">
             <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
@@ -145,22 +220,17 @@ function Category() {
                 <option value="3">Category 3</option>
               </select>
             </div>
-            <div
-              className={`flex gap-2  duration-700 ${
-                open ? "lg:w-full md:w-full w-60" : "overflow-hidden w-0"
-              }`}
-            >
+            <div>
               <input
+                ref={inputRef}
                 type="text"
-                className={` rounded outline-none  placeholder-purple placeholder-opacity-75 text-purple ${
-                  open ? "visible overflow-x-hidden " : "overflow-x-hidden "
-                }`}
+                className="w-0 outline-none placeholder-purple"
                 placeholder="Search vehicle"
               />
             </div>
             <button
               className="text-white rounded-full bg-purple"
-              onClick={() => setOpen(!open)}
+              onClick={handelOpen}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -177,6 +247,18 @@ function Category() {
             </button>
           </div>
         </section>
+        <section className="mt-4 md:mt-8">
+          <div className="flex flex-col gap-4">
+            <HeroSubtitle className="hidden md:visible ">
+              Collection of{" "}
+              <span className="uppercase text-purple">{category?.vehicle}</span>
+            </HeroSubtitle>
+            <p className="text-sm">
+              Showing all {vehicle ? vehicle.length : 0} results{" "}
+            </p>
+          </div>
+        </section>
+
         {/*  */}
         {!vehicle ? (
           <div className="flex justify-center md:text-3xl">
@@ -264,7 +346,7 @@ function Category() {
                             Rs{":"}
                             <span className="font-semibold ">{e?.price}</span>
                           </p>
-                          <NavLink to={`/car/${e._id}`}>View Details →</NavLink>
+                          <NavLink to={`/vehicle/${e._id}`}>View Details →</NavLink>
                         </div>
                       </div>
                       <button className="absolute top-3 right-3">
