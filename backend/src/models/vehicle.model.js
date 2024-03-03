@@ -11,7 +11,6 @@ const vehicleSchema = new mongoose.Schema(
     displacement: { type: String, required: true },
     mileage: { type: Number, required: true },
     transmission: { type: String, required: true },
-    kilometer: { type: Number, required: true },
     drivetype: { type: String, required: true },
     description: { type: String, required: true },
     meta_description: {

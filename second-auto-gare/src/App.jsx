@@ -20,6 +20,8 @@ import Vehicles from "./pages/User/vehicles";
 import tyre from "./assets/images/tyre.png";
 import Category from "./pages/User/categoty";
 import SingleVehicle from "./pages/User/singleVehicle";
+import PrivateRoutes from "./pages/auth/protectedroute";
+import AdminRoute from "./pages/auth/adminroute";
 function App() {
   const paths = [
     "/login",
@@ -48,31 +50,35 @@ function App() {
           <PersistGate persistor={persist}>
             {!pathname && <Header />}
             <Routes>
-              <Route
-                path="/admin/*"
-                element={
-                  <div className="flex">
-                    <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/user" element={<User />} />
-                      <Route
-                        path="/updateProfile/:id"
-                        element={<UpdateUser />}
-                      />
-                      <Route path="/vehicle" element={<Vehicle />}></Route>
-                    </Routes>
-                  </div>
-                }
-              />
+              <Route element={<AdminRoute />}>
+                <Route
+                  path="/admin/*"
+                  element={
+                    <div className="flex">
+                      <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/user" element={<User />} />
+                        <Route
+                          path="/updateProfile/:id"
+                          element={<UpdateUser />}
+                        />
+                        <Route path="/vehicle" element={<Vehicle />}></Route>
+                      </Routes>
+                    </div>
+                  }
+                />
+              </Route>
 
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/category" element={<Vehicles />} />
-              <Route path="/car/:vehicle" element={<Category />} />
-              <Route path="/vehicle/:vehicle" element={<SingleVehicle />} />
+              <Route element={<PrivateRoutes />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/category" element={<Vehicles />} />
+                <Route path="/car/:vehicle" element={<Category />} />
+                <Route path="/vehicle/:vehicle" element={<SingleVehicle />} />
+              </Route>
               <Route path="*" element={<Noroute />} />
             </Routes>
             {!pathname && <Footer />}

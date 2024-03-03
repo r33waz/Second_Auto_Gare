@@ -3,8 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import mainRouter from "./src/routes/main.js";
 import { Dbconnect } from "./src/config/dbconfig.js";
-import session from "express-session";
-import http from "https"
+import cookieParser from "cookie-parser";
 
 const app = express();
 Dbconnect();
@@ -16,21 +15,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(
-  session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // 1 week in seconds
-      //*Here keeping secure false beacuse we are thestng it in our local device
-      //* In the production we will change false in true to make it secure
-      secure: false,
-      sameSite: "Lax",
-    },
-  })
-);
+app.use(cookieParser());
 
 const PORT = process.env.PORT;
 app.use(mainRouter);

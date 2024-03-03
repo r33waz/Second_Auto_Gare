@@ -8,6 +8,7 @@ const initialState = {
   phonenumber: "",
   role: "",
   islogin: "",
+  photo:[]
 };
 
 const loginslice = createSlice({

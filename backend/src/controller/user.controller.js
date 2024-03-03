@@ -1,19 +1,19 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import Token from "../models/token.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { validationResult } from "express-validator";
 import { OTPexpire, TwominOTPexpire } from "../utils/otpvalidation.js";
 import cloudinary from "../config/cloudinary.js";
-import fs from "fs"
+import fs from "fs";
 
 export const Signup = async (req, res) => {
   const saltRounds = 10;
+  console.log(req.body);
   try {
     const { firstname, lastname, email, phonenumber, password, category } =
       req.body;
-
-    const existingUserEmail = await User.findOne({ email });
     if (existingUserEmail) {
       return res.status(400).json({
         status: false,
@@ -32,8 +32,8 @@ export const Signup = async (req, res) => {
     await newUser.save();
     return res.status(200).json({
       status: true,
-      message: "User signup sucessfully"
-    })
+      message: "User signup sucessfully",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -42,7 +42,6 @@ export const Signup = async (req, res) => {
     });
   }
 };
-
 
 //*API to Login user ussing session
 export const Login = async (req, res) => {
@@ -65,26 +64,35 @@ export const Login = async (req, res) => {
         message: "Invalid Email or Password",
       });
     }
+    const token = jwt.sign(
+      { userID: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-    req.session.user = {
-      _id: user.id,
-      role: user.role,
-    };
-
-    return res.status(200).json({
-      status: true,
-      data: {
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        role: user.role,
-        islogin: true,
-        posts: user?.post,
-        verified: user.verified,
-      },
-      message: `Welcome ${user.firstname + " " + user.lastname}!`,
-    });
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Lax",
+      })
+      .status(200)
+      .json({
+        status: true,
+        data: {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          role: user.role,
+          islogin: true,
+          verified: user.verified,
+          photo: user.photo,
+        },
+        message: "Logged in successfully",
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -95,22 +103,12 @@ export const Login = async (req, res) => {
 };
 
 //*API for user logout deleting session id
-export const Logoout = async (req, res) => {
+export const Logout = async (req, res) => {
   try {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          message: "Internal server error",
-        });
-      }
-    });
-
-    res.clearCookie("connect.sid");
-    return res.status(200).json({
-      status: true,
-      message: "Logout sucessfull",
-    });
+    return res
+      .clearCookie("access_token")
+      .status(200)
+      .json({ status: true, message: "Successfully logged out" });
   } catch (error) {
     return res.status(500).json({
       status: false,
@@ -122,8 +120,10 @@ export const Logoout = async (req, res) => {
 //*API to get all user
 export const getAllUser = async (req, res) => {
   try {
-    const user = await User.find()
-      .populate('post', 'model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status')
+    const user = await User.find().populate(
+      "post",
+      "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
+    );
     if (user) {
       return res.status(200).json({
         status: true,
@@ -145,9 +145,11 @@ export const getAllUser = async (req, res) => {
 //*API to get userby id
 export const getUserById = async (req, res) => {
   try {
-    const id = req.params.id
-    const user = await User.findById({ _id: id })
-      .populate('post', 'model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status')
+    const id = req.params.id;
+    const user = await User.findById({ _id: id }).populate(
+      "post",
+      "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
+    );
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -157,7 +159,7 @@ export const getUserById = async (req, res) => {
       return res.status(200).json({
         status: true,
         data: user,
-      })
+      });
     }
   } catch (error) {
     console.log(error);
@@ -166,7 +168,7 @@ export const getUserById = async (req, res) => {
       message: "Internal Server Error",
     });
   }
-}
+};
 
 //*API for user update
 export const userUpdate = async (req, res) => {
@@ -194,9 +196,11 @@ export const userUpdate = async (req, res) => {
       let results = [];
       for (let file of req.files) {
         let result;
-        if (file.mimetype === 'image/jpeg'
-          || file.mimetype === 'image/png'
-          || file.mimetype === 'image/jpg') {
+        if (
+          file.mimetype === "image/jpeg" ||
+          file.mimetype === "image/png" ||
+          file.mimetype === "image/jpg"
+        ) {
           result = await cloudinary.v2.uploader.upload(file.path);
         }
         results.push({ public_id: result.public_id, url: result.secure_url });
@@ -215,7 +219,6 @@ export const userUpdate = async (req, res) => {
         { new: true }
       );
 
-
       if (!updateUser) {
         return res.status(400).json({
           status: false,
@@ -224,12 +227,12 @@ export const userUpdate = async (req, res) => {
       } else {
         return res.status(200).json({
           status: true,
-          message: `${updateUser?.firstname + " " + updateUser?.lastname
-            } updated`,
+          message: `${
+            updateUser?.firstname + " " + updateUser?.lastname
+          } updated`,
         });
       }
     }
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -267,8 +270,6 @@ export const userDelete = async (req, res) => {
   }
 };
 
-
-
 //* Api for user search by email
 export const userSearchByEmail = async (req, res) => {
   const user = req.query.email || "";
@@ -284,7 +285,7 @@ export const userSearchByEmail = async (req, res) => {
     } else {
       return res.status(200).json({
         status: true,
-        data: emailUser
+        data: emailUser,
       });
     }
   } catch (error) {
@@ -302,8 +303,8 @@ export const SendOTP = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         status: false,
-        message: 'Enter a valid email',
-        errors: errors.array()
+        message: "Enter a valid email",
+        errors: errors.array(),
       });
     }
 
@@ -312,38 +313,37 @@ export const SendOTP = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         status: false,
-        message: 'Email not registered'
+        message: "Email not registered",
       });
     }
 
     if (user.verified) {
       return res.status(400).json({
         status: false,
-        message: 'This account is already verified.'
+        message: "This account is already verified.",
       });
     }
     const generateOTP = () => {
       return Math.floor(100000 + Math.random() * 999999);
-    }
+    };
     const OTP = generateOTP();
 
-    const prevOTP = await Token.findOne({ userId: user._id })
+    const prevOTP = await Token.findOne({ userId: user._id });
     if (prevOTP) {
-      const sendAnotherOtp = await OTPexpire(prevOTP.createdAt)
+      const sendAnotherOtp = await OTPexpire(prevOTP.createdAt);
       if (!sendAnotherOtp) {
         return res.status(400).json({
           status: false,
-          message: "Try againg after some minutes!"
-        })
+          message: "Try againg after some minutes!",
+        });
       }
     }
     await Token.findOneAndUpdate(
       { userId: user._id },
       { token: OTP, createdAT: Date.now() },
       { upsert: true, new: true, setDefaultsOnInsert: true }
-    )
-    console.log(OTP)
-
+    );
+    console.log(OTP);
 
     const message = `<p>Hi ${user.firstname} ${user.lastname},</p>
 <p>Your OTP is:<h3> <b>${OTP}</b></h3></p>
@@ -351,14 +351,13 @@ export const SendOTP = async (req, res) => {
     sendEmail(user.email, "OTP Verification", message);
     return res.status(200).json({
       status: true,
-      message: `An OTP has been sent to your email.`
+      message: `An OTP has been sent to your email.`,
     });
-
   } catch (error) {
-    console.error('Error sending OTP:', error); // Log the error for debugging
+    console.error("Error sending OTP:", error); // Log the error for debugging
     return res.status(500).json({
       status: false,
-      message: 'An error occurred while sending OTP. Please try again later.'
+      message: "An error occurred while sending OTP. Please try again later.",
     });
   }
 };
@@ -370,41 +369,44 @@ export const VerifyOtp = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         status: false,
-        message: 'Input fields are empty',
-        errors: errors.array()
+        message: "Input fields are empty",
+        errors: errors.array(),
       });
     }
 
-    const { userId, token } = req.body
-    console.log(userId, token)
-    const otpData = await Token.findOne({ userId, token })
+    const { userId, token } = req.body;
+    console.log(userId, token);
+    const otpData = await Token.findOne({ userId, token });
     //*Checking if the otp exist or not
     if (!otpData) {
       return res.status(401).json({
         status: false,
-        message: 'Invalid or expired OTP'
-      })
+        message: "Invalid or expired OTP",
+      });
     }
     //*checking the time of the otp
-    const isExpired = await TwominOTPexpire(otpData.createdAt)
+    const isExpired = await TwominOTPexpire(otpData.createdAt);
     if (isExpired) {
       return res.status(400).json({
         status: false,
-        message: "OTP already expired!"
-      })
+        message: "OTP already expired!",
+      });
     }
-    await User.findByIdAndUpdate({ _id: userId }, {
-      $set: { verified: true }
-    })
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        $set: { verified: true },
+      }
+    );
     return res.status(200).json({
       status: true,
-      message: 'OTP verified successfully!'
-    })
+      message: "OTP verified successfully!",
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       status: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};

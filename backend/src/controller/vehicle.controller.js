@@ -217,7 +217,7 @@ export const getVehicleById = async (req, res) => {
         model: "Comment",
         populate: {
           path: "author",
-          select: "_id firstname lastname",
+          select: "_id firstname lastname photo",
         },
       })
       .populate("user", "_id firstname lastname email phonenumber photo");
@@ -618,19 +618,10 @@ export const findTransmissionVehicles = async (req, res) => {
 };
 //find by category
 export const findByCategory = async (req, res) => {
-  let { category, min, max } = req.query;
+  let { category } = req.query;
 
   console.log("category :", category);
   let query = { category: { $regex: category, $options: "i" } };
-
-  if (min && max) {
-    query = { ...query, price: { $gte: parseInt(min), $lte: parseInt(max) } };
-  } else if (min && !max) {
-    query = { ...query, price: { $gte: parseInt(min) } };
-  } else if (!min && max) {
-    query = { ...query, price: { $lte: parseInt(max) } };
-  }
-
   console.log(query);
   try {
     const singleVehicle = await Vehicle.find(query)
@@ -639,14 +630,14 @@ export const findByCategory = async (req, res) => {
         model: "Comment",
         populate: {
           path: "author",
-          select: "_id firstname lastname",
+          select: "_id firstname lastname photo",
         },
       })
       .sort([["createdAt", -1]]);
     if (singleVehicle.length === 0) {
       return res.status(400).json({
         status: false,
-        message: "No vehicles found",
+        // message: "No vehicles found",
       });
     } else {
       return res.status(200).json({

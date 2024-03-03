@@ -1,20 +1,16 @@
+import jwt from "jsonwebtoken";
 export const authentication = async (req, res, next) => {
+  const token = req.cookies.access_token;
+  if (!token) {
+    return res.sendStatus(403);
+  }
   try {
-      const user = req.session.user;
-      console.log(user)
-    if (!user) {
-      return res.status(500).json({
-        status: false,
-        message: "Session Expired",
-      });
-    }
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
+    const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.userId = data.id;
+    req.userRole = data.role;
+    return next();
+  } catch {
+    return res.sendStatus(403);
   }
 };
 
