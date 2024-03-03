@@ -80,7 +80,7 @@ function Vehicle() {
               className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
             >
               Suv
-              <img src={Suv} alt="SUV" className="w-12 h-12" />{" "}
+              <img src={Suv} alt="SUV" className="w-8 h-8" />{" "}
               {/* Adjusted size */}
             </Link>
           </SwiperSlide>

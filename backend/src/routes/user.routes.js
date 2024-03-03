@@ -1,7 +1,7 @@
 import express from "express";
 import {
   Login,
-  Logoout,
+  Logout,
   SendOTP,
   Signup,
   VerifyOtp,
@@ -22,8 +22,7 @@ const router = express.Router();
 
 router.post("/signup", Signup);
 router.post("/login", Login);
-router.post("/logout", Logoout);
-router.post("/logout", Logoout);
+router.post("/logout", Logout);
 router.get("/users", getAllUser);
 router.get("/users/:id", getUserById);
 router.patch(
@@ -41,7 +40,7 @@ router.delete(
 );
 
 router.get("/user", userSearchByEmail);
-router.post("/send_otp", otpVerification, SendOTP)
-router.post("/verify_otp",verifyOtpValidation,VerifyOtp)
+router.post("/send_otp", otpVerification, SendOTP);
+router.post("/verify_otp", verifyOtpValidation, VerifyOtp);
 
 export default router;

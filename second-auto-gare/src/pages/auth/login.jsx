@@ -36,6 +36,7 @@ function Login() {
   const onSumit = async (data) => {
     console.log(data);
     const resp = await postData("/api/v1/login", data);
+    console.log(resp);
     if (resp?.status && resp.data.role === "user") {
       dispatch(login(resp.data));
       navigate("/home");
