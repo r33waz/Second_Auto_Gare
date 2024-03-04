@@ -22,6 +22,7 @@ import Category from "./pages/User/categoty";
 import SingleVehicle from "./pages/User/singleVehicle";
 import PrivateRoutes from "./pages/auth/protectedroute";
 import AdminRoute from "./pages/auth/adminroute";
+import Userprofile from "./pages/User/userprofile";
 function App() {
   const paths = [
     "/login",
@@ -78,6 +79,7 @@ function App() {
                 <Route path="/category" element={<Vehicles />} />
                 <Route path="/car/:vehicle" element={<Category />} />
                 <Route path="/vehicle/:vehicle" element={<SingleVehicle />} />
+                <Route path="/profile" element={<Userprofile />} />
               </Route>
               <Route path="*" element={<Noroute />} />
             </Routes>
