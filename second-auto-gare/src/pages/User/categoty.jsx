@@ -37,13 +37,7 @@ function Category() {
     }
   };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleOptionClick = () => {
-    setIsOpen(false);
-  };
+ 
 
   useEffect(() => {
     setVehicle(data?.data);

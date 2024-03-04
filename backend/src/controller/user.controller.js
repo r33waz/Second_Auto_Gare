@@ -158,7 +158,17 @@ export const getUserById = async (req, res) => {
     } else {
       return res.status(200).json({
         status: true,
-        data: user,
+        data: {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          role: user.role,
+          islogin: true,
+          verified: user.verified,
+          photo: user.photo,
+          phonenumber: user.phonenumber,
+        },
       });
     }
   } catch (error) {
@@ -171,28 +181,27 @@ export const getUserById = async (req, res) => {
 };
 
 //*API for user update
+
 export const userUpdate = async (req, res) => {
   try {
     const id = req.params.id;
-
     const user = await User.findById({ _id: id });
-    //?checking if the user is not present
-    console.log(user);
+
     if (!user) {
       return res.status(400).json({
         status: false,
-        message: "Invalid Attemp",
+        message: "Invalid Attempt",
       });
     } else {
       if (!req.files) {
-        //updating without image
+        // Updating without image
         const updatedUser = await User.findByIdAndUpdate(
           { _id: id },
           { ...req.body }
         );
       }
-      //update the image in cloudinary
 
+      // Update the image in cloudinary
       let results = [];
       for (let file of req.files) {
         let result;
@@ -208,11 +217,19 @@ export const userUpdate = async (req, res) => {
       }
 
       if (user?.photo) {
-        //deleting old images from cloudinary
+        // Deleting old images from cloudinary
         for (let photo of user.photo) {
           await cloudinary.v2.uploader.destroy(photo?.public_id);
         }
       }
+
+      // Check if password needs to be updated
+      if (req.body.password) {
+        // Hash the password before updating
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
+      }
+
       const updateUser = await User.findByIdAndUpdate(
         { _id: id },
         { $set: { ...req.body, photo: results } },
@@ -222,7 +239,7 @@ export const userUpdate = async (req, res) => {
       if (!updateUser) {
         return res.status(400).json({
           status: false,
-          message: "Invalid Attemp",
+          message: "Invalid Attempt",
         });
       } else {
         return res.status(200).json({
