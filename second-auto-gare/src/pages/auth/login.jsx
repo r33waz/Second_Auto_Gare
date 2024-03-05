@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { postData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { login } from "./loginslice";
+import { login } from "../../slice/loginslice";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

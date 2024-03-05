@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { postData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
-import { logout } from "../../pages/auth/loginslice";
+import { logout } from "../../slice/loginslice";
 import { Primary_btn } from "./button";
 
 function Header() {
@@ -160,7 +160,7 @@ function Header() {
                   className={`absolute z-50 duration-500 border-2 right-5 rounded-lg  bg-white ${
                     isOpen
                       ? "h-[18rem] w-[250px] p-1.5 "
-                      : "h-0 w-[250px] opacity-0"
+                      : "h-0 w-[250px] hidden"
                   }`}
                 >
                   <div className="flex flex-col divide-y">

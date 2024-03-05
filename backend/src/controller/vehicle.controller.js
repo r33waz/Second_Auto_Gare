@@ -274,7 +274,6 @@ export const deleteVechile = async (req, res) => {
     });
   }
 };
-
 //Update vehicle by finding the vehicle id
 export const updateVehicle = async (req, res) => {
   try {

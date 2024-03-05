@@ -1,31 +1,103 @@
-import { getData } from "../../service/axiosservice";
-import React from "react";
+import { Save_btn } from "../../components/common/button";
+import { getData, updateUser } from "../../service/axiosservice";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Loading from "../../components/common/loading";
+import logo from "../../assets/images/kidmfond.jpg";
+import { toast } from "react-toastify";
 
 function Userprofile() {
   const user = useSelector((state) => state.user);
+  const [singleUser, setSingleUser] = useState();
   const { data, isLoading } = useSWR(`/api/v1/users/${user.id}`, (url) =>
     getData(url).then((res) => res)
   );
-  console.log("user:", data);
-  console.log(user.id);
+
+  console.log(data?.data);
+
+  console.log("singleuser", singleUser);
+
+  useEffect(() => {
+    if (data) {
+      setSingleUser(data?.data);
+    }
+  }, [data]);
+
+  const [isShow, setShow] = useState(false);
+  const [newPassword, setnewPassword] = useState(false);
+  // validation schema
+  const userUpdateSchema = yup.object({
+    firstname: yup.string(),
+    lastname: yup.string(),
+    email: yup.string(),
+    phonenumber: yup.string(),
+    newpassword: yup.string(),
+    confirmnewpassword: yup
+      .string()
+      .oneOf([yup.ref("newpassword"), null], "Passwords must match"),
+  });
+
   const {
     register,
-    reset,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(userUpdateSchema),
+  });
+
+  const OnSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("firstname", data?.firstname);
+    formData.append("lastname", data?.lastname);
+    formData.append("email", data?.email);
+    formData.append("phonenumber", data?.phonenumber);
+    if (data?.photo) {
+      const photo = data?.photo[0];
+      formData.append("photo", photo);
+    }
+    if (data?.oldpassword && data?.newpassword && data?.confirmnewpassword) {
+      const oldpassword = data?.oldPassword;
+      const password = data?.confirmnewpassword;
+      formData.append("oldPassword", oldpassword);
+      formData.append("password", password);
+    }
+    console.log("form Data", formData);
+    const resp = await updateUser(`/api/v1/updateuser/${user?.id}`, formData);
+    console.log(resp);
+    if (resp.status) {
+      toast.success(resp?.message);
+    }
+  };
+
+  if (!user || !singleUser || isLoading) {
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto">
       <div className="px-2 md:mt-16 lg:px-12 md:px-12">
-        <section className="mt-8 h-screen">
-          <div className="flex justify-center items-center">
-            <div className="grid lg:grid-cols-3 md:grid-cols-3 grid-cols-1 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md">
-              <div className="flex flex-col justify-center items-center bg-purple bg-opacity-40 gap-3 p-3 rounded-md">
-                {data?.data?.photo[0] ? (
-                  <img src={user?.photo[0]} alt="image" />
+        <section className="mt-8">
+          <div className="flex items-start justify-center h-screen ">
+            <div className="flex gap-2 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md bg-purple bg-opacity-40 lg:flex-nowrap md:flex-nowrap flex-wrap relative">
+              <img
+                src={logo}
+                alt="img"
+                className="absolute rounded-full h-14 w-14 left-3 top-3"
+              />
+              <div className="flex flex-col items-center justify-center w-full gap-3 p-3 text-white rounded-md lg:w-80 md:w-80 bg-sideNav">
+                {singleUser?.photo?.url ? (
+                  <img
+                    src={singleUser?.photo?.url}
+                    alt="image"
+                    className="object-cover rounded-full h-60 w-60"
+                  />
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -40,27 +112,27 @@ function Userprofile() {
                   </svg>
                 )}
                 <div className="flex flex-col gap-3">
-                  <p className=" text-lg">
-                    Email: <span className=" text-sm">{data?.data?.email}</span>
+                  <p className="text-lg ">
+                    Email: <span className="text-sm ">{data?.data?.email}</span>
                   </p>
-                  <p className=" text-lg">
+                  <p className="text-lg ">
                     First name:
                     <span className="text-base">{data?.data?.firstname}</span>
                   </p>
-                  <p className=" text-lg">
+                  <p className="text-lg ">
                     Last name:
                     <span className="text-base">{data?.data?.lastname}</span>
                   </p>
-                  <p className=" text-lg">
+                  <p className="text-lg ">
                     Phone number:
                     <span className="text-base">{data?.data?.phonenumber}</span>
                   </p>
-                  <div className="flex gap-1 justify-between">
-                    <p className=" text-lg">
+                  <div className="flex justify-between gap-1">
+                    <p className="text-lg ">
                       Role:
                       <span className="text-base">{data?.data?.role}</span>
                     </p>
-                    <p className="flex gap-1  text-lg">
+                    <p className="flex gap-1 text-lg">
                       Verified:
                       {data?.data?.verified === true ? (
                         <svg
@@ -93,16 +165,245 @@ function Userprofile() {
                   </div>
                 </div>
               </div>
-              <form>
-                <div className="col-span-2 flex flex-col">
-                  aofidjoidfgiorioghihdroighorghroigre
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      className="bg-green bg-opacity-90 text-white px-2.5 py-1 rounded-md"
-                    >
-                      Save changes
-                    </button>
+
+              <form onSubmit={handleSubmit(OnSubmit)}>
+                <div className="flex flex-col p-2">
+                  <div className="flex flex-col gap-2.5">
+                    <div className="flex flex-wrap justify-between gap-2 lg:flex-nowrap md:flex-nowrap">
+                      <div className="flex flex-col gap-1.5 w-full">
+                        <label htmlFor="firstname">First name</label>
+                        <input
+                          type="text"
+                          name="firstname"
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-500 rounded outline-none "
+                          id="firstname"
+                          defaultValue={singleUser?.firstname}
+                          {...register("firstname")}
+                        />
+                        <small className="tracking-wider text-red">
+                          {errors.firstname?.message}
+                        </small>
+                      </div>
+                      <div className="flex flex-col gap-1.5 w-full">
+                        <label htmlFor="lastname">Last name</label>
+                        <input
+                          type="text"
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none "
+                          id="lastname"
+                          name="lastname"
+                          defaultValue={singleUser?.lastname}
+                          {...register("lastname")}
+                        />
+                        <small className="tracking-wider text-red">
+                          {errors.lastname?.message}
+                        </small>
+                      </div>
+                    </div>
+                    {/*  */}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="email">Email</label>
+                        <input
+                          type="text"
+                          name="email"
+                          autoComplete="off"
+                          defaultValue={singleUser?.email}
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none"
+                          id="email"
+                          {...register("email")}
+                        />
+                        <small className="tracking-wider text-red">
+                          {errors.email?.message}
+                        </small>
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="phonenumber">Number</label>
+                        <input
+                          type="text"
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none"
+                          id="phonenumber"
+                          defaultValue={singleUser?.phonenumber}
+                          {...register("phonenumber")}
+                        />
+                        <small className="tracking-wider text-red">
+                          {errors.phonenumber?.message}
+                        </small>
+                      </div>
+                    </div>
+                    {/*  */}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-1.5 relative">
+                        <label htmlFor="oldpassword">Old password</label>
+                        <input
+                          type="password"
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none"
+                          id="oldpassword"
+                          {...register("oldpassword")}
+                        />
+                        {/*  */}
+                        <small className="tracking-wider text-red">
+                          {errors?.oldpassword?.message}
+                        </small>
+                      </div>
+                      <div className="flex flex-col gap-1.5 relative">
+                        <label htmlFor="newpassword">New password</label>
+                        <input
+                          type={newPassword ? "text" : "password"}
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none"
+                          id="newpassword"
+                          {...register("newpassword")}
+                        />
+                        <span
+                          onClick={() => setnewPassword(!newPassword)}
+                          className="absolute cursor-pointer right-5 top-9"
+                        >
+                          {newPassword ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="22"
+                              height="22"
+                              viewBox="0 0 24 24"
+                            >
+                              <g
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              >
+                                <path d="M2 12s3-7 10-7s10 7 10 7s-3 7-10 7s-10-7-10-7" />
+                                <circle cx="12" cy="12" r="3" />
+                              </g>
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="22"
+                              height="22"
+                              viewBox="0 0 24 24"
+                            >
+                              <g
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              >
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24m-3.39-9.04A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" />
+                              </g>
+                            </svg>
+                          )}
+                        </span>
+                        <small className="tracking-wider text-red">
+                          {errors.newpassword?.message}
+                        </small>
+                      </div>
+                      <div className="flex flex-col gap-1.5 relative">
+                        <label htmlFor="number">Confirm Password</label>
+                        <input
+                          type={isShow ? "text" : "password"}
+                          autoComplete="off"
+                          className="h-8 pl-2 border border-gray-400 rounded outline-none"
+                          id="confirmnewpassword"
+                          {...register("confirmnewpassword", {
+                            required: true,
+                          })}
+                        />
+                        <span
+                          onClick={() => setShow(!isShow)}
+                          className="absolute cursor-pointer right-5 top-9"
+                        >
+                          {isShow ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="22"
+                              height="22"
+                              viewBox="0 0 24 24"
+                            >
+                              <g
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              >
+                                <path d="M2 12s3-7 10-7s10 7 10 7s-3 7-10 7s-10-7-10-7" />
+                                <circle cx="12" cy="12" r="3" />
+                              </g>
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="22"
+                              height="22"
+                              viewBox="0 0 24 24"
+                            >
+                              <g
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              >
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24m-3.39-9.04A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" />
+                              </g>
+                            </svg>
+                          )}
+                        </span>
+                        <small className="tracking-wider text-red">
+                          {errors?.confirmnewpassword?.message}
+                        </small>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="number">Upload image</label>
+                        <input
+                          id="photo"
+                          type="file"
+                          className="w-full h-8 pt-1 pl-2 bg-white rounded-sm"
+                          {...register("photo", { required: true })}
+                        />
+                      </div>
+                    </div>
+                    {/*  */}
+                    <Save_btn>
+                      {isSubmitting ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          className="w-20"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                            opacity=".25"
+                          />
+                          <path
+                            fill="currentColor"
+                            d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"
+                          >
+                            <animateTransform
+                              attributeName="transform"
+                              dur="0.75s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            />
+                          </path>
+                        </svg>
+                      ) : (
+                        "Save chnage"
+                      )}
+                    </Save_btn>
                   </div>
                 </div>
               </form>

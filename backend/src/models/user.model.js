@@ -29,18 +29,20 @@ const UserSchema = new mongoose.Schema(
       enum: ["admin", "user", "dealer"],
     },
     verified: { type: Boolean, default: false },
-    photo: [{
+    photo: {
       public_id: {
         type: String,
       },
       url: {
         type: String,
-      }
-    }],
-    post: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Vehicle'
-    }]
+      },
+    },
+    post: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vehicle",
+      },
+    ],
   },
   {
     timestamps: true,
