@@ -30,7 +30,7 @@ export const deleteData = async (url) => {
 
 export const updateUser = async (url, data) => {
   try {
-    const resp = await main_uri.patch(url, data);
+    const resp = await photo_url.patch(url, data);
     return resp.data;
   } catch (error) {
     console.log(error);

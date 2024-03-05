@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import sideProfileCar from "../../assets/images/sideprofile.png";
 import { Fade } from "react-awesome-reveal";
 import { Link, NavLink } from "react-router-dom";
@@ -20,11 +20,22 @@ import { CarCard } from "../../components/common/card";
 import useSWR from "swr";
 import { getData } from "../../service/axiosservice";
 import FilterCarTabs from "../../components/filtercar";
+import { setVehicles } from "../../slice/vehicleslice";
+import { useDispatch, useSelector } from "react-redux";
 function Vehicle() {
+  const dispatch = useDispatch();
   const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
     getData(url).then((res) => res)
   );
+   const { vehicles } = useSelector((state) => state.vehicle);
+  console.log("redux vehicle", vehicles);
   console.log(data);
+  useEffect(() => {
+    if (data) {
+      dispatch(setVehicles(data));
+    }
+  }, [data, dispatch]);
+
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }

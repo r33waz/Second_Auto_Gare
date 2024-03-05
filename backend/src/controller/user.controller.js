@@ -146,10 +146,12 @@ export const getAllUser = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    const user = await User.findById({ _id: id }).populate(
-      "post",
-      "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
-    );
+    const user = await User.findById({ _id: id })
+      .select("-password")
+      .populate(
+        "post",
+        "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
+      );
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -158,17 +160,7 @@ export const getUserById = async (req, res) => {
     } else {
       return res.status(200).json({
         status: true,
-        data: {
-          id: user.id,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          role: user.role,
-          islogin: true,
-          verified: user.verified,
-          photo: user.photo,
-          phonenumber: user.phonenumber,
-        },
+        data: user,
       });
     }
   } catch (error) {
@@ -186,56 +178,45 @@ export const userUpdate = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await User.findById({ _id: id });
-
     if (!user) {
       return res.status(400).json({
         status: false,
         message: "Invalid Attempt",
       });
     } else {
-      if (!req.files) {
-        // Updating without image
-        const updatedUser = await User.findByIdAndUpdate(
-          { _id: id },
-          { ...req.body }
-        );
-      }
-
-      // Update the image in cloudinary
-      let results = [];
-      for (let file of req.files) {
-        let result;
+      let postPhoto;
+      if (req.file) {
+        // Update the image in cloudinary if a file was uploaded
         if (
-          file.mimetype === "image/jpeg" ||
-          file.mimetype === "image/png" ||
-          file.mimetype === "image/jpg"
+          req.file.mimetype === "image/jpeg" ||
+          req.file.mimetype === "image/png" ||
+          req.file.mimetype === "image/jpg"
         ) {
-          result = await cloudinary.v2.uploader.upload(file.path);
-        }
-        results.push({ public_id: result.public_id, url: result.secure_url });
-        fs.unlinkSync(file.path);
-      }
-
-      if (user?.photo) {
-        // Deleting old images from cloudinary
-        for (let photo of user.photo) {
-          await cloudinary.v2.uploader.destroy(photo?.public_id);
+          postPhoto = await cloudinary.v2.uploader.upload(req.file.path);
+          fs.unlinkSync(req.file.path); // Remove the uploaded file from the server
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid image type",
+          });
         }
       }
-
-      // Check if password needs to be updated
+      // Deleting old images from cloudinary if they exist
+      if (user.photo && user.photo.public_id) {
+        const public_id = user?.photo?.public_id;
+        await cloudinary.v2.uploader.destroy(public_id);
+      }
+      // Check if password needs to be updated and hash it
       if (req.body.password) {
-        // Hash the password before updating
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         req.body.password = hashedPassword;
       }
-
+      // Update the user information
       const updateUser = await User.findByIdAndUpdate(
         { _id: id },
-        { $set: { ...req.body, photo: results } },
+        { $set: { ...req.body, photo: postPhoto || user.photo } }, // Use the new photo if uploaded, otherwise keep the old one
         { new: true }
       );
-
       if (!updateUser) {
         return res.status(400).json({
           status: false,
@@ -244,9 +225,7 @@ export const userUpdate = async (req, res) => {
       } else {
         return res.status(200).json({
           status: true,
-          message: `${
-            updateUser?.firstname + " " + updateUser?.lastname
-          } updated`,
+          message: `${updateUser.firstname} ${updateUser.lastname} updated`,
         });
       }
     }

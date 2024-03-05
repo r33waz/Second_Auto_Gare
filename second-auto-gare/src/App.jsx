@@ -8,7 +8,6 @@ import Login from "./pages/auth/login";
 import Signup from "./pages/auth/signup";
 import Dashboard from "./pages/Admin/Dashboard";
 import { Provider } from "react-redux";
-import { persist, store } from "../store/store";
 import { PersistGate } from "redux-persist/integration/react";
 import User from "./pages/Admin/user";
 import UpdateUser from "./pages/Admin/updateUser";
@@ -23,6 +22,7 @@ import SingleVehicle from "./pages/User/singleVehicle";
 import PrivateRoutes from "./pages/auth/protectedroute";
 import AdminRoute from "./pages/auth/adminroute";
 import Userprofile from "./pages/User/userprofile";
+import { persist, store } from "../store/store";
 function App() {
   const paths = [
     "/login",

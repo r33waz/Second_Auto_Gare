@@ -29,7 +29,7 @@ router.patch(
   "/updateuser/:id",
   // authentication,
   // authorization("admin"),
-  upload.array("photo", 3),
+  upload.single("photo"),
   userUpdate
 );
 router.delete(
