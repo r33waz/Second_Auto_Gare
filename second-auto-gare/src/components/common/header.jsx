@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { postData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
-import { logout } from "../../slice/loginslice";
+import { logout } from "../../redux/loginslice/loginslice";
 import { Primary_btn } from "./button";
 
 function Header() {
@@ -12,7 +12,7 @@ function Header() {
   const [isOpen, setIsopen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = location.pathname;
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //*Storing the links in form of array of object
@@ -67,8 +67,8 @@ function Header() {
     const resp = await postData("/api/v1/logout");
     if (resp.status) {
       dispatch(logout(resp.data));
+      window.location.reload();
       navigate("/login");
-      toast.success(resp.message);
     }
   };
   return (
@@ -135,7 +135,7 @@ function Header() {
               </svg>
             )}
           </button>
-          {user?.islogin === true ? (
+          {user?.login?.islogin === true ? (
             <>
               <div className="relative">
                 <button onClick={() => setIsopen(!isOpen)}>
@@ -182,10 +182,10 @@ function Header() {
                       </svg>
                       <div className="flex flex-col">
                         <h1>
-                          {user?.firstname}
-                          {user?.lastname}
+                          {user?.login.firstname}
+                          {user?.login.lastname}
                         </h1>
-                        <small>{user?.email}</small>
+                        <small>{user?.login.email}</small>
                       </div>
                     </div>
                     <div className="flex flex-col py-1.5">

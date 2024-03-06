@@ -22,7 +22,7 @@ import SingleVehicle from "./pages/User/singleVehicle";
 import PrivateRoutes from "./pages/auth/protectedroute";
 import AdminRoute from "./pages/auth/adminroute";
 import Userprofile from "./pages/User/userprofile";
-import { persist, store } from "../store/store";
+import { persist, store } from "./redux/store/store";
 function App() {
   const paths = [
     "/login",

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { postData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { login } from "../../slice/loginslice";
+import { login } from "../../redux/loginslice/loginslice";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,8 +38,8 @@ function Login() {
     const resp = await postData("/api/v1/login", data);
     console.log(resp);
     if (resp?.status && resp.data.role === "user") {
-      dispatch(login(resp.data));
       navigate("/home");
+      dispatch(login(resp.data));
       toast.success(resp.message);
     }
 
