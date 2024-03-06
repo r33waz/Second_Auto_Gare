@@ -20,22 +20,22 @@ import { CarCard } from "../../components/common/card";
 import useSWR from "swr";
 import { getData } from "../../service/axiosservice";
 import FilterCarTabs from "../../components/filtercar";
-import { setVehicles } from "../../slice/vehicleslice";
+// import { setVehicles } from "../../redux/slice/vehicleslice";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicle } from "../../redux/vehicleslice/vehicleslice";
 function Vehicle() {
   const dispatch = useDispatch();
-  const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
-    getData(url).then((res) => res)
-  );
-   const { vehicles } = useSelector((state) => state.vehicle);
-  console.log("redux vehicle", vehicles);
+  // const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
+  //   getData(url).then((res) => res)
+  // );
+   const { data,isLoading } = useSelector((state) => state?.vehicle);
+  console.log("redux vehicle", data);
   console.log(data);
-  useEffect(() => {
-    if (data) {
-      dispatch(setVehicles(data));
-    }
-  }, [data, dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchVehicle())
+  },[dispatch])
+  
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -255,7 +255,7 @@ function Vehicle() {
               modules={[Autoplay, Pagination, Navigation]}
               className="py-10 "
             >
-              {data?.data?.slice(0, 10).map((e, index) => (
+              {data?.slice(0, 10).map((e, index) => (
                 <SwiperSlide key={index}>
                   <CarCard>
                     <div className="relative flex flex-col">

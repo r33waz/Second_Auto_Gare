@@ -28,7 +28,7 @@ export const deleteData = async (url) => {
   }
 };
 
-export const updateUser = async (url, data) => {
+export const updateData = async (url, data) => {
   try {
     const resp = await photo_url.patch(url, data);
     return resp.data;

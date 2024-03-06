@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
-import { getData, updateUser } from "../../service/axiosservice";
-import { useEffect, useState } from "react";
+import { getData, updateData } from "../../service/axiosservice";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 function UpdateUser() {
@@ -22,7 +22,7 @@ function UpdateUser() {
     console.log(id);
     console.log(value);
 
-    const resp = await updateUser(`/api/v1/updateuser/${id}`, value);
+    const resp = await updateData(`/api/v1/updateuser/${id}`, value);
     if (resp?.status) {
       // navigate("/admin/user");
       toast.success(resp?.message);
