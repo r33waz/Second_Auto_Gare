@@ -9,10 +9,8 @@ import logo from "../../assets/images/kidmfond.jpg";
 import { toast } from "react-toastify";
 import { UpdateUser, getSingleUser } from "../../redux/userslice/userslice";
 import { useNavigate } from "react-router-dom";
-
 function Userprofile() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { login } = useSelector((state) => state.login);
   const { data, isLoading } = useSelector((state) => state.user);
   console.log("user", data);

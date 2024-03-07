@@ -9,7 +9,7 @@ function SideNav() {
   const Menus = [
     {
       name: "Dashboard",
-      link: "/admin",
+      link: "/admin/dashboard",
       svg: (
         <>
           <svg

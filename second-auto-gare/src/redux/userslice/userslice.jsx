@@ -1,7 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getData, updateData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+
+export const getAllUser = createAsyncThunk("getAllUser", async () => {
+  const resp = await getData("/api/v1/users");
+  console.log("thunk all user", resp);
+  return resp.data;
+});
 
 export const getSingleUser = createAsyncThunk(
   "getSingleUser",
@@ -31,6 +36,19 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // for all user
+    builder.addCase(getAllUser.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(getAllUser.fulfilled, (state, action) => {
+      (state.isLoading = false), (state.data = action.payload);
+    });
+
+    builder.addCase(getAllUser.rejected, (state, action) => {
+      (state.isLoading = false), (state.error = action.error?.message);
+    });
+    // for single user
     builder.addCase(getSingleUser.pending, (state) => {
       state.isLoading = true;
     });
@@ -41,7 +59,6 @@ const userSlice = createSlice({
       (state.isLoading = false), (state.error = action.error.message);
     });
     // For update user
-
     builder.addCase(UpdateUser.pending, (state) => {
       state.isLoading = true;
     });
@@ -49,7 +66,7 @@ const userSlice = createSlice({
     builder.addCase(UpdateUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = action.payload;
-       toast.success("User updated successfully");
+      toast.success("User updated successfully");
     });
 
     builder.addCase(UpdateUser.rejected, (state, action) => {

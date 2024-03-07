@@ -25,12 +25,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchVehicle } from "../../redux/vehicleslice/vehicleslice";
 function Vehicle() {
   const dispatch = useDispatch();
-  // const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
-  //   getData(url).then((res) => res)
-  // );
    const { data,isLoading } = useSelector((state) => state?.vehicle);
-  console.log("redux vehicle", data);
-  console.log(data);
+  // console.log("redux vehicle", data);
+  // console.log(data);
 
   useEffect(() => {
     dispatch(fetchVehicle())
