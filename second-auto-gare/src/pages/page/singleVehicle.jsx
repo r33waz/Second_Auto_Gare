@@ -9,18 +9,24 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination } from "swiper/modules";
 import { CarCard, SmallCard } from "../../components/common/card";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchVehicle,
+  getSingleVehicle,
+} from "../../redux/vehicleslice/vehicleslice";
+import Loading from "../../components/common/loading";
+import { postComment } from "../../redux/commentslice/commentslice";
 
 function SingleVehicle() {
-  const user = useSelector((state) => state.user);
-  console.log("userid:", user);
+  const dispatch = useDispatch();
+  const { login } = useSelector((state) => state.login);
+  console.log("userid:", login);
+  const { data, isLoading } = useSelector((state) => state.vehicle);
   const { vehicle } = useParams();
-  const { data, isLoading } = useSWR(`/api/v1/get_vehicle/${vehicle}`, (url) =>
-    getData(url).then((res) => res)
-  );
-  console.log(vehicle);
-  console.log(data);
+  console.log("vehicle data", data);
+  useEffect(() => {
+    dispatch(getSingleVehicle({ id: vehicle }));
+  }, [dispatch, vehicle]);
 
   const {
     register,
@@ -29,22 +35,22 @@ function SingleVehicle() {
     formState: { errors },
   } = useForm();
 
-  const Onsubmit = async (data) => {
-    const comment = { text: data.comment, author: user.id, post: vehicle };
-    const resp = await postData("/api/v1/comment", comment);
-    console.log(resp);
+  const Onsubmit = (value) => {
+    const comment = { text: value.comment, author: login.id, post: data?._id };
+    dispatch(postComment(comment)).then(() => {
+      dispatch(getSingleVehicle({ id: vehicle }));
+    });
     reset();
-    toast.success(resp.message);
   };
 
-  const { data: category, isLoading: categoryloading } = useSWR(
-    `/api/v1/vehicle/category/?category=${data?.data?.category}`,
-    (url) => getData(url).then((res) => res)
-  );
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loading />
+      </div>
+    );
   }
-  console.log("category:", category);
+
   return (
     <div className="container mx-auto">
       <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
@@ -64,7 +70,7 @@ function SingleVehicle() {
             </svg>
           </Link>
           <span className="text-lg font-light uppercase text-purple">
-            Vehicles / {data?.data.brand} /{data?.data.model}
+            Vehicles / {data?.brand} /{data?.model}
           </span>
         </section>
         {/*  */}
@@ -73,9 +79,9 @@ function SingleVehicle() {
             <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
               <div className="flex flex-col gap-3">
                 <h1 className="font-semibold md:text-2xl">
-                  {data?.data.brand} /{data?.data.model}
+                  {data?.brand} /{data?.model}
                 </h1>
-                <p>{data?.data.meta_description.slice(0, 100)}</p>
+                <p>{data?.meta_description.slice(0, 100)}</p>
               </div>
               <p className="flex gap-2">
                 Share{" "}
@@ -109,7 +115,7 @@ function SingleVehicle() {
                       >
                         <path
                           fill="currentColor"
-                          fill-opacity=".15"
+                          fillOpacity=".15"
                           d="M712 304c0 4.4-3.6 8-8 8h-56c-4.4 0-8-3.6-8-8v-48H384v48c0 4.4-3.6 8-8 8h-56c-4.4 0-8-3.6-8-8v-48H184v136h656V256H712z"
                         />
                         <path
@@ -118,7 +124,7 @@ function SingleVehicle() {
                         />
                       </svg>
                     </span>
-                    {data?.data?.year}
+                    {data?.year}
                   </p>
                 </SmallCard>
                 <SmallCard>
@@ -137,7 +143,7 @@ function SingleVehicle() {
                         />
                       </svg>
                     </span>
-                    {data?.data?.mileage}/km
+                    {data?.mileage}/km
                   </p>
                 </SmallCard>
                 <SmallCard>
@@ -156,7 +162,7 @@ function SingleVehicle() {
                         />
                       </svg>
                     </span>
-                    {data?.data?.transmission}
+                    {data?.transmission}
                   </p>
                 </SmallCard>
                 <SmallCard>
@@ -175,12 +181,12 @@ function SingleVehicle() {
                         />
                       </svg>
                     </span>
-                    {data?.data?.fule_type}
+                    {data?.fule_type}
                   </p>
                 </SmallCard>
               </div>
               <p className="text-2xl font-semibold md:text-3xl">
-                Rs {data?.data?.price.toLocaleString()}
+                Rs {data?.price.toLocaleString()}
               </p>
             </div>
           </div>
@@ -209,7 +215,7 @@ function SingleVehicle() {
               modules={[Autoplay]}
               className="w-full h-96"
             >
-              {data?.data?.imageUrl?.map((e) => {
+              {data?.imageUrl?.map((e) => {
                 return (
                   <SwiperSlide key={e.id}>
                     <img
@@ -244,7 +250,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Body</span>
                   </p>
-                  <p>{data?.data?.category}</p>
+                  <p>{data?.category}</p>
                 </div>
                 {/*  */}
                 <div className="flex justify-between w-full">
@@ -262,7 +268,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Mileage</span>
                   </p>
-                  <p>{data?.data?.mileage}/km</p>
+                  <p>{data?.mileage}/km</p>
                 </div>
 
                 {/*  */}
@@ -281,7 +287,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Fule type</span>
                   </p>
-                  <p>{data?.data?.fule_type}</p>
+                  <p>{data?.fule_type}</p>
                 </div>
                 {/*  */}
                 <div className="flex justify-between w-full">
@@ -299,7 +305,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Transmission</span>
                   </p>
-                  <p>{data?.data?.transmission}</p>
+                  <p>{data?.transmission}</p>
                 </div>
                 <div className="flex justify-between w-full">
                   <p className="flex items-center gap-2">
@@ -316,7 +322,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Color</span>
                   </p>
-                  <p>{data?.data?.color}</p>
+                  <p>{data?.color}</p>
                 </div>
               </div>
               {/*  */}
@@ -336,7 +342,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Year</span>
                   </p>
-                  <p>{data?.data?.year}</p>
+                  <p>{data?.year}</p>
                 </div>
                 {/*  */}
                 <div className="flex justify-between w-full">
@@ -358,7 +364,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Doors</span>
                   </p>
-                  <p>{data?.data?.doors}</p>
+                  <p>{data?.doors}</p>
                 </div>
 
                 {/*  */}
@@ -377,7 +383,7 @@ function SingleVehicle() {
                     </svg>
                     <span>No.people</span>
                   </p>
-                  <p>{data?.data?.number_of_people}</p>
+                  <p>{data?.number_of_people}</p>
                 </div>
                 {/*  */}
                 <div className="flex justify-between w-full">
@@ -395,7 +401,7 @@ function SingleVehicle() {
                     </svg>
                     <span>Engine</span>
                   </p>
-                  <p>{data?.data?.displacement}</p>
+                  <p>{data?.displacement}</p>
                 </div>
                 {/*  */}
                 <div className="flex justify-between w-full">
@@ -413,18 +419,18 @@ function SingleVehicle() {
                     </svg>
                     <span> Drive Type </span>
                   </p>
-                  <p>{data?.data?.drivetype}</p>
+                  <p>{data?.drivetype}</p>
                 </div>
               </div>
               {/*  */}
               <div className="flex flex-col gap-3 p-2 border-2 ">
                 <img
-                  src={data?.data?.user?.photo[0].url}
+                  src={data?.user?.photo.url}
                   alt="user image"
                   className="object-cover w-16 h-16 rounded-full"
                 />
                 <h1 className="text-xl font-medium">
-                  {data?.data?.user?.firstname} {data?.data?.user?.lastname}
+                  {data?.user?.firstname} {data?.user?.lastname}
                 </h1>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -440,7 +446,7 @@ function SingleVehicle() {
                         d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
                       />
                     </svg>
-                    <span>{data?.data?.user?.email}</span>
+                    <span>{data?.user?.email}</span>
                   </div>
                   {/*  */}
                   <div className="flex items-center gap-2">
@@ -456,7 +462,7 @@ function SingleVehicle() {
                         d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
                       />
                     </svg>
-                    <span>{data?.data?.user?.phonenumber}</span>
+                    <span>{data?.user?.phonenumber}</span>
                   </div>
                 </div>
                 <div className="flex flex-col justify-between gap-2">
@@ -464,7 +470,7 @@ function SingleVehicle() {
                     Message Dealer
                   </Link>
                   <a
-                    href={`https://wa.me/${data?.data?.user?.phonenumber}/?text=hi`}
+                    href={`https://wa.me/${data?.user?.phonenumber}/?text=hi`}
                     className="py-3 text-lg text-center text-white rounded-xl bg-green"
                   >
                     Message via whatsapp
@@ -480,7 +486,7 @@ function SingleVehicle() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <div className="flex flex-col gap-3 overflow-y-scroll h-96">
-                {data?.data?.comments.map((e) => {
+                {data?.comments.map((e) => {
                   return (
                     <div
                       key={e.id}
@@ -540,7 +546,7 @@ function SingleVehicle() {
               <div className="flex flex-col gap-2">
                 <h1 className="md:text-xl">Tags:</h1>
                 <h1 className="px-4 py-1.5 font-medium text-white rounded-md md:text-xl bg-purple w-fit">
-                  Vehicles-{data?.data?.category}
+                  Vehicles-{data?.category}
                 </h1>
               </div>
               <Swiper
@@ -569,110 +575,7 @@ function SingleVehicle() {
                 }}
                 modules={[Autoplay]}
                 className="py-4"
-              >
-                {category?.data?.slice(0, 10).map((e, index) => (
-                  <SwiperSlide key={index}>
-                    <CarCard>
-                      <div className="relative flex flex-col">
-                        <img
-                          src={e.imageUrl[0]?.url}
-                          alt={`Image ${index}`}
-                          className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"
-                        />
-                        <div className="flex flex-col py-2 px-2.5 gap-3">
-                          <NavLink
-                            to={`/vehicle/${e._id}`}
-                            className="text-lg font-medium text-white hover:underline hover:underline-offset-4"
-                          >
-                            {e?.model + " - " + e?.year}
-                          </NavLink>
-                          <p className="text-sm text-white">
-                            {e?.description
-                              ? e?.description.slice(0, 40) + "..."
-                              : "..."}
-                          </p>
-                          <hr></hr>
-                          <div className="flex justify-between py-2">
-                            <div className="flex flex-col items-center text-white">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="25"
-                                height="25"
-                                viewBox="0 0 24 24"
-                                className=""
-                              >
-                                <path
-                                  fill="currentColor"
-                                  d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62l-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41c-.39.39-1.03.39-1.42.01A9.969 9.969 0 0 1 2 13A10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07c-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"
-                                />
-                              </svg>
-                              <span className="text-xs">{e?.kilometer}km</span>
-                            </div>
-                            {/*  */}
-                            <div className="flex flex-col items-center text-white">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="25"
-                                height="25"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  fill="currentColor"
-                                  d="m19.616 6.48l.014-.017l-4-3.24l-1.26 1.554l2.067 1.674a2.99 2.99 0 0 0-1.395 3.058c.149.899.766 1.676 1.565 2.112c.897.49 1.685.446 2.384.197L18.976 18a.996.996 0 0 1-1.39.922a.995.995 0 0 1-.318-.217a.996.996 0 0 1-.291-.705L17 16a2.98 2.98 0 0 0-.877-2.119A3 3 0 0 0 14 13h-1V5c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h7c1.103 0 2-.897 2-2v-4h1c.136 0 .267.027.391.078a1.028 1.028 0 0 1 .531.533A.994.994 0 0 1 15 16l-.024 2c0 .406.079.799.236 1.168c.151.359.368.68.641.951a2.97 2.97 0 0 0 2.123.881c.406 0 .798-.078 1.168-.236c.358-.15.68-.367.951-.641A2.983 2.983 0 0 0 20.976 18L21 9a2.997 2.997 0 0 0-1.384-2.52M4 5h7l.001 4H4zm0 14v-8h7.001l.001 8zm14-9a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
-                                />
-                              </svg>
-                              <span className="text-xs">
-                                {capitalizeFirstLetter(e?.fule_type)}
-                              </span>
-                            </div>
-                            {/*  */}
-                            <div className="flex flex-col items-center text-white">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="25"
-                                height="25"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  fill="currentColor"
-                                  d="M4 21q-1.25 0-2.125-.875T1 18q0-.975.563-1.75T3 15.175v-6.35q-.875-.3-1.437-1.075T1 6q0-1.25.875-2.125T4 3q1.25 0 2.125.875T7 6q0 .975-.562 1.75T5 8.825V11h6V8.825q-.875-.3-1.437-1.075T9 6q0-1.25.875-2.125T12 3q1.25 0 2.125.875T15 6q0 .975-.562 1.75T13 8.825V11h5q.425 0 .713-.287T19 10V8.825q-.875-.3-1.437-1.075T17 6q0-1.25.875-2.125T20 3q1.25 0 2.125.875T23 6q0 .975-.562 1.75T21 8.825V10q0 1.25-.875 2.125T18 13h-5v2.175q.875.3 1.438 1.075T15 18q0 1.25-.875 2.125T12 21q-1.25 0-2.125-.875T9 18q0-.975.563-1.75T11 15.175V13H5v2.175q.875.3 1.438 1.075T7 18q0 1.25-.875 2.125T4 21m0-2q.425 0 .713-.288T5 18q0-.425-.288-.712T4 17q-.425 0-.712.288T3 18q0 .425.288.713T4 19M4 7q.425 0 .713-.288T5 6q0-.425-.288-.712T4 5q-.425 0-.712.288T3 6q0 .425.288.713T4 7m8 12q.425 0 .713-.288T13 18q0-.425-.288-.712T12 17q-.425 0-.712.288T11 18q0 .425.288.713T12 19m0-12q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m8 0q.425 0 .713-.288T21 6q0-.425-.288-.712T20 5q-.425 0-.712.288T19 6q0 .425.288.713T20 7m0-1"
-                                />
-                              </svg>
-                              <span className="text-xs">
-                                {capitalizeFirstLetter(e?.transmission)}
-                              </span>
-                            </div>
-                          </div>
-                          <hr></hr>
-                          <div className="flex justify-between py-2 text-white">
-                            <p>
-                              Rs{":"}
-                              <span className="font-semibold ">{e?.price}</span>
-                            </p>
-                            <NavLink to={`/vehicle/${e._id}`}>
-                              View Details →
-                            </NavLink>
-                          </div>
-                        </div>
-                        <button className="absolute top-3 right-3">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="32"
-                            height="32"
-                            viewBox="0 0 24 24"
-                            className="p-1 bg-white rounded-full h-7 w-7"
-                          >
-                            <path
-                              fill="currentColor"
-                              d="M5 21V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v16l-7-3zm2-3.05l5-2.15l5 2.15V5H7zM7 5h10z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </CarCard>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              ></Swiper>
             </div>
           </div>
         </section>
@@ -682,3 +585,103 @@ function SingleVehicle() {
 }
 
 export default SingleVehicle;
+// {
+//   data?.slice(0, 10).map((e, index) => (
+//     <SwiperSlide key={index}>
+//       <CarCard>
+//         <div className="relative flex flex-col">
+//           <img
+//             src={e.imageUrl[0]?.url}
+//             alt={`Image ${index}`}
+//             className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"
+//           />
+//           <div className="flex flex-col py-2 px-2.5 gap-3">
+//             <NavLink
+//               to={`/vehicle/${e._id}`}
+//               className="text-lg font-medium text-white hover:underline hover:underline-offset-4"
+//             >
+//               {e?.model + " - " + e?.year}
+//             </NavLink>
+//             <p className="text-sm text-white">
+//               {e?.description ? e?.description.slice(0, 40) + "..." : "..."}
+//             </p>
+//             <hr></hr>
+//             <div className="flex justify-between py-2">
+//               <div className="flex flex-col items-center text-white">
+//                 <svg
+//                   xmlns="http://www.w3.org/2000/svg"
+//                   width="25"
+//                   height="25"
+//                   viewBox="0 0 24 24"
+//                   className=""
+//                 >
+//                   <path
+//                     fill="currentColor"
+//                     d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62l-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41c-.39.39-1.03.39-1.42.01A9.969 9.969 0 0 1 2 13A10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07c-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"
+//                   />
+//                 </svg>
+//                 <span className="text-xs">{e?.kilometer}km</span>
+//               </div>
+//               {/*  */}
+//               <div className="flex flex-col items-center text-white">
+//                 <svg
+//                   xmlns="http://www.w3.org/2000/svg"
+//                   width="25"
+//                   height="25"
+//                   viewBox="0 0 24 24"
+//                 >
+//                   <path
+//                     fill="currentColor"
+//                     d="m19.616 6.48l.014-.017l-4-3.24l-1.26 1.554l2.067 1.674a2.99 2.99 0 0 0-1.395 3.058c.149.899.766 1.676 1.565 2.112c.897.49 1.685.446 2.384.197L18.976 18a.996.996 0 0 1-1.39.922a.995.995 0 0 1-.318-.217a.996.996 0 0 1-.291-.705L17 16a2.98 2.98 0 0 0-.877-2.119A3 3 0 0 0 14 13h-1V5c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h7c1.103 0 2-.897 2-2v-4h1c.136 0 .267.027.391.078a1.028 1.028 0 0 1 .531.533A.994.994 0 0 1 15 16l-.024 2c0 .406.079.799.236 1.168c.151.359.368.68.641.951a2.97 2.97 0 0 0 2.123.881c.406 0 .798-.078 1.168-.236c.358-.15.68-.367.951-.641A2.983 2.983 0 0 0 20.976 18L21 9a2.997 2.997 0 0 0-1.384-2.52M4 5h7l.001 4H4zm0 14v-8h7.001l.001 8zm14-9a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
+//                   />
+//                 </svg>
+//                 <span className="text-xs">
+//                   {capitalizeFirstLetter(e?.fule_type)}
+//                 </span>
+//               </div>
+//               {/*  */}
+//               <div className="flex flex-col items-center text-white">
+//                 <svg
+//                   xmlns="http://www.w3.org/2000/svg"
+//                   width="25"
+//                   height="25"
+//                   viewBox="0 0 24 24"
+//                 >
+//                   <path
+//                     fill="currentColor"
+//                     d="M4 21q-1.25 0-2.125-.875T1 18q0-.975.563-1.75T3 15.175v-6.35q-.875-.3-1.437-1.075T1 6q0-1.25.875-2.125T4 3q1.25 0 2.125.875T7 6q0 .975-.562 1.75T5 8.825V11h6V8.825q-.875-.3-1.437-1.075T9 6q0-1.25.875-2.125T12 3q1.25 0 2.125.875T15 6q0 .975-.562 1.75T13 8.825V11h5q.425 0 .713-.287T19 10V8.825q-.875-.3-1.437-1.075T17 6q0-1.25.875-2.125T20 3q1.25 0 2.125.875T23 6q0 .975-.562 1.75T21 8.825V10q0 1.25-.875 2.125T18 13h-5v2.175q.875.3 1.438 1.075T15 18q0 1.25-.875 2.125T12 21q-1.25 0-2.125-.875T9 18q0-.975.563-1.75T11 15.175V13H5v2.175q.875.3 1.438 1.075T7 18q0 1.25-.875 2.125T4 21m0-2q.425 0 .713-.288T5 18q0-.425-.288-.712T4 17q-.425 0-.712.288T3 18q0 .425.288.713T4 19M4 7q.425 0 .713-.288T5 6q0-.425-.288-.712T4 5q-.425 0-.712.288T3 6q0 .425.288.713T4 7m8 12q.425 0 .713-.288T13 18q0-.425-.288-.712T12 17q-.425 0-.712.288T11 18q0 .425.288.713T12 19m0-12q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m8 0q.425 0 .713-.288T21 6q0-.425-.288-.712T20 5q-.425 0-.712.288T19 6q0 .425.288.713T20 7m0-1"
+//                   />
+//                 </svg>
+//                 <span className="text-xs">
+//                   {capitalizeFirstLetter(e?.transmission)}
+//                 </span>
+//               </div>
+//             </div>
+//             <hr></hr>
+//             <div className="flex justify-between py-2 text-white">
+//               <p>
+//                 Rs{":"}
+//                 <span className="font-semibold ">{e?.price}</span>
+//               </p>
+//               <NavLink to={`/vehicle/${e._id}`}>View Details →</NavLink>
+//             </div>
+//           </div>
+//           <button className="absolute top-3 right-3">
+//             <svg
+//               xmlns="http://www.w3.org/2000/svg"
+//               width="32"
+//               height="32"
+//               viewBox="0 0 24 24"
+//               className="p-1 bg-white rounded-full h-7 w-7"
+//             >
+//               <path
+//                 fill="currentColor"
+//                 d="M5 21V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v16l-7-3zm2-3.05l5-2.15l5 2.15V5H7zM7 5h10z"
+//               />
+//             </svg>
+//           </button>
+//         </div>
+//       </CarCard>
+//     </SwiperSlide>
+//   ));
+// }

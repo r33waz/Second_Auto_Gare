@@ -9,7 +9,6 @@ import { CarCard } from "../../components/common/card";
 
 function Category() {
   const category = useParams();
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
   console.log(selectedValue);
   const [vehicle, setVehicle] = useState([]);

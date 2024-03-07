@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn_ui/ui/tabs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -7,12 +7,17 @@ import "swiper/css";
 import { HeroTitle } from "./common/title";
 import { CarCard } from "./common/card";
 import { NavLink } from "react-router-dom";
-import useSWR from "swr";
-import { getData } from "../service/axiosservice";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicle } from "../redux/vehicleslice/vehicleslice";
 function FilterCarTabs() {
-  const { data, isLoading } = useSWR("api/v1/get_allvehicles", (url) =>
-    getData(url).then((res) => res)
-  );
+  const dispatch = useDispatch()
+   const { data, isLoading } = useSelector((state) => state?.vehicle);
+   console.log("redux vehicle", data);
+
+   useEffect(() => {
+     dispatch(fetchVehicle());
+   }, [dispatch]);
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -52,7 +57,7 @@ function FilterCarTabs() {
             </TabsList>
             <TabsContent value="sedan">
               <div>
-                {data?.data?.slice(0, 10).filter((vehicle) => {
+                {data?.slice(0, 10).filter((vehicle) => {
                   return vehicle.category === "sedan";
                 }).length > 0 ? (
                   <Swiper
@@ -82,7 +87,7 @@ function FilterCarTabs() {
                     modules={[Autoplay, Pagination, Navigation]}
                     className="py-10 "
                   >
-                    {data?.data
+                    {data
                       ?.slice(0, 10)
                       .filter((vehicle) => {
                         return vehicle.category === "sedan";
@@ -203,7 +208,7 @@ function FilterCarTabs() {
             </TabsContent>
             <TabsContent value="SUV">
               <div>
-                {data?.data?.slice(0, 10).filter((vehicle) => {
+                {data?.slice(0, 10).filter((vehicle) => {
                   return vehicle.category === "suv";
                 }).length > 0 ? (
                   <Swiper
@@ -233,7 +238,7 @@ function FilterCarTabs() {
                     modules={[Autoplay, Pagination, Navigation]}
                     className="py-10 "
                   >
-                    {data?.data
+                    {data
                       ?.slice(0, 10)
                       .filter((vehicle) => {
                         return vehicle.category === "suv";
@@ -354,7 +359,7 @@ function FilterCarTabs() {
             </TabsContent>
             <TabsContent value="luxury">
               <div>
-                {data?.data?.slice(0, 10).filter((vehicle) => {
+                {data?.slice(0, 10).filter((vehicle) => {
                   return vehicle.category === "luxury";
                 }).length > 0 ? (
                   <Swiper
@@ -505,7 +510,7 @@ function FilterCarTabs() {
             </TabsContent>
             <TabsContent value="hatchback">
               <div>
-                {data?.data?.slice(0, 10).filter((vehicle) => {
+                {data?.slice(0, 10).filter((vehicle) => {
                   return vehicle.category === "hatchback";
                 }).length > 0 ? (
                   <Swiper
