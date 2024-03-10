@@ -15,15 +15,15 @@ import Vehicle from "./pages/Admin/vehicle";
 import Contact from "./pages/page/contact";
 import Noroute from "./pages/auth/noroute";
 import About from "./pages/page/about";
-import Vehicles from "./pages/User/vehicles";
+import Vehicles from "./pages/page/vehicles";
 import tyre from "./assets/images/tyre.png";
 import Category from "./pages/page/categoty";
 import SingleVehicle from "./pages/page/singleVehicle";
 import PrivateRoutes from "./pages/auth/protectedroute";
 import AdminRoute from "./pages/auth/adminroute";
-import Userprofile from "./pages/User/userprofile";
+import Userprofile from "./pages/User/userprofile/userprofile";
 import { persist, store } from "./redux/store/store";
-import UserPost from "./pages/User/usepost";
+import UserPost from "./pages/User/userpost/usepost";
 function App() {
   const paths = [
     "/login",
@@ -78,8 +78,8 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/category" element={<Vehicles />} />
-              <Route path="/car/:vehicle" element={<Category />} />
-              <Route path="/vehicle/:vehicle" element={<SingleVehicle />} />
+              <Route path="/car/:type" element={<Category />} />
+              <Route path="/vehicle/:id" element={<SingleVehicle />} />
               <Route path="/profile" element={<Userprofile />} />
               <Route path="/userpost" element={<UserPost />} />
               {/* </Route> */}

@@ -211,7 +211,7 @@ export const getAllVehicle = async (req, res) => {
 export const getVehicleById = async (req, res) => {
   try {
     const id = req.params.id;
-    const singleVehicle = await Vehicle.findById({ _id: id })
+    const singleVehicle = await Vehicle.findById(id)
       .populate({
         path: "comments",
         model: "Comment",

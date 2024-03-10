@@ -2,17 +2,17 @@ import React from "react";
 import { useState, useEffect } from "react";
 import SideNav from "../../components/common/SlideNav";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUser } from "../../redux/userslice/userslice";
 import Loading from "../../components/common/loading";
 import { Card } from "../../components/common/card";
 import { Link } from "react-router-dom";
+import { GetAllUser } from "../../redux/userslice/userthunk";
 
 function User() {
   const dispatch = useDispatch();
   const { data: user, isLoading } = useSelector((state) => state.user);
   console.log("frontend data", user);
   useEffect(() => {
-    dispatch(getAllUser());
+    dispatch(GetAllUser());
   }, [dispatch]);
 
   return (

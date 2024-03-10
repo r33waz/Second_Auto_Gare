@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-import { getSingleUser } from "../../redux/userslice/userslice";
-import { CarCard } from "../../components/common/card";
-import Loading from "../../components/common/loading";
-import Nopostimg from "../../assets/images/nopost.png";
+import { CarCard } from "../../../components/common/card";
+import Loading from "../../../components/common/loading";
+import Nopostimg from "../../../assets/images/nopost.png";
+import { GetSingleUser } from "../../../redux/userslice/userthunk";
 
 function UserPost() {
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ function UserPost() {
   }
 
   useEffect(() => {
-    dispatch(getSingleUser({ id: login.id }));
+    dispatch(GetSingleUser({ id: login.id }));
   }, [dispatch, login.id]);
 
   //loading if the data is not being call and loaded
