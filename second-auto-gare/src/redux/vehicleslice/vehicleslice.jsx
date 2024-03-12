@@ -1,24 +1,19 @@
-import { getData } from "../../service/axiosservice";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-export const fetchVehicle = createAsyncThunk("fetchVehicle", async () => {
-  const resp = await getData("/api/v1/get_allvehicles");
-  return resp.data;
-});
-
-export const getSingleVehicle = createAsyncThunk(
-  "getSingleVehicle",
-  async ({ id }) => {
-    const resp = await getData(`/api/v1/get_vehicle/${id}`);
-    console.log("single vehicle", resp);
-    return resp?.data;
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  DeleteVehicle,
+  FetchVehicle,
+  GetSingleVehicle,
+  UpdateVehicle,
+} from "./vehiclethunk";
+import { toast } from "react-toastify";
 
 const initialState = {
   isLoading: false,
-  data: null,
+  data: [],
   error: null,
+  singleVehicle: null,
+  singleVehicleErrror: null,
+  singleVehicleLoading: false,
 };
 
 const vehicleSlice = createSlice({
@@ -26,29 +21,53 @@ const vehicleSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchVehicle.pending, (state) => {
+    builder.addCase(FetchVehicle.pending, (state) => {
       state.isLoading = true;
     });
 
-    builder.addCase(fetchVehicle.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
+    builder.addCase(FetchVehicle.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
     });
 
-    builder.addCase(fetchVehicle.rejected, (state, action) => {
+    builder.addCase(FetchVehicle.rejected, (state, action) => {
+      state.isLoading = false;
       state.error = action.error.message;
     });
 
     // for single vehicle
-    builder.addCase(getSingleVehicle.pending, (state) => {
+    builder.addCase(GetSingleVehicle.pending, (state) => {
+      state.singleVehicleLoading = true;
+    });
+
+    builder.addCase(GetSingleVehicle.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.singleVehicle = action.payload;
+    });
+
+    builder.addCase(GetSingleVehicle.rejected, (state, action) => {
+      state.singleVehicleErrror = action.error.message;
+    });
+    // to update the vehicle
+    builder.addCase(UpdateVehicle.pending, (state) => {
       state.isLoading = true;
     });
-
-    builder.addCase(getSingleVehicle.fulfilled, (state, action) => {
+    builder.addCase(UpdateVehicle.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
     });
-
-    builder.addCase(getSingleVehicle.rejected, (state, action) => {
-      state.error = action.error.message;
+    builder.addCase(UpdateVehicle.rejected, (state, action) => {
+      (state.isLoading = false), (state.error = action.error.message);
+    });
+    // delete the delete the vehicle
+    builder.addCase(DeleteVehicle.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(DeleteVehicle.fulfilled, (state, action) => {
+      (state.isLoading = false), (state.data = action.payload);
+      toast.success("Deleted Successfully");
+    });
+    builder.addCase(DeleteVehicle.rejected, (state, action) => {
+      (state.isLoading = false), (state.error = action.error.message);
     });
   },
 });

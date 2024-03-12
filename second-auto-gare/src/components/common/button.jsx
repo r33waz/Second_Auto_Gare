@@ -21,3 +21,19 @@ export const Save_btn = ({ children }) => {
     </div>
   );
 };
+
+export const Delete_btn = ({ className, children, onClick }) => {
+  return (
+    <button className={` ${className}`} onClick={onClick}>
+      {children}
+    </button>
+  );
+};
+
+export const Update_btn = ({ className, children, onClick }) => {
+  return (
+    <button className={` ${className}`} onClick={onClick}>
+      {children}
+    </button>
+  );
+};

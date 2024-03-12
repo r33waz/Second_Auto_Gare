@@ -1,22 +1,23 @@
-import { Save_btn } from "../../components/common/button";
+import { Save_btn } from "../../../components/common/button";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Loading from "../../components/common/loading";
-import logo from "../../assets/images/kidmfond.jpg";
-import { toast } from "react-toastify";
-import { UpdateUser, getSingleUser } from "../../redux/userslice/userslice";
-import { useNavigate } from "react-router-dom";
+import Loading from "../../../components/common/loading";
+import logo from "../../../assets/images/kidmfond.jpg";
+
+import { GetSingleUser, Updateuser } from "../../../redux/userslice/userthunk";
 function Userprofile() {
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
-  const { data, isLoading } = useSelector((state) => state.user);
+  const { singleUser: data, singleUserLoading:isLoading } = useSelector(
+    (state) => state.user
+  );
   console.log("user", data);
 
   useEffect(() => {
-    dispatch(getSingleUser({ id: login.id }));
+    dispatch(GetSingleUser({ id: login.id }));
   }, [dispatch, login.id]);
 
   const [isShow, setShow] = useState(false);
@@ -47,7 +48,7 @@ function Userprofile() {
     formData.append("lastname", data?.lastname);
     formData.append("email", data?.email);
     formData.append("phonenumber", data?.phonenumber);
-    if (data?.photo) {
+    if (data?.photo[0]) {
       const photo = data?.photo[0];
       formData.append("photo", photo);
     }
@@ -58,8 +59,8 @@ function Userprofile() {
       formData.append("password", password);
     }
     console.log("form Data", formData);
-    dispatch(UpdateUser({ id: login.id }, formData)).then(() => {
-      dispatch(getSingleUser({ id: login.id }));
+    dispatch(Updateuser({ id: login.id, data: formData })).then(() => {
+      dispatch(GetSingleUser({ id: login.id }));
     });
   };
 
@@ -389,7 +390,7 @@ function Userprofile() {
                               </path>
                             </svg>
                           ) : (
-                            "Save chnage"
+                            "Save change"
                           )}
                         </Save_btn>
                       </div>

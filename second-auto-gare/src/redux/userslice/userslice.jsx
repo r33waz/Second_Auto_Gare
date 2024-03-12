@@ -1,34 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getData, updateData } from "../../service/axiosservice";
 import { toast } from "react-toastify";
-
-export const getAllUser = createAsyncThunk("getAllUser", async () => {
-  const resp = await getData("/api/v1/users");
-  console.log("thunk all user", resp);
-  return resp.data;
-});
-
-export const getSingleUser = createAsyncThunk(
-  "getSingleUser",
-  async ({ id }) => {
-    const resp = await getData(`/api/v1/users/${id}`);
-    console.log("thunk single user", resp);
-    return resp.data;
-  }
-);
-
-export const UpdateUser = createAsyncThunk(
-  "Updateuser",
-  async ({ id, data }) => {
-    const resp = await updateData(`/api/v1/updateuser/${id}`, data);
-    return resp.data;
-  }
-);
+import { DeleteUser, GetAllUser, GetSingleUser, Updateuser } from "./userthunk";
 
 const initialState = {
-  data: null,
+  data: [],
   isLoading: false,
   error: null,
+  singleUser: null,
+  singleUserError: null,
+  singleUserLoading: false,
 };
 
 const userSlice = createSlice({
@@ -37,42 +17,58 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // for all user
-    builder.addCase(getAllUser.pending, (state) => {
+    builder.addCase(GetAllUser.pending, (state) => {
       state.isLoading = true;
     });
 
-    builder.addCase(getAllUser.fulfilled, (state, action) => {
+    builder.addCase(GetAllUser.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
     });
 
-    builder.addCase(getAllUser.rejected, (state, action) => {
+    builder.addCase(GetAllUser.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error?.message);
     });
     // for single user
-    builder.addCase(getSingleUser.pending, (state) => {
-      state.isLoading = true;
+    builder.addCase(GetSingleUser.pending, (state) => {
+      state.singleUserLoading = true;
     });
-    builder.addCase(getSingleUser.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
+    builder.addCase(GetSingleUser.fulfilled, (state, action) => {
+      (state.singleUserLoading = false), (state.singleUser = action.payload);
     });
-    builder.addCase(getSingleUser.rejected, (state, action) => {
-      (state.isLoading = false), (state.error = action.error.message);
+    builder.addCase(GetSingleUser.rejected, (state, action) => {
+      (state.singleUserLoading = false),
+        (state.singleUserError = action.error.message);
     });
     // For update user
-    builder.addCase(UpdateUser.pending, (state) => {
+    builder.addCase(Updateuser.pending, (state) => {
       state.isLoading = true;
     });
 
-    builder.addCase(UpdateUser.fulfilled, (state, action) => {
+    builder.addCase(Updateuser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = action.payload;
       toast.success("User updated successfully");
     });
 
-    builder.addCase(UpdateUser.rejected, (state, action) => {
+    builder.addCase(Updateuser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
-      toast.error("Error updating user");
+    });
+
+    // to delete user
+    builder.addCase(DeleteUser.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(DeleteUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+      toast.success("User deleted successfully");
+    });
+
+    builder.addCase(DeleteUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
     });
   },
 });

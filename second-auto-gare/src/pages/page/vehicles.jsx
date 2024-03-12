@@ -7,18 +7,17 @@ import useSWR from "swr";
 import ReactPaginate from "react-paginate";
 import { CarCard } from "../../components/common/card";
 
-function Category() {
+function Vehicle() {
   const category = useParams();
-  const [selectedValue, setSelectedValue] = useState(null);
-  console.log(selectedValue);
+  console.log(category);
+
   const [vehicle, setVehicle] = useState([]);
   const [itemsPerPage] = useState(12);
   const inputRef = useRef();
+  console.log("vehicle", vehicle);
 
   const { data, isLoading } = useSWR(
-    `api/v1/vehicle/category/?category=${
-      category?.vehicle
-    }&max=${""}&min=${""}`,
+    `api/v1/vehicle/category/?category=${category?.type}&max=${""}&min=${""}`,
     (url) => getData(url).then((res) => res)
   );
   // console.log(vehicle);
@@ -36,8 +35,6 @@ function Category() {
     }
   };
 
- 
-
   useEffect(() => {
     setVehicle(data?.data);
   }, [data]);
@@ -52,7 +49,7 @@ function Category() {
   const currentItems = vehicle
     ?.filter((vehicle) => vehicle.status === "sell")
     .slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(vehicle?.length / itemsPerPage);
+  const pageCount = Math.ceil(currentItems?.length / itemsPerPage);
   console.log(currentItems);
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
@@ -68,75 +65,11 @@ function Category() {
   }
 
   if (isLoading) {
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
     <div className="container mx-auto">
-      {/* <div className="relative">
-        <button
-          className="w-full px-4 py-2 text-left bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-          aria-haspopup="listbox"
-          aria-expanded="true"
-          aria-labelledby="listbox-label"
-          onClick={toggleDropdown}
-        >
-          <svg
-            className="w-5 h-5 ml-2 -mr-1 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M6 10l4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-
-        {isOpen && (
-          <ul className="absolute z-10 w-full mt-1 overflow-auto bg-white rounded-md shadow-lg max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            <li
-              className="relative py-2 pl-3 text-gray-900 cursor-default select-none pr-9"
-              aria-disabled="true"
-              tabIndex="-1"
-            >
-              -- Select an option --
-            </li>
-
-            <li
-              value="Hello"
-              className="cursor-pointer"
-              onClick={(e) => setSelectedValue(e.target.value)}
-            >
-              Category 1
-            </li>
-
-            <li
-              value="Car"
-              className="cursor-pointer"
-              onClick={(e) => setSelectedValue(e.target.value)}
-            >
-              Category 2
-            </li>
-
-            <li
-              value="Jeep"
-              className="cursor-pointer"
-              onClick={(e) => setSelectedValue(e.target.value)}
-            >
-              Category 3
-            </li>
-          </ul>
-        )}
-      </div> */}
       <div className="px-2 md:mt-16 lg:px-12 md:px-12">
         <div className="flex items-center justify-start gap-3">
           <Link to="/home">
@@ -247,7 +180,8 @@ function Category() {
               <span className="uppercase text-purple">{category?.vehicle}</span>
             </HeroSubtitle>
             <p className="text-sm">
-              Showing all {vehicle ? vehicle.length : 0} results{" "}
+              Showing all {currentItems?.length > 0 ? currentItems?.length : 0}{" "}
+              results{" "}
             </p>
           </div>
         </section>
@@ -296,7 +230,7 @@ function Category() {
                                 d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62l-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41c-.39.39-1.03.39-1.42.01A9.969 9.969 0 0 1 2 13A10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07c-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"
                               />
                             </svg>
-                            <span className="text-xs">{e?.kilometer}km</span>
+                            <span className="text-xs">{e?.mileage}km</span>
                           </div>
                           {/*  */}
                           <div className="flex flex-col items-center text-white">
@@ -339,7 +273,9 @@ function Category() {
                             Rs{":"}
                             <span className="font-semibold ">{e?.price}</span>
                           </p>
-                          <NavLink to={`/vehicle/${e._id}`}>View Details →</NavLink>
+                          <NavLink to={`/vehicle/${e._id}`}>
+                            View Details →
+                          </NavLink>
                         </div>
                       </div>
                       <button className="absolute top-3 right-3">
@@ -411,4 +347,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default Vehicle;
