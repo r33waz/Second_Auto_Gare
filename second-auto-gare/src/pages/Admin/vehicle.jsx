@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "../../components/common/card";
-import { getData } from "../../service/axiosservice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "../../shadcn_ui/ui/button";
 import {
   Tabs,
@@ -17,49 +16,20 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 import SideNav from "../../components/common/SlideNav";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchVehicle } from "../../redux/vehicleslice/vehiclethunk";
+import Loading from "../../components/common/loading";
 
 function Vehicle() {
-  const [vehicle, setVehicle] = useState();
-
-  const getVehicle = async () => {
-    try {
-      const resp = await getData("/api/v1/get_allvehicles");
-      setVehicle(resp);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-  console.log(vehicle);
-
-  const handelSearch = async (e) => {
-    const resp = await getData(`/api/v1/vehicle/?brand=${e}`);
-    setVehicle(resp);
-  };
-
-  const vehicleSearchColor = async (e) => {
-    const resp = await getData(`/api/v1/vehicle/color/?color=${e}`);
-    setVehicle(resp);
-  };
-
-  const vehicleSearchTransmission = async (e) => {
-    const resp = await getData(
-      `/api/v1/vehicle/transmission/?transmission=${e}`
-    );
-    setVehicle(resp);
-  };
-
-  const vehicleSearchFule = async (e) => {
-    const resp = await getData(`/api/v1/vehicle/fule_type/?fule_type=${e}`);
-    setVehicle(resp);
-  };
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
+  const dispatch = useDispatch();
+  const { data: vehicle, isLoadng } = useSelector((state) => state.vehicle);
   useEffect(() => {
-    getVehicle();
-  }, []);
+    dispatch(FetchVehicle());
+  }, [dispatch]);
+
+  if (isLoadng) {
+    return <Loading />;
+  }
   return (
     <>
       <div className="flex w-full">
@@ -109,8 +79,8 @@ function Vehicle() {
                     </svg>
                   </div>
                   <h1 className="text-5xl text-purple">
-                    {vehicle?.data?.filter((e) => e.status === "sell").length
-                      ? vehicle?.data?.filter((e) => e.status === "sell").length
+                    {vehicle?.filter((e) => e.status === "sell").length
+                      ? vehicle?.filter((e) => e.status === "sell").length
                       : "0"}
                   </h1>
                 </div>
@@ -133,8 +103,8 @@ function Vehicle() {
                     </svg>
                   </div>
                   <h1 className="text-5xl text-purple">
-                    {vehicle?.data?.filter((e) => e.status === "rent").length
-                      ? vehicle?.data?.filter((e) => e.status === "rent").length
+                    {vehicle?.filter((e) => e.status === "rent").length
+                      ? vehicle?.filter((e) => e.status === "rent").length
                       : "0"}
                   </h1>
                 </div>
@@ -143,7 +113,7 @@ function Vehicle() {
           </div>
 
           <div className="w-full px-2">
-            <div className="flex md:flex-nowrap flex-wrap  items-center justify-between  gap-10">
+            <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
               <div className="flex flex-col w-full gap-2">
                 <label className="text-lg font-light">Filter by brand</label>
                 <select
@@ -246,8 +216,8 @@ function Vehicle() {
                 <>
                   <TabsContent value="sell">
                     <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
-                      {vehicle?.data
-                        .filter((e) => e.status === "sell")
+                      {vehicle
+                        ?.filter((e) => e.status === "sell")
                         .map((i) => {
                           return (
                             <div
@@ -264,7 +234,7 @@ function Vehicle() {
                                   clickable: true,
                                 }}
                                 modules={[Pagination, Navigation]}
-                                className="md:w-96 w-48 h-40 md:h-96"
+                                className="w-48 h-40 md:w-96 md:h-96"
                               >
                                 {i?.imageUrl?.map((e, idx) => {
                                   return (
@@ -311,9 +281,7 @@ function Vehicle() {
                                         className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                         id="color"
                                         type="text"
-                                        defaultValue={capitalizeFirstLetter(
-                                          i?.color
-                                        )}
+                                        defaultValue={i?.color}
                                       />
                                     </div>
                                   </div>
@@ -480,8 +448,8 @@ function Vehicle() {
                   <TabsContent value="rent">
                     {" "}
                     <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
-                      {vehicle?.data
-                        .filter((e) => e.status === "rent")
+                      {vehicle
+                        ?.filter((e) => e.status === "rent")
                         .map((i) => {
                           return (
                             <div
@@ -548,9 +516,7 @@ function Vehicle() {
                                         className="w-full h-8 p-2 border border-gray-300 rounded-md"
                                         id="color"
                                         type="text"
-                                        defaultValue={capitalizeFirstLetter(
-                                          i?.color
-                                        )}
+                                        defaultValue={i?.color}
                                       />
                                     </div>
                                   </div>

@@ -16,11 +16,13 @@ function SingleVehicle() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
-  const { data, isLoading } = useSelector((state) => state.vehicle);
-  console.log("single vehicle", data);
+  const { singleVehicle, singleVehicleLoading } = useSelector(
+    (state) => state.vehicle
+  );
+  // console.log("single vehicle", SingleVehicle);
   useEffect(() => {
     if (id) {
-      console.log(id);
+      console.log("Dispatching GetSingleVehicle with id:", id);
       dispatch(GetSingleVehicle(id));
     }
   }, [dispatch, id]);
@@ -36,24 +38,24 @@ function SingleVehicle() {
     const comment = {
       text: value.comment,
       author: login?.id,
-      post: data?._id,
+      post: singleVehicle?._id,
     };
     dispatch(postComment(comment)).then(() => {
       dispatch(GetSingleVehicle(id));
     });
     reset();
   };
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loading />
-      </div>
-    );
-  }
+  // if (singleVehicleLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <Loading />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
-      {data && (
+      {singleVehicle && (
         <div className="container mx-auto">
           <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
             <section className="flex items-center justify-start gap-3">
@@ -72,7 +74,7 @@ function SingleVehicle() {
                 </svg>
               </Link>
               <span className="text-lg font-light uppercase text-purple">
-                Vehicles / {data?.brand} /{data?.model}
+                Vehicles / {singleVehicle?.brand} /{singleVehicle?.model}
               </span>
             </section>
             {/*  */}
@@ -81,9 +83,9 @@ function SingleVehicle() {
                 <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
                   <div className="flex flex-col gap-3">
                     <h1 className="font-semibold md:text-2xl">
-                      {data?.brand} /{data?.model}
+                      {singleVehicle?.brand} /{singleVehicle?.model}
                     </h1>
-                    <p>{data?.meta_description.slice(0, 100)}</p>
+                    <p>{singleVehicle?.meta_description.slice(0, 100)}</p>
                   </div>
                   <p className="flex gap-2">
                     Share{" "}
@@ -126,7 +128,7 @@ function SingleVehicle() {
                             />
                           </svg>
                         </span>
-                        {data?.year}
+                        {singleVehicle?.year}
                       </p>
                     </SmallCard>
                     <SmallCard>
@@ -145,7 +147,7 @@ function SingleVehicle() {
                             />
                           </svg>
                         </span>
-                        {data?.mileage}/km
+                        {singleVehicle?.mileage}/km
                       </p>
                     </SmallCard>
                     <SmallCard>
@@ -164,7 +166,7 @@ function SingleVehicle() {
                             />
                           </svg>
                         </span>
-                        {data?.transmission}
+                        {singleVehicle?.transmission}
                       </p>
                     </SmallCard>
                     <SmallCard>
@@ -183,12 +185,12 @@ function SingleVehicle() {
                             />
                           </svg>
                         </span>
-                        {data?.fule_type}
+                        {singleVehicle?.fule_type}
                       </p>
                     </SmallCard>
                   </div>
                   <p className="text-2xl font-semibold md:text-3xl">
-                    Rs {data?.price.toLocaleString()}
+                    Rs {singleVehicle?.price.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -217,7 +219,7 @@ function SingleVehicle() {
                   modules={[Autoplay]}
                   className="w-full h-96"
                 >
-                  {data?.imageUrl?.map((e) => {
+                  {singleVehicle?.imageUrl?.map((e) => {
                     return (
                       <SwiperSlide key={e.id}>
                         <img
@@ -252,7 +254,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Body</span>
                       </p>
-                      <p>{data?.category}</p>
+                      <p>{singleVehicle?.category}</p>
                     </div>
                     {/*  */}
                     <div className="flex justify-between w-full">
@@ -270,7 +272,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Mileage</span>
                       </p>
-                      <p>{data?.mileage}/km</p>
+                      <p>{singleVehicle?.mileage}/km</p>
                     </div>
 
                     {/*  */}
@@ -289,7 +291,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Fule type</span>
                       </p>
-                      <p>{data?.fule_type}</p>
+                      <p>{singleVehicle?.fule_type}</p>
                     </div>
                     {/*  */}
                     <div className="flex justify-between w-full">
@@ -307,7 +309,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Transmission</span>
                       </p>
-                      <p>{data?.transmission}</p>
+                      <p>{singleVehicle?.transmission}</p>
                     </div>
                     <div className="flex justify-between w-full">
                       <p className="flex items-center gap-2">
@@ -324,7 +326,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Color</span>
                       </p>
-                      <p>{data?.color}</p>
+                      <p>{singleVehicle?.color}</p>
                     </div>
                   </div>
                   {/*  */}
@@ -344,7 +346,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Year</span>
                       </p>
-                      <p>{data?.year}</p>
+                      <p>{singleVehicle?.year}</p>
                     </div>
                     {/*  */}
                     <div className="flex justify-between w-full">
@@ -366,7 +368,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Doors</span>
                       </p>
-                      <p>{data?.doors}</p>
+                      <p>{singleVehicle?.doors}</p>
                     </div>
 
                     {/*  */}
@@ -385,7 +387,7 @@ function SingleVehicle() {
                         </svg>
                         <span>No.people</span>
                       </p>
-                      <p>{data?.number_of_people}</p>
+                      <p>{singleVehicle?.number_of_people}</p>
                     </div>
                     {/*  */}
                     <div className="flex justify-between w-full">
@@ -403,7 +405,7 @@ function SingleVehicle() {
                         </svg>
                         <span>Engine</span>
                       </p>
-                      <p>{data?.displacement}</p>
+                      <p>{singleVehicle?.displacement}</p>
                     </div>
                     {/*  */}
                     <div className="flex justify-between w-full">
@@ -421,18 +423,19 @@ function SingleVehicle() {
                         </svg>
                         <span> Drive Type </span>
                       </p>
-                      <p>{data?.drivetype}</p>
+                      <p>{singleVehicle?.drivetype}</p>
                     </div>
                   </div>
                   {/*  */}
                   <div className="flex flex-col gap-3 p-2 border-2 ">
                     <img
-                      src={data?.user?.photo.url}
+                      src={singleVehicle?.user?.photo.url}
                       alt="user image"
                       className="object-cover w-16 h-16 rounded-full"
                     />
                     <h1 className="text-xl font-medium">
-                      {data?.user?.firstname} {data?.user?.lastname}
+                      {singleVehicle?.user?.firstname}{" "}
+                      {singleVehicle?.user?.lastname}
                     </h1>
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
@@ -448,7 +451,7 @@ function SingleVehicle() {
                             d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
                           />
                         </svg>
-                        <span>{data?.user?.email}</span>
+                        <span>{singleVehicle?.user?.email}</span>
                       </div>
                       {/*  */}
                       <div className="flex items-center gap-2">
@@ -464,7 +467,7 @@ function SingleVehicle() {
                             d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
                           />
                         </svg>
-                        <span>{data?.user?.phonenumber}</span>
+                        <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
                     <div className="flex flex-col justify-between gap-2">
@@ -472,7 +475,7 @@ function SingleVehicle() {
                         Message Dealer
                       </Link>
                       <a
-                        href={`https://wa.me/${data?.user?.phonenumber}/?text=hi`}
+                        href={`https://wa.me/${singleVehicle?.user?.phonenumber}/?text=hi`}
                         className="py-3 text-lg text-center text-white rounded-xl bg-green"
                       >
                         Message via whatsapp
@@ -488,7 +491,7 @@ function SingleVehicle() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <div className="flex flex-col gap-3 overflow-y-scroll h-96">
-                    {data?.comments.map((e) => {
+                    {singleVehicle?.comments.map((e) => {
                       return (
                         <div
                           key={e.id}
@@ -553,7 +556,7 @@ function SingleVehicle() {
                   <div className="flex flex-col gap-2">
                     <h1 className="md:text-xl">Tags:</h1>
                     <h1 className="px-4 py-1.5 font-medium text-white rounded-md md:text-xl bg-purple w-fit">
-                      Vehicles-{data?.category}
+                      Vehicles-{singleVehicle?.category}
                     </h1>
                   </div>
                   <Swiper

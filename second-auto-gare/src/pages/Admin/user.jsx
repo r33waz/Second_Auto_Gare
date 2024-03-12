@@ -4,16 +4,31 @@ import SideNav from "../../components/common/SlideNav";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/loading";
 import { Card } from "../../components/common/card";
-import { Link } from "react-router-dom";
-import { GetAllUser } from "../../redux/userslice/userthunk";
+import { Link, useNavigate } from "react-router-dom";
+import { GetAllUser, DeleteUser } from "../../redux/userslice/userthunk";
 
 function User() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: user, isLoading } = useSelector((state) => state.user);
   console.log("frontend data", user);
   useEffect(() => {
     dispatch(GetAllUser());
   }, [dispatch]);
+
+  const deletUeser = async (id) => {
+    console.log(id);
+    if (id) {
+      dispatch(DeleteUser(id)).then(() => {
+        dispatch(GetAllUser());
+      });
+    }
+  };
+
+  const EiditUser = async (id) => {
+    console.log(id)
+    navigate(`/admin/updateProfile/${id}`);
+  };
 
   return (
     <>
@@ -26,7 +41,7 @@ function User() {
         ) : (
           <div className="flex flex-col w-full">
             <div className="relative z-50 w-full h-40 bg-purple">
-              <div className="absolute grid w-full gap-8 px-1 pt-10 lg:top-20 md:top-12 top-12 lg:grid-cols-4 lg:px-2 md:px-2 md:gris-cols-4 sm:grid-cols-1 place-items-center">
+              <div className="absolute flex flex-wrap justify-center w-full gap-8 lg:flex-nowrap md:flex-nowrap lg:top-20 md:top-12 top-12">
                 <Card>
                   <div className="flex flex-col animate__animated animate__fadeInUp">
                     <div className="flex justify-between">
@@ -158,48 +173,6 @@ function User() {
                     <h1 className="text-5xl text-purple">{user?.length}</h1>
                   </div>
                 </Card>
-                <Card>
-                  <div className="flex flex-col animate__animated animate__fadeInUp">
-                    <div className="flex justify-between">
-                      <h1 className="text-2xl">Total Users</h1>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          strokeDasharray="28"
-                          strokeDashoffset="28"
-                          strokeLinecap="round"
-                          strokeWidth="2"
-                        >
-                          <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                          <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.5s"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </div>
-                    <h1 className="text-5xl text-purple">10</h1>
-                  </div>
-                </Card>
               </div>
             </div>
             <div className="w-full  lg:pt-24 md:pt-[px] pt-[500px]">
@@ -251,6 +224,18 @@ function User() {
                               </th>
                               <th
                                 scope="col"
+                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                              >
+                                Role
+                              </th>
+                              <th
+                                scope="col"
+                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-end"
+                              >
+                                Role
+                              </th>
+                              <th
+                                scope="col"
                                 className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-end"
                               >
                                 Role
@@ -258,25 +243,49 @@ function User() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                            <tr>
-                              <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ">
-                                John Brown
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                45
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                New York No. 1 Lake Park
-                              </td>
-                              <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-end">
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
+                            {user?.map((e) => {
+                              return (
+                                <>
+                                  <tr>
+                                    <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ">
+                                      {e?.firstname}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
+                                      {e?.lastname}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
+                                      {e?.email}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
+                                      <button
+                                        type="button"
+                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                      >
+                                        {e?.role}
+                                      </button>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-end">
+                                      <button
+                                        onClick={() => deletUeser(e?._id)}
+                                        type="button"
+                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
+                                      <button
+                                        onClick={() => EiditUser(e?._id)}
+                                        type="button"
+                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                      >
+                                        Eidit
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

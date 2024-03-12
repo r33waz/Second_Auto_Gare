@@ -19,15 +19,12 @@ export const GetSingleUser = createAsyncThunk(
   }
 );
 
-export const Updateuser = createAsyncThunk(
-  "Updateuser",
-  async ({ id, data }) => {
-    console.log("userid", id);
-    console.log("userdata", data);
-    const resp = await updateData(`/api/v1/updateuser/${id}`, data);
-    return resp.data;
-  }
-);
+export const Updateuser = createAsyncThunk("Updateuser", async ({ id, data }) => {
+  console.log("userid", id);
+  console.log("userdata", data);
+  const resp = await updateData(`/api/v1/updateuser/${id}`, data);
+  return resp.data;
+});
 
 export const DeleteUser = createAsyncThunk("DeleteUser", async (id) => {
   const resp = await deleteData(`/api/v1/usersdelete/${id}`);

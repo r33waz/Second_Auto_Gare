@@ -24,6 +24,8 @@ export const Addvehicle = async (req, res) => {
       kilometer,
       drivetype,
       transmission,
+      description,
+      meta_description,
       doors,
       price,
       number_of_people,
@@ -72,6 +74,18 @@ export const Addvehicle = async (req, res) => {
       return res.status(400).json({
         status: false,
         message: `Displacement is required`,
+      });
+    }
+    if (!description) {
+      return res.status(400).json({
+        status: false,
+        message: `Description is required`,
+      });
+    }
+    if (!meta_description) {
+      return res.status(400).json({
+        status: false,
+        message: `Meta description is required`,
       });
     }
     if (!fule_type) {
@@ -143,6 +157,8 @@ export const Addvehicle = async (req, res) => {
       transmission,
       imageUrl: results,
       doors,
+      description,
+      meta_description,
       price,
       number_of_people,
       category,
@@ -170,23 +186,16 @@ export const Addvehicle = async (req, res) => {
 export const getAllVehicle = async (req, res) => {
   try {
     const vehicles = await Vehicle.find()
-      .populate({
+       .populate({
         path: "comments",
         model: "Comment",
         populate: {
           path: "author",
-          select: "_id firstname lastname",
+          select: "_id firstname lastname photo",
         },
       })
+      .populate("user", "_id firstname lastname email phonenumber photo")
       .sort([["createdAt", -1]]);
-    // .populate({
-    //     path: 'comments',
-    //     model: "Comment",
-    //     populate: {
-    //         path: 'post',
-    //         select: '_id model brand color imageUrl number_of_people'
-    //     }
-    // })
     if (!vehicles) {
       return res.status(400).json({
         status: false,
@@ -282,7 +291,7 @@ export const updateVehicle = async (req, res) => {
     if (!vehicle) {
       return res.status(404).json({
         status: false,
-        message: "Vehicle Not Found!",
+        message: "Invalid Attempt",
       });
     } else {
       if (!req.files) {

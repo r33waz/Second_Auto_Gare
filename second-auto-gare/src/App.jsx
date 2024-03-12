@@ -16,14 +16,15 @@ import Contact from "./pages/page/contact";
 import Noroute from "./pages/auth/noroute";
 import About from "./pages/page/about";
 import Vehicles from "./pages/page/vehicles";
-import tyre from "./assets/images/tyre.png";
-import Category from "./pages/page/categoty";
+import Category from "./pages/page/category";
 import SingleVehicle from "./pages/page/singleVehicle";
 import PrivateRoutes from "./pages/auth/protectedroute";
 import AdminRoute from "./pages/auth/adminroute";
 import Userprofile from "./pages/User/userprofile/userprofile";
 import { persist, store } from "./redux/store/store";
 import UserPost from "./pages/User/userpost/usepost";
+import UserPostUpdate from "./pages/User/userpost/userPostUpdate";
+import Loading from "./components/common/loading";
 function App() {
   const paths = [
     "/login",
@@ -40,14 +41,18 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     setTimeout(() => {
-      setLoading(true);
+      setLoading(false);
     }, 2000);
   }, []);
   return (
     <>
       {loading ? (
+        <div className="flex items-center justify-center h-screen">
+          <Loading />
+        </div>
+      ) : (
         <Provider store={store}>
           <PersistGate persistor={persist}>
             {!pathname && <Header />}
@@ -77,21 +82,18 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
-              <Route path="/category" element={<Vehicles />} />
-              <Route path="/car/:type" element={<Category />} />
+              <Route path="/category" element={<Category />} />
+              <Route path="/car/:type" element={<Vehicles />} />
               <Route path="/vehicle/:id" element={<SingleVehicle />} />
               <Route path="/profile" element={<Userprofile />} />
               <Route path="/userpost" element={<UserPost />} />
+              <Route path="/updatepost/:id" element={<UserPostUpdate />} />
               {/* </Route> */}
               <Route path="*" element={<Noroute />} />
             </Routes>
             {!pathname && <Footer />}
           </PersistGate>
         </Provider>
-      ) : (
-        <div className="flex items-center justify-center h-screen">
-          <img src={tyre} className="w-40 h-40 animate-spin" />
-        </div>
       )}
     </>
   );

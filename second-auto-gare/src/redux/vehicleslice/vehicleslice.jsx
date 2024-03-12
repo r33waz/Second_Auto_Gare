@@ -1,10 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { FetchVehicle, GetSingleVehicle } from "./vehiclethunk";
+import {
+  DeleteVehicle,
+  FetchVehicle,
+  GetSingleVehicle,
+  UpdateVehicle,
+} from "./vehiclethunk";
+import { toast } from "react-toastify";
 
 const initialState = {
   isLoading: false,
-  data: null,
+  data: [],
   error: null,
+  singleVehicle: null,
+  singleVehicleErrror: null,
+  singleVehicleLoading: false,
 };
 
 const vehicleSlice = createSlice({
@@ -17,24 +26,48 @@ const vehicleSlice = createSlice({
     });
 
     builder.addCase(FetchVehicle.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
+      state.isLoading = false;
+      state.data = action.payload;
     });
 
     builder.addCase(FetchVehicle.rejected, (state, action) => {
+      state.isLoading = false;
       state.error = action.error.message;
     });
 
     // for single vehicle
     builder.addCase(GetSingleVehicle.pending, (state) => {
-      state.isLoading = true;
+      state.singleVehicleLoading = true;
     });
 
     builder.addCase(GetSingleVehicle.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
+      state.isLoading = false;
+      state.singleVehicle = action.payload;
     });
 
     builder.addCase(GetSingleVehicle.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.singleVehicleErrror = action.error.message;
+    });
+    // to update the vehicle
+    builder.addCase(UpdateVehicle.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(UpdateVehicle.fulfilled, (state, action) => {
+      (state.isLoading = false), (state.data = action.payload);
+    });
+    builder.addCase(UpdateVehicle.rejected, (state, action) => {
+      (state.isLoading = false), (state.error = action.error.message);
+    });
+    // delete the delete the vehicle
+    builder.addCase(DeleteVehicle.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(DeleteVehicle.fulfilled, (state, action) => {
+      (state.isLoading = false), (state.data = action.payload);
+      toast.success("Deleted Successfully");
+    });
+    builder.addCase(DeleteVehicle.rejected, (state, action) => {
+      (state.isLoading = false), (state.error = action.error.message);
     });
   },
 });

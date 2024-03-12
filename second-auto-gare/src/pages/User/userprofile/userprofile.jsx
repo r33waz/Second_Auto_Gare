@@ -11,7 +11,9 @@ import { GetSingleUser, Updateuser } from "../../../redux/userslice/userthunk";
 function Userprofile() {
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
-  const { data, isLoading } = useSelector((state) => state.user);
+  const { singleUser: data, singleUserLoading:isLoading } = useSelector(
+    (state) => state.user
+  );
   console.log("user", data);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function Userprofile() {
     formData.append("lastname", data?.lastname);
     formData.append("email", data?.email);
     formData.append("phonenumber", data?.phonenumber);
-    if (data?.photo) {
+    if (data?.photo[0]) {
       const photo = data?.photo[0];
       formData.append("photo", photo);
     }
@@ -57,7 +59,7 @@ function Userprofile() {
       formData.append("password", password);
     }
     console.log("form Data", formData);
-    dispatch(Updateuser({ id: login.id }, formData)).then(() => {
+    dispatch(Updateuser({ id: login.id, data: formData })).then(() => {
       dispatch(GetSingleUser({ id: login.id }));
     });
   };
@@ -388,7 +390,7 @@ function Userprofile() {
                               </path>
                             </svg>
                           ) : (
-                            "Save chnage"
+                            "Save change"
                           )}
                         </Save_btn>
                       </div>

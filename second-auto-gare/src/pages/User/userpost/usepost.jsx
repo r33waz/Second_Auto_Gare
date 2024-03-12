@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import { CarCard } from "../../../components/common/card";
 import Loading from "../../../components/common/loading";
 import Nopostimg from "../../../assets/images/nopost.png";
 import { GetSingleUser } from "../../../redux/userslice/userthunk";
+import { Delete_btn, Update_btn } from "../../../components/common/button";
+import { DeleteVehicle } from "../../../redux/vehicleslice/vehiclethunk";
 
 function UserPost() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [itemOffset, setItemOffset] = useState(0);
   const [itemsPerPage] = useState(12);
   const { login } = useSelector((state) => state?.login);
   // console.log("user", login);
-  const { data, isLoading } = useSelector((state) => state?.user);
+  const { singleUser: data, singleUserLoading: isLoading } = useSelector(
+    (state) => state?.user
+  );
   console.log("user", data);
 
   //pagination
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = (data?.post || [])
-    ?.filter((vehicle) => vehicle.status === "sell")
-    .slice(itemOffset, endOffset);
+  const currentItems = (data?.post || [])?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data?.post?.length / itemsPerPage);
   //   console.log(currentItems);
   // Invoke when user click to request another page.
@@ -42,13 +45,33 @@ function UserPost() {
     dispatch(GetSingleUser({ id: login.id }));
   }, [dispatch, login.id]);
 
+  //delete user function
+  const VehicleDelete = async (id) => {
+    if (!window.confirm("Are you sure ?")) {
+      return;
+    } else {
+      if (id) {
+        dispatch(DeleteVehicle(id)).then(() => {
+          dispatch(GetSingleUser({ id: login.id }));
+        });
+      }
+    }
+  };
+
+  const VehicleUpdate = async (id) => {
+    if (id) {
+      navigate(`/updatepost/${id}`);
+    } else {
+      navigate("/userpost");
+    }
+  };
   //loading if the data is not being call and loaded
   if (isLoading) {
     return <Loading />;
   }
   return (
-    <div className="container flex flex-col h-screen mx-auto">
-      <section className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
+    <div className="container mx-auto">
+      <section className="flex flex-col px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
         <div className="flex flex-col gap-2 w-fit">
           <Link to="/home">
             <svg
@@ -91,12 +114,28 @@ function UserPost() {
                         className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"
                       />
                       <div className="flex flex-col py-2 px-2.5 gap-3">
-                        <NavLink
-                          to={`/vehicle/${e._id}`}
-                          className="text-lg font-medium text-white hover:underline hover:underline-offset-4"
-                        >
-                          {e?.model + " - " + e?.year}
-                        </NavLink>
+                        <div className="flex justify-between">
+                          <NavLink
+                            to={`/vehicle/${e._id}`}
+                            className="text-lg font-medium text-white hover:underline hover:underline-offset-4"
+                          >
+                            {e?.model + " - " + e?.year}
+                          </NavLink>
+                          <div className="flex gap-2">
+                            <Delete_btn
+                              onClick={() => VehicleDelete(e?._id)}
+                              className="px-2 text-white rounded bg-red"
+                            >
+                              Delete
+                            </Delete_btn>
+                            <Update_btn
+                              onClick={() => VehicleUpdate(e?._id)}
+                              className="px-2 text-white rounded bg-green"
+                            >
+                              Update
+                            </Update_btn>
+                          </div>
+                        </div>
                         <p className="text-sm text-white">
                           {e?.description
                             ? e?.description.slice(0, 40) + "..."
@@ -117,7 +156,9 @@ function UserPost() {
                                 d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62l-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41c-.39.39-1.03.39-1.42.01A9.969 9.969 0 0 1 2 13A10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07c-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"
                               />
                             </svg>
-                            <span className="text-xs">{e?.kilometer}km</span>
+                            <span className="text-xs">
+                              {e?.kilometer ? e?.kilometer : "0"}km
+                            </span>
                           </div>
                           {/*  */}
                           <div className="flex flex-col items-center text-white">
@@ -133,7 +174,9 @@ function UserPost() {
                               />
                             </svg>
                             <span className="text-xs">
-                              {capitalizeFirstLetter(e?.fule_type)}
+                              {capitalizeFirstLetter(
+                                e?.fule_type ? e?.fule_type : "0"
+                              )}
                             </span>
                           </div>
                           {/*  */}
@@ -150,7 +193,9 @@ function UserPost() {
                               />
                             </svg>
                             <span className="text-xs">
-                              {capitalizeFirstLetter(e?.transmission)}
+                              {capitalizeFirstLetter(
+                                e?.transmission ? e?.transmission : "0"
+                              )}
                             </span>
                           </div>
                         </div>
