@@ -14,10 +14,15 @@ export const GetSingleVehicle = createAsyncThunk(
   }
 );
 
-export const UpdateVehicle = createAsyncThunk("vehicle/update", async () => {
-  const resp = await updateData(`/api/v1/update_vehicle/`);
-  return resp?.data;
-});
+export const UpdateVehicle = createAsyncThunk(
+  "vehicle/update",
+  async ({ id, data }) => {
+    console.log("userid", id);
+    console.log("userdata", data);
+    const resp = await updateData(`/api/v1/update_vehicle/${id}`, data);
+    return resp?.data;
+  }
+);
 
 export const DeleteVehicle = createAsyncThunk("vehicle/delete", async (id) => {
   const resp = await deleteData(`/api/v1/delete_vehicle/${id}`);

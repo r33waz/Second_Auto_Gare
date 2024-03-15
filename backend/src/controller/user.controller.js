@@ -14,6 +14,8 @@ export const Signup = async (req, res) => {
   try {
     const { firstname, lastname, email, phonenumber, password, category } =
       req.body;
+    // Check for existing user with the same username
+    const existingUserEmail = await User.findOne({ email });
     if (existingUserEmail) {
       return res.status(400).json({
         status: false,
@@ -47,17 +49,16 @@ export const Signup = async (req, res) => {
 export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-
+    console.log(email,password)
+    const user = await User.findOne({email} );
+    console.log("user",user)
     if (!user) {
       return res.status(400).json({
         status: false,
         message: "Invalid Email or Password",
       });
     }
-
     const validPassword = await bcrypt.compare(password, user.password);
-
     if (!validPassword) {
       return res.status(400).json({
         status: false,
@@ -147,7 +148,7 @@ export const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await User.findById({ _id: id })
-      .select("-password")
+      // .select("-password")
       .populate(
         "post",
         "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
@@ -173,12 +174,11 @@ export const getUserById = async (req, res) => {
 };
 
 //*API for user update
-
 export const userUpdate = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await User.findById({ _id: id });
-    
+
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -187,15 +187,34 @@ export const userUpdate = async (req, res) => {
     } else {
       console.log("body", req.body);
       console.log("file", req.file);
-      
+
+      // Check if the old password matches the current password
+      if (req.body.oldPassword) {
+        const isPasswordMatch = await bcrypt.compare(
+          req.body.oldPassword,
+          user.password
+        );
+        if (!isPasswordMatch) {
+          return res.status(400).json({
+            status: false,
+            message: "Old password does not match",
+          });
+        }
+      }
+
+      // Check if password needs to be updated and hash it
+      if (req.body.password) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
+      }
+
       if (!req.file) {
         // Updating user without image
         const updateUser = await User.findByIdAndUpdate(
           { _id: id },
-          { $set: { ...req.body, photo: user.photo } }, // Use the existing photo if no new photo is uploaded
-          { new: true }
+          { ...req.body, photo: user.photo } // Use the existing photo if no new photo is uploaded
         );
-        
+
         if (!updateUser) {
           return res.status(400).json({
             status: false,
@@ -208,33 +227,28 @@ export const userUpdate = async (req, res) => {
           });
         }
       } else {
+        // Update user with image
         let postPhoto;
-        if (req.file) {
-          // Update the image in cloudinary if a file was uploaded
-          if (
-            req.file.mimetype === "image/jpeg" ||
-            req.file.mimetype === "image/png" ||
-            req.file.mimetype === "image/jpg"
-          ) {
-            postPhoto = await cloudinary.v2.uploader.upload(req.file.path);
-            fs.unlinkSync(req.file.path); // Remove the uploaded file from the server
-          } else {
-            return res.status(400).json({
-              success: false,
-              message: "Invalid image type",
-            });
-          }
+        if (
+          req.file.mimetype === "image/jpeg" ||
+          req.file.mimetype === "image/png" ||
+          req.file.mimetype === "image/jpg"
+        ) {
+          postPhoto = await cloudinary.v2.uploader.upload(req.file.path);
+          fs.unlinkSync(req.file.path); // Remove the uploaded file from the server
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid image type",
+          });
         }
+
         // Deleting old images from cloudinary if they exist
         if (user?.photo && user?.photo?.public_id) {
           const public_id = user?.photo?.public_id;
           await cloudinary.v2.uploader.destroy(public_id);
         }
-        // Check if password needs to be updated and hash it
-        if (req.body.password) {
-          const hashedPassword = await bcrypt.hash(req.body.password, 10);
-          req.body.password = hashedPassword;
-        }
+
         // Update the user information
         const updateUser = await User.findByIdAndUpdate(
           { _id: id },
@@ -259,10 +273,10 @@ export const userUpdate = async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Internal Server Error",
- 
-    })
+    });
   }
-}
+};
+
 
 //*API for user update
 export const userDelete = async (req, res) => {

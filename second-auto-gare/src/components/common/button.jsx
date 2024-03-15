@@ -9,16 +9,11 @@ export const Primary_btn = ({ children }) => {
   );
 };
 
-export const Save_btn = ({ children }) => {
+export const Save_btn = ({ className, children, onClick, type }) => {
   return (
-    <div className="flex justify-end">
-      <button
-        type="submit"
-        className="bg-green bg-opacity-90 text-white px-2.5 py-1 rounded-md"
-      >
-        {children}
-      </button>
-    </div>
+    <button type={`${type}`} className={`${className}`} onClick={onClick}>
+      {children}
+    </button>
   );
 };
 

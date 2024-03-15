@@ -41,7 +41,7 @@ const vehicleSlice = createSlice({
     });
 
     builder.addCase(GetSingleVehicle.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.singleVehicleLoading = false;
       state.singleVehicle = action.payload;
     });
 
@@ -54,6 +54,7 @@ const vehicleSlice = createSlice({
     });
     builder.addCase(UpdateVehicle.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
+      toast.success("Vehicle updated sucessfully")
     });
     builder.addCase(UpdateVehicle.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error.message);

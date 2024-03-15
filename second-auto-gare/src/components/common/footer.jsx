@@ -5,7 +5,7 @@ import logo from "../../assets/images/kidmfond.jpg";
 
 function Footer() {
   return (
-    <div className="bg-white shadow-2xl ">
+    <div className="bg-white shadow-2xl mt-20">
       <footer className="pt-5 lg:px-14 md:px-14">
         <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-1 ">
           <div className="flex flex-col gap-4">

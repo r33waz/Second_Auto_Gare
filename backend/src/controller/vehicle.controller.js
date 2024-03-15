@@ -186,7 +186,7 @@ export const Addvehicle = async (req, res) => {
 export const getAllVehicle = async (req, res) => {
   try {
     const vehicles = await Vehicle.find()
-       .populate({
+      .populate({
         path: "comments",
         model: "Comment",
         populate: {
@@ -288,57 +288,88 @@ export const updateVehicle = async (req, res) => {
   try {
     const id = req.params.id;
     const vehicle = await Vehicle.findById({ _id: id });
+
     if (!vehicle) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: false,
         message: "Invalid Attempt",
       });
     } else {
+      console.log("body", req.body);
+      console.log("file", req.file);
+
       if (!req.files) {
-        //updating without image
-        const updatevehicle = await Vehicle.findByIdAndUpdate(
+        // Updating user without image
+        const updateUser = await Vehicle.findByIdAndUpdate(
           { _id: id },
-          { ...req.body }
+          { ...req.body, imageUrl: vehicle?.imageUrl }
         );
-      }
-      let results = [];
-      //for of loop
-      for (let file of req.files) {
-        let result;
-        if (
-          file.mimetype === "image/jpeg" ||
-          file.mimetype === "image/png" ||
-          file.mimetype === "image/jpg"
-        ) {
-          result = await cloudinary.v2.uploader.upload(file.path);
-        }
-        results.push({ public_id: result.public_id, url: result.secure_url });
-        fs.unlinkSync(file.path);
-      }
 
-      if (vehicle?.imageUrl) {
-        //deleting old images from cloudinary
-        for (let photo of vehicle.imageUrl) {
-          await cloudinary.v2.uploader.destroy(photo?.public_id);
+        if (!updateUser) {
+          return res.status(400).json({
+            status: false,
+            message: "Invalid Attempt",
+          });
+        } else {
+          return res.status(200).json({
+            status: true,
+            message: `${updateUser.firstname} ${updateUser.lastname} updated`,
+          });
+        }
+      } else {
+        // Update user with image
+        let results = [];
+        //for of loop
+        for (let file of req.files) {
+          let result;
+          if (
+            file.mimetype === "image/jpeg" ||
+            file.mimetype === "image/png" ||
+            file.mimetype === "image/jpg"
+          ) {
+            result = await cloudinary.v2.uploader.upload(file.path);
+          }
+          results.push({ public_id: result.public_id, url: result.secure_url });
+          fs.unlinkSync(file.path);
+        }
+
+        // Deleting old images from cloudinary if they exist
+        if (vehicle?.imageUrl) {
+          //deleting old images from cloudinary
+          for (let photo of vehicle.imageUrl) {
+            await cloudinary.v2.uploader.destroy(photo?.public_id);
+          }
+        }
+
+        // Update the user information
+        const updateVehicle = await Vehicle.findByIdAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              ...req.body,
+              imageUrl: results.length > 0 ? results : vehicle?.imageUrl, 
+            },
+          }, 
+          { new: true }
+        );
+        if (!updateVehicle) {
+          return res.status(400).json({
+            status: false,
+            message: "Invalid Attempt",
+          });
+        } else {
+          return res.status(200).json({
+            status: true,
+            message: `Vehicle updated`,
+          });
         }
       }
-
-      const updatevehicle = await Vehicle.findByIdAndUpdate(
-        { _id: id },
-        { $set: { ...req.body, imageUrl: results } },
-        { new: true }
-      );
-      return res.status(200).json({
-        status: true,
-        data: updatevehicle,
-        message: "Vehicle updated successfully.",
-      });
     }
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       status: false,
-      message: "Internal server error",
+      message: "Internal Server Error",
     });
   }
 };
