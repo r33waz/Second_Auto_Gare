@@ -2,5 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 body{
-    font-family: 'DM Sans',sans-serif;
+      font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
 }

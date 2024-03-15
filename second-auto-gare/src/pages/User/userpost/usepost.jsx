@@ -109,6 +109,7 @@ function UserPost() {
                   <CarCard key={e.id}>
                     <div className="relative flex flex-col">
                       <img
+                        loading="lazy"
                         src={e.imageUrl[0]?.url}
                         alt={`Image`}
                         className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"

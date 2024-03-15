@@ -23,7 +23,7 @@ function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,isSubmitting },
   } = useForm({
     defaultValues: { email: "", password: "" },
     resolver: yupResolver(loginSchema),
@@ -59,7 +59,10 @@ function Login() {
                 <input
                   id="email"
                   type="text"
-                  className="w-full pl-2 text-black bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none h-14"
+                  autoComplete="off"
+                  className={`w-full pl-2 text-black bg-transparent ${
+                    errors.email?.message ? "border-red" : "border-gray-500"
+                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none h-14`}
                   placeholder="Email"
                   {...register("email")}
                 />
@@ -72,7 +75,9 @@ function Login() {
                 <input
                   id="password"
                   type={showpassword ? "text" : "password"}
-                  className="w-full h-14 pl-2  text-black  placeholder-gray-500 bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                  className={`w-full pl-2 text-black bg-transparent ${
+                    errors.password?.message ? "border-red" : "border-gray-500"
+                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none h-14`}
                   placeholder="Password"
                   {...register("password")}
                 />
@@ -110,13 +115,40 @@ function Login() {
                   )}
                 </span>
               </div>
-              <div className="flex flex-col gap-5">
-                <button
-                  type="submit"
-                  className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-purple"
-                >
-                  Sign In
-                </button>
+              <div className="flex flex-col  gap-5">
+                {isSubmitting ? (
+                  <button
+                    type="submit"
+                    className="text-3xl flex justify-center items-center border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-purple"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          dur="0.75s"
+                          repeatCount="indefinite"
+                          type="rotate"
+                          values="0 12 12;360 12 12"
+                        />
+                      </path>
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="text-3xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-purple"
+                  >
+                    Sign In
+                  </button>
+                )}
                 <span className="text-center text-black :text-white">
                   Don't have an account?{" "}
                   <NavLink
@@ -133,8 +165,8 @@ function Login() {
                   or
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 p-1 text-black :text-white border rounded-sm shadow-[0px_1px_2px_2px_#00000024]">
+              <div className="flex md:gap-2 gap-2 md:items-center md:justify-between md:flex-nowrap flex-wrap justify-center items-center w-full">
+                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024] w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
@@ -160,7 +192,7 @@ function Login() {
                   </svg>
                   <small>Signin with google</small>
                 </div>
-                <div className="flex items-center gap-2 p-1 text-black :text-white border rounded-sm shadow-[0px_1px_2px_2px_#00000024]">
+                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024] w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"

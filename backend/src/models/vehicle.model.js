@@ -8,11 +8,12 @@ const vehicleSchema = new mongoose.Schema(
     color: { type: String, required: true },
     year: { type: Number, required: true },
     fule_type: { type: String, required: true },
-    displacement: { type: String, required: true },
+    displacement: { type: Number, required: true },
     mileage: { type: Number, required: true },
     transmission: { type: String, required: true },
     drivetype: { type: String, required: true },
     description: { type: String, required: true },
+    kilometer: { type: Number, required: true },
     meta_description: {
       type: String,
       required: true,
@@ -30,7 +31,7 @@ const vehicleSchema = new mongoose.Schema(
     ],
     doors: { type: Number, required: true },
     price: { type: Number, required: true },
-    number_of_people: { type: String, required: true },
+    number_of_people: { type: Number, required: true },
     category: {
       type: String,
       required: true,
@@ -46,6 +47,10 @@ const vehicleSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    Avilable: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

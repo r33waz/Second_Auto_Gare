@@ -4,15 +4,24 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
-import { postImageData } from "../../service/axiosservice";
+import { postData, postImageData } from "../../service/axiosservice";
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup";
+yupResolver
 function Signup() {
   const naviagte = useNavigate();
   const [showpassword, setShowpassword] = useState(false);
-
+//  const SigninSchema = yup.object({
+//    email: yup
+//      .string()
+//      .required("Enter your email")
+//      .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid Email"),
+//    password: yup.string().required("Enter your password"),
+//  });
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,isSubmitting },
   } = useForm();
 
   const OnSubmit = async (data) => {
@@ -23,7 +32,7 @@ function Signup() {
     formData.append("phonenumber", data.phonenumber);
     formData.append("password", data.password);
     formData.append("category", data.category);
-    const resp = await postImageData("/api/v1/signup", formData);
+    const resp = await postData("/api/v1/signup", formData);
     if (resp?.status) {
       naviagte("/login");
       toast.success(resp?.message);
@@ -38,49 +47,15 @@ function Signup() {
       <div className="flex items-center justify-center h-screen ">
         <div className="relative p-3 w-[350px] lg:w-[500px] md:w-[500px] shadow-[0px_1px_3px_3px_#00000024] ">
           <form onSubmit={handleSubmit(OnSubmit)}>
-            <div className="flex flex-col gap-5 ">
-              <div className="flex justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  viewBox="0 0 24 24"
-                  className="text-black border border-black rounded-full "
-                >
-                  <g
-                    fill="none"
-                    stroke="currentColor"
-                    strokeDasharray="28"
-                    stroke-dashoffset="28"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                  >
-                    <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                      <animate
-                        fill="freeze"
-                        attributeName="stroke-dashoffset"
-                        dur="0.4s"
-                        values="28;0"
-                      />
-                    </path>
-                    <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                      <animate
-                        fill="freeze"
-                        attributeName="stroke-dashoffset"
-                        begin="0.5s"
-                        dur="0.4s"
-                        values="28;0"
-                      />
-                    </path>
-                  </g>
-                </svg>
-              </div>
+            <div className="flex flex-col gap-5 md:mt-14 mt-12">
               <div className="flex flex-wrap gap-5 lg:flex-nowrap md:flex-nowrap ">
                 <div className="flex flex-col w-full gap-1">
                   <input
                     id="firstname"
                     type="text"
-                    className="w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                    className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                      errors.firstname ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                     placeholder="First name"
                     {...register("firstname", { required: true })}
                     autoComplete="off"
@@ -94,7 +69,9 @@ function Signup() {
                   <input
                     id="lastname"
                     type="text"
-                    className="w-full h-10 pl-2 text-black  placeholder-gray-500 border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                    className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                      errors.lastname ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                     placeholder="Last name"
                     {...register("lastname", { required: true })}
                     autoComplete="off"
@@ -108,7 +85,9 @@ function Signup() {
                 <input
                   id="email"
                   type="text"
-                  className="w-full h-10 pl-2 text-black  placeholder-gray-500 border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                  className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                    errors.email ? "border-red" : "border-gray-500"
+                  }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                   placeholder="Email"
                   {...register("email", {
                     required: true,
@@ -125,7 +104,9 @@ function Signup() {
                   <input
                     id="password"
                     type={showpassword ? "text" : "password"}
-                    className="w-full h-10 pl-2  text-black  placeholder-gray-500 bg-transparent border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                    className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                      errors.password ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                     placeholder="Password"
                     {...register("password", { required: true })}
                   />
@@ -169,7 +150,9 @@ function Signup() {
                   <input
                     id="phonenumber"
                     type="text"
-                    className="w-full h-10 pl-2 text-black   placeholder-gray-500 border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                    className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                      errors.phonenumber ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                     placeholder="Phone number"
                     {...register("phonenumber", { required: true })}
                     autoComplete="off"
@@ -182,7 +165,9 @@ function Signup() {
                 </div>
                 <div className="flex flex-col w-full gap-1">
                   <select
-                    className="w-full h-10 pl-2  text-gray-500 bg-white  border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none"
+                    className={`w-full bg-white h-10 text-gray-500 pl-2  bg-transparent border ${
+                      errors.category ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
                     {...register("category", { required: true })}
                     defaultValue="" // Set the default value to an empty string
                   >
@@ -198,15 +183,42 @@ function Signup() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-5">
-                <button
-                  type="submit"
-                  className="h-10 text-3xl text-white border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] bg-purple"
-                >
-                  Sign Up
-                </button>
-                <span className="text-center">
-                  Already have an account?{" "}
+              <div className="flex flex-col gap-5 text-white">
+                {isSubmitting ? (
+                  <button
+                    type="submit"
+                    className="text-3xl flex justify-center items-center border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-14 bg-purple"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          dur="0.75s"
+                          repeatCount="indefinite"
+                          type="rotate"
+                          values="0 12 12;360 12 12"
+                        />
+                      </path>
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="text-xl border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] h-10  bg-purple"
+                  >
+                    Sign Up
+                  </button>
+                )}
+                <span className="text-center text-black">
+                  Already have an account?
                   <NavLink
                     to="/login"
                     className="font-medium underline text-purple"
@@ -221,8 +233,8 @@ function Signup() {
                   or
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024]">
+              <div className="flex md:gap-2 gap-2 md:items-center md:justify-between md:flex-nowrap flex-wrap justify-center items-center w-full">
+                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024] w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
@@ -248,7 +260,7 @@ function Signup() {
                   </svg>
                   <small>Signin with google</small>
                 </div>
-                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024]">
+                <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024] w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
