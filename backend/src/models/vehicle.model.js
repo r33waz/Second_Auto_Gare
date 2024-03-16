@@ -47,9 +47,8 @@ const vehicleSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
-    Avilable: {
+    avilable: {
       type: Boolean,
-      default: false,
     },
   },
   {
