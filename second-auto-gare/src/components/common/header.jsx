@@ -157,11 +157,10 @@ function Header() {
                   </svg>
                 </button>
                 <div
-                  className={`absolute z-50 duration-500 border-2 right-5 rounded-lg  bg-white ${
-                    isOpen
-                      ? "h-[18rem] w-[250px] p-1.5 "
-                      : "h-0 w-[250px] hidden"
-                  }`}
+                  className={`absolute z-50 duration-500  right-5 rounded-lg  bg-white ${
+                    isOpen ? "   h-72 w-60 p-4 " : "h-0 w-60"
+                  }
+              rounded-lg overflow-hidden`}
                 >
                   <div className="flex flex-col divide-y">
                     <div className="flex items-center gap-2 py-2">
@@ -292,7 +291,7 @@ function Header() {
       {
         <div
           className={` bg-white z-50 fixed top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
-            isMobile ? "   h-60 w-full p-4 " : "h-0 w-full"
+            isMobile ? "   h-72 w-full p-4 " : "h-0 w-full"
           }
               rounded-lg overflow-hidden`}
         >
@@ -313,20 +312,20 @@ function Header() {
                 </NavLink>
               );
             })}
+            {user?.islogin === true ? (
+              ""
+            ) : (
+              <div className="flex mt-2 gap-x-4">
+                {page.map((i, idx) => {
+                  return (
+                    <Primary_btn key={idx}>
+                      <NavLink to={i?.link}>{i.name}</NavLink>
+                    </Primary_btn>
+                  );
+                })}
+              </div>
+            )}
           </nav>
-          {user?.islogin === true ? (
-            ""
-          ) : (
-            <div className="flex mt-2 gap-x-4">
-              {page.map((i, idx) => {
-                return (
-                  <Primary_btn key={idx}>
-                    <NavLink to={i?.link}>{i.name}</NavLink>
-                  </Primary_btn>
-                );
-              })}
-            </div>
-          )}
         </div>
       }
     </>

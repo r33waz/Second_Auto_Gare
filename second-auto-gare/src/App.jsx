@@ -25,6 +25,7 @@ import { persist, store } from "./redux/store/store";
 import UserPost from "./pages/User/userpost/usepost";
 import UserPostUpdate from "./pages/User/userpost/userPostUpdate";
 import Loading from "./components/common/loading";
+import Booking from "./pages/page/booking";
 function App() {
   const paths = [
     "/login",
@@ -83,6 +84,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/category" element={<Category />} />
+              <Route path="/booking" element={<Booking />} />
               <Route path="/car/:type" element={<Vehicles />} />
               <Route path="/vehicle/:id" element={<SingleVehicle />} />
               <Route path="/profile" element={<Userprofile />} />

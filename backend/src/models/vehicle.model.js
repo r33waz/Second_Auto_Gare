@@ -46,9 +46,11 @@ const vehicleSchema = new mongoose.Schema(
         type: mongoose.Types.ObjectId,
         ref: "Comment",
       },
-    ],
+    ], 
     avilable: {
-      type: Boolean,
+      startdate: { type: String },
+      enddate: { type: String },
+      isAvilable: { type: Boolean, default: false },
     },
   },
   {

@@ -43,6 +43,12 @@ const UserSchema = new mongoose.Schema(
         ref: "Vehicle",
       },
     ],
+    booking: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Renting",
+      },
+    ],
   },
   {
     timestamps: true,

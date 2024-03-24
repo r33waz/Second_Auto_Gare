@@ -16,9 +16,11 @@ function SingleVehicle() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
+  console.log("login", login);
   const { singleVehicle, singleVehicleLoading } = useSelector(
     (state) => state.vehicle
   );
+  console.log("single vehicle",singleVehicle)
   // console.log("single vehicle", SingleVehicle);
   useEffect(() => {
     if (id) {
@@ -41,17 +43,18 @@ function SingleVehicle() {
       post: singleVehicle?._id,
     };
     dispatch(postComment(comment)).then(() => {
+      console.log("comment", comment);
       dispatch(GetSingleVehicle(id));
     });
     reset();
   };
-  // if (singleVehicleLoading) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <Loading />
-  //     </div>
-  //   );
-  // }
+  if (singleVehicleLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -428,11 +431,20 @@ function SingleVehicle() {
                   </div>
                   {/*  */}
                   <div className="flex flex-col gap-3 p-2 border-2 ">
-                    <img
+                    {singleVehicle?.user?.photo? (
+                      <img
+                        src={singleVehicle?.user?.photo.url}
+                        alt="user image"
+                        className="object-cover w-16 h-16 rounded-full"
+                      />
+                    ) : (
+                      "User"
+                    )}
+                    {/* <img
                       src={singleVehicle?.user?.photo.url}
                       alt="user image"
                       className="object-cover w-16 h-16 rounded-full"
-                    />
+                    /> */}
                     <h1 className="text-xl font-medium">
                       {singleVehicle?.user?.firstname}{" "}
                       {singleVehicle?.user?.lastname}
