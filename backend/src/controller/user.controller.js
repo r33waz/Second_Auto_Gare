@@ -123,8 +123,9 @@ export const getAllUser = async (req, res) => {
   try {
     const user = await User.find().populate(
       "post",
-      "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
-    );
+      "model brand color year fule_type kilometer displacement mileage transmission imageUrl doors price number_of_people category status"
+    )
+    .populate("booking", "_id user vehicle startDate endDate");
     if (user) {
       return res.status(200).json({
         status: true,
@@ -152,7 +153,15 @@ export const getUserById = async (req, res) => {
       .populate(
         "post",
         "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
-      );
+      )
+      .populate({
+        path: "booking",
+        model: "Renting",
+        populate: {
+          path: "vehicle",
+          selected:"model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
+        },
+      });
     if (!user) {
       return res.status(400).json({
         status: false,

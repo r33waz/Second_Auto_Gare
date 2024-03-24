@@ -457,7 +457,7 @@ export const searchVehicle = async (req, res) => {
       });
     } else {
       const formattedVehicles = vehicles.map((vehicle) => ({
-        ...vehicle._doc,
+        ...vehicle,
         imageUrl: vehicle.imageUrl.map((image) => image.url),
       }));
       return res.status(200).json({
