@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { logout } from "../../redux/loginslice/loginslice";
 import { Primary_btn } from "./button";
 
+
+
 function Header() {
   const location = useLocation();
   const [isOpen, setIsopen] = useState(false);
@@ -15,6 +17,7 @@ function Header() {
   const user = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
   //*Storing the links in form of array of object
   const Links = [
     {
@@ -55,7 +58,8 @@ function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsMobile(false);
+      setIsMobile(false)
+      setIsopen(false)
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -291,7 +295,7 @@ function Header() {
       {
         <div
           className={` bg-white z-50 fixed top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
-            isMobile ? "   h-72 w-full p-4 " : "h-0 w-full"
+            isMobile ? "   h-72 w-full p-4 z-50" : "h-0 w-full"
           }
               rounded-lg overflow-hidden`}
         >

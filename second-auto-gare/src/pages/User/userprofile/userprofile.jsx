@@ -8,6 +8,7 @@ import Loading from "../../../components/common/loading";
 import logo from "../../../assets/images/kidmfond.jpg";
 
 import { GetSingleUser, Updateuser } from "../../../redux/userslice/userthunk";
+import { Button } from "../../../shadcn_ui/ui/button";
 function Userprofile() {
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
@@ -362,7 +363,7 @@ function Userprofile() {
                           </div>
                         </div>
                         {/*  */}
-                        <Save_btn>
+                        <Button className="bg-green">
                           {isSubmitting ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -390,9 +391,11 @@ function Userprofile() {
                               </path>
                             </svg>
                           ) : (
-                            "Save change"
+                            <span className="text-lg text-white">
+                              Save change
+                            </span>
                           )}
-                        </Save_btn>
+                        </Button>
                       </div>
                     </div>
                   </form>

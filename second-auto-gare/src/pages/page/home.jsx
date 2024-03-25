@@ -9,13 +9,15 @@ import luxuryCar from "../../assets/images/luxury.jpg";
 import SUV from "../../assets/images/toyota.jpg";
 import subSUV from "../../assets/images/kia.jpg";
 import sedan from "../../assets/images/sedan.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import rightRevel from "../../assets/images/rightrevel.png";
 import leftRevel from "../../assets/images/leftrevel.png";
 import centerRevel from "../../assets/images/center.png";
 import { Fade } from "react-awesome-reveal";
+import { Button } from "../../shadcn_ui/ui/button";
 
 function Home() {
+  const navigate = useNavigate()
   function LeftArrow({ onClick }) {
     return (
       <div onClick={onClick}>
@@ -95,6 +97,10 @@ function Home() {
     ],
   };
 
+  const createPost = () => {
+    navigate("/createpost");
+  }
+
   // eslint-disable-next-line no-sparse-arrays
   const carLogos = [
     {
@@ -144,8 +150,8 @@ function Home() {
 
   return (
     <>
-      <div className="text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[300px] ">
-        <div className="relative flex flex-col h-[500px] items-center pt-6 gap-4 ">
+      <div className="relative text-white bg-[url('assets/images/backimg.jpg')] bg-cover bg-no-repeat lg:h-[500px] md:h-[300px] h-[300px] ">
+        <div className=" flex flex-col h-[500px] items-center pt-6 gap-4 ">
           <div className="flex flex-col items-center justify-center lg:w-3/5 from-white">
             <h1 className="mb-4 text-5xl font-bold animate__animated animate__fadeIn animate__delay-0.6s">
               Second Auto Gare
@@ -170,6 +176,9 @@ function Home() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="absolute right-10 top-5">
+          <Button onClick={createPost} className="h-8 bg-green">Create Post</Button>
         </div>
       </div>
       <div className="mt-20 lg:mt-32 md:mt-32">

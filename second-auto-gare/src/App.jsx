@@ -26,6 +26,7 @@ import UserPost from "./pages/User/userpost/usepost";
 import UserPostUpdate from "./pages/User/userpost/userPostUpdate";
 import Loading from "./components/common/loading";
 import Booking from "./pages/page/booking";
+import CreatePost from "./pages/auth/createPost";
 function App() {
   const paths = [
     "/login",
@@ -90,6 +91,7 @@ function App() {
               <Route path="/profile" element={<Userprofile />} />
               <Route path="/userpost" element={<UserPost />} />
               <Route path="/updatepost/:id" element={<UserPostUpdate />} />
+              <Route path="/createpost" element={<CreatePost />} />
               {/* </Route> */}
               <Route path="*" element={<Noroute />} />
             </Routes>
