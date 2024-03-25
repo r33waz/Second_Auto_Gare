@@ -26,7 +26,7 @@ export const TwominOTPexpire = async (otptime) => {
         const timeDifference = (dateNow - otpTime) / (1000 * 60);
 
         // Check if time difference is greater than 3 minutes (expiry time)
-        if (Math.abs(timeDifference) > 3) {
+        if (Math.abs(timeDifference) > 5) {
             return true; // OTP expired
         } else {
             return false; // OTP not expired

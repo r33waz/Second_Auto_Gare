@@ -1,8 +1,5 @@
-import Loading from "../../../components/common/loading";
-import {
-  GetSingleVehicle,
-  UpdateVehicle,
-} from "../../../redux/vehicleslice/vehiclethunk";
+import Loading from "../../components/common/loading";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -13,25 +10,12 @@ import { Autoplay } from "swiper/modules";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "../../../shadcn_ui/ui/button";
+import { Button } from "../../shadcn_ui/ui/button";
 
-function UserPostUpdate() {
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  console.log(id);
-  const { singleVehicle: data, singleVehicleLoading: isLoading } = useSelector(
-    (state) => state.vehicle
-  );
-  const Vehicle = data;
-  console.log("vehicle", Vehicle?.user?._id);
-
-  useEffect(() => {
-    dispatch(GetSingleVehicle(id));
-  }, [dispatch, id]);
-
+function CreatePost() {
   const VehicleSchema = yup.object({
-    brand: yup.string(),
-    model: yup.string(),
+    brand: yup.string().required("Vehicle brand is required"),
+    model: yup.string().required("Vehicle model is required"),
     price: yup
       .number()
       .typeError("Price must be a number")
@@ -42,14 +26,14 @@ function UserPostUpdate() {
       .typeError("Displacement must be a number")
       .positive("Displacement must be a positive number")
       .integer("Displacement must be an integer"),
-    category: yup.string(),
+    category: yup.string().required("Vehicle category is required"),
     mileage: yup
       .number()
       .typeError("Mileage must be a number")
       .positive("Mileage must be a positive number")
       .integer("Mileage must be an integer"),
-    fule_type: yup.string(),
-    color: yup.string(),
+    fule_type: yup.string().required("Vehicle fuel type is required"),
+    color: yup.string().required("Vehicle color is required"),
     year: yup
       .number()
       .typeError("Year must be a number")
@@ -60,14 +44,14 @@ function UserPostUpdate() {
       .typeError("Door count must be a number")
       .positive("Door count must be a positive number")
       .integer("Door count must be an integer"),
-    
+    transmission: yup.string().required("Vehicle transmission is required"),
     number_of_people: yup
       .number()
       .typeError("Number of people must be a number")
       .positive("Number of people must be a positive number")
       .integer("Number of people must be an integer"),
-    drive_type: yup.string(),
-    status: yup.string(),
+    drive_type: yup.string().required("Vehicle drive type  is required"),
+    status: yup.string().required("Vehicle status is required"),
     meta_description: yup.string().max(100),
     description: yup.string().max(250),
     kilometer: yup
@@ -103,20 +87,20 @@ function UserPostUpdate() {
     formData.append("description", value?.description);
     formData.append("drive_type", value?.drive_type);
     formData.append("kilometer", value?.kilometer);
-    formData.append("user", Vehicle?.user?._id);
-    if (value.imageUrl && value.imageUrl.length > 0) {
-      for (const key of Object.keys(value.imageUrl)) {
-        formData.append("imageUrl", value.imageUrl[key]);
-      }
-    }
-    dispatch(UpdateVehicle({ id, data: formData })).then(() => {
-      dispatch(GetSingleVehicle(id));
-    });
+    // formData.append("user", Vehicle?.user?._id);
+    // if (value.imageUrl && value.imageUrl.length > 0) {
+    //   for (const key of Object.keys(value.imageUrl)) {
+    //     formData.append("imageUrl", value.imageUrl[key]);
+    //   }
+    // }
+    // dispatch(UpdateVehicle({ id, data: formData })).then(() => {
+    //   dispatch(GetSingleVehicle(id));
+    // });
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  //   if (isLoading) {
+  //     return <Loading />;
+  //   }
   return (
     <div className="container mx-auto">
       <div className="flex flex-col px-2 mt-8 mb-4 md:mt-16 lg:px-12 md:px-12">
@@ -142,40 +126,6 @@ function UserPostUpdate() {
         <section>
           <div className="flex items-center justify-center ">
             <div className="md:w-[1000px] h-fit w-full p-3 border-2 border-gray-400">
-              <Swiper
-                slidesPerView={1}
-                spaceBetween={10}
-                rewind={true}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 1,
-                    spaceBetween: 10,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    spaceBetween: 10,
-                  },
-                  1024: {
-                    slidesPerView: 2,
-                    spaceBetween: 10,
-                  },
-                }}
-                modules={[Autoplay]}
-                className="w-full h-"
-              >
-                {data?.imageUrl?.map((e) => {
-                  return (
-                    <SwiperSlide key={e.id}>
-                      <img
-                        src={e?.url}
-                        alt="image"
-                        className="object-fill w-[500px] rounded-lg shadow-md h-[300px]"
-                      />
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-              {/* <div className="flex justify-between w-full h-20 mt-4 "></div> */}
               <form onSubmit={handleSubmit(Onsubmit)}>
                 <div className="mt-4">
                   <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
@@ -183,21 +133,33 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Brand</label>
                       <input
                         id="brand"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.brand?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.brand}
                         {...register("brand")}
                       />
+                      <small className="text-xs text-red">
+                        {errors.brand?.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Model</label>
                       <input
                         id="model"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.model?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.model}
                         {...register("model")}
                       />
+                      <small className="text-xs text-red">
+                        {errors.model?.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Price</label>
@@ -209,7 +171,6 @@ function UserPostUpdate() {
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.price}
                         {...register("price")}
                       />
                       {console.log(errors)}
@@ -223,9 +184,14 @@ function UserPostUpdate() {
                       </label>
                       <input
                         id="displacement"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors &&
+                          errors.displacement &&
+                          errors.displacement.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.displacement}
                         {...register("displacement")}
                       />
                       <small className="text-xs text-red">
@@ -240,11 +206,17 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Category</label>
                       <input
                         id="category"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.category?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.category}
                         {...register("category")}
                       />
+                      <small className="text-xs text-red">
+                        {errors.category?.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Mileage</label>
@@ -256,7 +228,6 @@ function UserPostUpdate() {
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.mileage}
                         {...register("mileage")}
                       />
                       <small className="text-xs text-red">
@@ -267,11 +238,17 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Fule type</label>
                       <input
                         id="fule_type"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.fule_type?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.fule_type}
                         {...register("fule_type")}
                       />
+                      <small className="text-xs text-red">
+                        {errors.fule_type?.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">
@@ -279,11 +256,17 @@ function UserPostUpdate() {
                       </label>
                       <input
                         id="transmission"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.transmission?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.transmission}
                         {...register("transmission")}
                       />
+                      <small className="text-xs text-red">
+                        {errors.transmission?.message}
+                      </small>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
@@ -291,11 +274,17 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Color</label>
                       <input
                         id="color"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.color?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
-                        defaultValue={data?.color}
                         {...register("color")}
                       />
+                      <span className="text-xs text-red">
+                        {errors.color?.message}
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Year</label>
@@ -307,28 +296,26 @@ function UserPostUpdate() {
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.year}
                         {...register("year")}
                       />
                       <span className="text-xs text-red">
-                        {errors && errors.year && errors.year.message}
+                        {errors && errors.year && errors.year?.message}
                       </span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Doors</label>
                       <input
-                        id="doors"
+                        id="door"
                         className={`h-8 pl-2 border-2 outline-none ${
-                          errors && errors.door && errors.door.message
+                          errors && errors.door && errors.door?.message
                             ? "border-red"
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.doors}
-                        {...register("doors")}
+                        {...register("door")}
                       />
                       <span className="text-xs text-red">
-                        {errors && errors.door && errors.door.message}
+                        {errors && errors.door && errors.door?.message}
                       </span>
                     </div>
                     <div className="flex flex-col gap-1">
@@ -338,22 +325,21 @@ function UserPostUpdate() {
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors &&
                           errors.number_of_people &&
-                          errors.number_of_people
+                          errors.number_of_people?.message
                             ? "border-red"
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.number_of_people}
                         {...register("number_of_people")}
                       />
                       <span className="text-xs text-red">
                         {errors &&
                           errors.number_of_people &&
-                          errors.number_of_people}
+                          errors.number_of_people?.message}
                       </span>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
+                  {/* <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">
                         Drive Type
@@ -362,7 +348,6 @@ function UserPostUpdate() {
                         id="drive_type"
                         className="h-8 pl-2 border-2 border-gray-500 rounded-md"
                         type="text"
-                        defaultValue={data?.drivetype}
                         {...register("drive_type")}
                       />
                     </div>
@@ -371,7 +356,6 @@ function UserPostUpdate() {
                       <select
                         id="status"
                         className="h-8 pl-2 border-2 border-gray-500 rounded-md"
-                        defaultValue={data?.status}
                         {...register("status")}
                       >
                         <option value="Sell">Sell</option>
@@ -388,15 +372,14 @@ function UserPostUpdate() {
                             : "border-gray-500"
                         }  rounded-md`}
                         type="text"
-                        defaultValue={data?.kilometer}
                         {...register("kilometer")}
                       />
                       <span className="text-xs text-red">
                         {errors && errors.kilometer && errors.kilometer.message}
                       </span>
                     </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
+                  </div> */}
+                  {/* <div className="flex flex-col gap-2">
                     <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-2">
                       <div className="flex flex-col gap-1">
                         <label className="text-lg font-semibold">
@@ -424,7 +407,6 @@ function UserPostUpdate() {
                               : "border-gray-500"
                           }  rounded-md`}
                           type="text"
-                          defaultValue={data?.meta_description}
                           {...register("meta_description")}
                         />
                         <span className="text-xs text-red">
@@ -443,7 +425,6 @@ function UserPostUpdate() {
                           ? "border-red"
                           : "border-gray-500"
                       }  rounded-md`}
-                      defaultValue={data?.description}
                       {...register("description")}
                     />
                     <span className="text-xs text-red">
@@ -451,7 +432,7 @@ function UserPostUpdate() {
                         errors.description &&
                         errors.description?.message}
                     </span>
-                  </div>
+                  </div>  */}
                 </div>
                 <div className="flex justify-end">
                   {isSubmitting ? (
@@ -500,4 +481,43 @@ function UserPostUpdate() {
   );
 }
 
-export default UserPostUpdate;
+export default CreatePost;
+
+{
+  /* <Swiper
+                slidesPerView={1}
+                spaceBetween={10}
+                rewind={true}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                  },
+                  1024: {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                  },
+                }}
+                modules={[Autoplay]}
+                className="w-full h-"
+              >
+                {data?.imageUrl?.map((e) => {
+                  return (
+                    <SwiperSlide key={e.id}>
+                      <img
+                        src={e?.url}
+                        alt="image"
+                        className="object-fill w-[500px] rounded-lg shadow-md h-[300px]"
+                      />
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper> */
+}
+{
+  /* <div className="flex justify-between w-full h-20 mt-4 "></div> */
+}

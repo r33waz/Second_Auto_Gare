@@ -119,15 +119,6 @@ export const updateRentalToCompleted = async (req, res) => {
         message: "Invalid user.",
       });
     }
-
-    // const rental = await Renting.findOne({ _id: renting });
-    // console.log(rental);
-    // if (!rental) {
-    //   return res.status(400).json({
-    //     status: false,
-    //     message: "Invalid Booking ID!",
-    //   });
-    // } else {
     const singleVehicle = await Vehicle.findOne({ _id: vehicleId });
     console.log(singleVehicle);
     await Vehicle.findByIdAndUpdate(
