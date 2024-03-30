@@ -3,11 +3,11 @@ import Logo from "../../assets/images/kidmfond.jpg";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { postData } from "../../service/axiosservice";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { logout } from "../../redux/loginslice/loginslice";
 import { Primary_btn } from "./button";
-
-
+import toast from "react-hot-toast";
+import { SucessToast } from "./toast";
 
 function Header() {
   const location = useLocation();
@@ -17,7 +17,7 @@ function Header() {
   const user = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
   //*Storing the links in form of array of object
   const Links = [
     {
@@ -58,8 +58,8 @@ function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsMobile(false)
-      setIsopen(false)
+      setIsMobile(false);
+      setIsopen(false);
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -71,8 +71,8 @@ function Header() {
     const resp = await postData("/api/v1/logout");
     if (resp.status) {
       dispatch(logout(resp.data));
-      window.location.reload();
       navigate("/login");
+      SucessToast({ message: resp?.message });
     }
   };
   return (
@@ -161,8 +161,8 @@ function Header() {
                   </svg>
                 </button>
                 <div
-                  className={`absolute z-50 duration-500  right-5 rounded-lg  bg-white ${
-                    isOpen ? "   h-72 w-60 p-4 " : "h-0 w-60"
+                  className={`absolute z-50 duration-500  right-5 rounded-lg px-2  bg-white ${
+                    isOpen ? "   h-72 w-60  " : "h-0 w-60"
                   }
               rounded-lg overflow-hidden`}
                 >
@@ -295,7 +295,7 @@ function Header() {
       {
         <div
           className={` bg-white z-50 fixed top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
-            isMobile ? "   h-72 w-full p-4 z-50" : "h-0 w-full"
+            isMobile ? "  h-72 w-full p-4 z-50" : "h-0 w-full"
           }
               rounded-lg overflow-hidden`}
         >

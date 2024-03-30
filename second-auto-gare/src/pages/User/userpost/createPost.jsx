@@ -1,8 +1,8 @@
-import Loading from "../../components/common/loading";
+import Loading from "../../../components/common/loading";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -10,9 +10,33 @@ import { Autoplay } from "swiper/modules";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "../../shadcn_ui/ui/button";
+import { Button } from "../../../shadcn_ui/ui/button";
+import { CreateVehicle } from "../../../redux/vehicleslice/vehiclethunk";
+import { toast } from "react-toastify";
 
 function CreatePost() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [images, setImages] = useState([]);
+  // const changeMultipleFiles = (e) => {
+  //   if (e.target.files) {
+  //     const imageArray = Array.from(e.target.files).map((file) =>
+  //       URL.createObjectURL(file)
+  //     );
+  //     setMultipleImages((prevImages) => prevImages.concat(imageArray));
+  //   }
+  // };
+
+  const onChangeImages = (file) => {
+    const files = Array.from(file);
+    setImages(files);
+  };
+
+  console.log("picture", images);
+  
+
+  const { login: user } = useSelector((state) => state.login);
+  console.log(user?.id);
   const VehicleSchema = yup.object({
     brand: yup.string().required("Vehicle brand is required"),
     model: yup.string().required("Vehicle model is required"),
@@ -39,7 +63,7 @@ function CreatePost() {
       .typeError("Year must be a number")
       .positive("Year must be a positive number")
       .integer("Year must be an integer"),
-    door: yup
+    doors: yup
       .number()
       .typeError("Door count must be a number")
       .positive("Door count must be a positive number")
@@ -51,14 +75,26 @@ function CreatePost() {
       .positive("Number of people must be a positive number")
       .integer("Number of people must be an integer"),
     drive_type: yup.string().required("Vehicle drive type  is required"),
-    status: yup.string().required("Vehicle status is required"),
-    meta_description: yup.string().max(100),
-    description: yup.string().max(250),
+    status: yup
+      .string()
+      .oneOf(["sell", "rent"])
+      .required("Vehicle status is required"),
+    meta_description: yup
+      .string()
+      .max(50)
+      .required("Meta description is required"),
+    description: yup.string().max(250).required("Description is required"),
     kilometer: yup
       .number()
-      .typeError("Kilometer of people must be a number")
-      .positive("Kilometer of people must be a positive number")
-      .integer("Kilometer of people must be an integer"),
+      .typeError("Kilometer of vehicle must be a number")
+      .positive("Kilometer of vehicle must be a positive number")
+      .integer("Kilometer of vehicle must be an integer"),
+    file: yup.mixed().test("file", "You need to provide a file", (value) => {
+      if (value.length > 0) {
+        return true;
+      }
+      return false;
+    }),
   });
 
   const {
@@ -87,20 +123,20 @@ function CreatePost() {
     formData.append("description", value?.description);
     formData.append("drive_type", value?.drive_type);
     formData.append("kilometer", value?.kilometer);
-    // formData.append("user", Vehicle?.user?._id);
-    // if (value.imageUrl && value.imageUrl.length > 0) {
-    //   for (const key of Object.keys(value.imageUrl)) {
-    //     formData.append("imageUrl", value.imageUrl[key]);
-    //   }
-    // }
-    // dispatch(UpdateVehicle({ id, data: formData })).then(() => {
-    //   dispatch(GetSingleVehicle(id));
-    // });
+    formData.append("user", user?.id);
+    if (value.file && value.file.length > 0) {
+      for (const key of Object.keys(value.file)) {
+        formData.append("imageUrl", value.file[key]);
+      }
+    }
+
+    dispatch(CreateVehicle(formData)).then(() => {
+      toast.success("Post created sucessfully");
+      navigate("/home");
+    });
   };
 
-  //   if (isLoading) {
-  //     return <Loading />;
-  //   }
+ 
   return (
     <div className="container mx-auto">
       <div className="flex flex-col px-2 mt-8 mb-4 md:mt-16 lg:px-12 md:px-12">
@@ -120,24 +156,32 @@ function CreatePost() {
             </svg>
           </Link>
           <span className="text-lg font-light uppercase text-purple">
-            Update/Posts
+            Create/Posts
           </span>
         </section>
         <section>
           <div className="flex items-center justify-center ">
-            <div className="md:w-[1000px] h-fit w-full p-3 border-2 border-gray-400">
+            {images.map((image, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(image)}
+                alt={`Uploaded ${index}`}
+                style={{ width: "100px", height: "100px", marginRight: "10px" }}
+              />
+            ))}
+            <div className="md:w-[1100px] h-fit w-full mt-2 p-3 border-2 border-gray-400">
               <form onSubmit={handleSubmit(Onsubmit)}>
                 <div className="mt-4">
-                  <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-4 mt-3 md:grid-cols-4">
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Brand</label>
+                      <label className="text-lg ">Brand</label>
                       <input
                         id="brand"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.brand?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("brand")}
                       />
@@ -146,14 +190,14 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Model</label>
+                      <label className="text-lg ">Model</label>
                       <input
                         id="model"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.model?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("model")}
                       />
@@ -162,14 +206,14 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Price</label>
+                      <label className="text-lg ">Price</label>
                       <input
                         id="price"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors && errors.price && errors.price.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("price")}
                       />
@@ -179,9 +223,7 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">
-                        Displacement
-                      </label>
+                      <label className="text-lg ">Displacement</label>
                       <input
                         id="displacement"
                         className={`h-8 pl-2 border-2 outline-none ${
@@ -190,7 +232,7 @@ function CreatePost() {
                           errors.displacement.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("displacement")}
                       />
@@ -201,16 +243,16 @@ function CreatePost() {
                       </small>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-4 mt-3 md:grid-cols-4">
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Category</label>
+                      <label className="text-lg ">Category</label>
                       <input
                         id="category"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.category?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("category")}
                       />
@@ -219,14 +261,14 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Mileage</label>
+                      <label className="text-lg ">Mileage</label>
                       <input
                         id="mileage"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors && errors.mileage && errors.mileage.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("mileage")}
                       />
@@ -235,14 +277,14 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Fule type</label>
+                      <label className="text-lg ">Fule type</label>
                       <input
                         id="fule_type"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.fule_type?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("fule_type")}
                       />
@@ -251,16 +293,14 @@ function CreatePost() {
                       </small>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">
-                        Transmission
-                      </label>
+                      <label className="text-lg ">Transmission</label>
                       <input
                         id="transmission"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.transmission?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("transmission")}
                       />
@@ -269,16 +309,16 @@ function CreatePost() {
                       </small>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-4 mt-3 md:grid-cols-4">
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Color</label>
+                      <label className="text-lg ">Color</label>
                       <input
                         id="color"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors.color?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("color")}
                       />
@@ -287,14 +327,14 @@ function CreatePost() {
                       </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Year</label>
+                      <label className="text-lg ">Year</label>
                       <input
                         id="year"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors && errors.year && errors.year.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("year")}
                       />
@@ -303,23 +343,23 @@ function CreatePost() {
                       </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Doors</label>
+                      <label className="text-lg ">Doors</label>
                       <input
-                        id="door"
+                        id="doors"
                         className={`h-8 pl-2 border-2 outline-none ${
-                          errors && errors.door && errors.door?.message
+                          errors && errors.doors && errors.doors?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
-                        {...register("door")}
+                        {...register("doors")}
                       />
                       <span className="text-xs text-red">
-                        {errors && errors.door && errors.door?.message}
+                        {errors && errors.doors && errors.doors?.message}
                       </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">No.people</label>
+                      <label className="text-lg ">No.people</label>
                       <input
                         id="number_of_people"
                         className={`h-8 pl-2 border-2 outline-none ${
@@ -328,7 +368,7 @@ function CreatePost() {
                           errors.number_of_people?.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("number_of_people")}
                       />
@@ -339,38 +379,54 @@ function CreatePost() {
                       </span>
                     </div>
                   </div>
-                  {/* <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-4 mt-3 md:grid-cols-4">
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">
-                        Drive Type
-                      </label>
+                      <label className="text-lg ">Drive Type</label>
                       <input
                         id="drive_type"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors.drive_type?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  `}
                         type="text"
                         {...register("drive_type")}
                       />
+                      <span className="text-xs text-red">
+                        {errors.drive_type?.message}
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Status</label>
+                      <label className="text-lg ">Status</label>
                       <select
                         id="status"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none bg-white ${
+                          errors.status?.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  `}
                         {...register("status")}
+                        defaultValue=""
                       >
-                        <option value="Sell">Sell</option>
-                        <option value="Buy">Buy</option>
+                        <option value="" disabled>
+                          Select option
+                        </option>
+                        <option value="sell">Sell</option>
+                        <option value="rent">Buy</option>
                       </select>
+                      <span className="text-xs text-red">
+                        {errors.status?.message}
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-lg font-semibold">Kilometer</label>
+                      <label className="text-lg ">Kilometer</label>
                       <input
                         id="kilometer"
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors && errors.kilometer && errors.kilometer.message
                             ? "border-red"
                             : "border-gray-500"
-                        }  rounded-md`}
+                        }  `}
                         type="text"
                         {...register("kilometer")}
                       />
@@ -378,25 +434,29 @@ function CreatePost() {
                         {errors && errors.kilometer && errors.kilometer.message}
                       </span>
                     </div>
-                  </div> */}
-                  {/* <div className="flex flex-col gap-2">
-                    <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-2">
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="grid grid-cols-1 gap-4 mt-3 md:grid-cols-2">
                       <div className="flex flex-col gap-1">
-                        <label className="text-lg font-semibold">
-                          Upload image
-                        </label>
+                        <label className="text-lg ">Upload image</label>
                         <input
-                          id="imageUrl"
+                          id="file"
                           multiple
-                          className="border-2 pl-2 pt-0.5 h-8 border-gray-500 rounded-md"
+                          className={`h-8 pl-2 border-2 outline-none ${
+                            errors && errors?.file && errors.file?.message
+                              ? "border-red"
+                              : "border-gray-500"
+                          }  `}
                           type="file"
-                          {...register("imageUrl", { required: true })}
+                          onChange={(e) => onChangeImages(e?.target?.files)}
+                          {...register("file")}
                         />
+                        <span className="text-xs text-red">
+                          {errors && errors?.file && errors.file?.message}
+                        </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="text-lg font-semibold">
-                          Meta Desciption
-                        </label>
+                        <label className="text-lg ">Meta Desciption</label>
                         <input
                           id="meta_description"
                           className={`h-8 pl-2 border-2 outline-none ${
@@ -405,7 +465,7 @@ function CreatePost() {
                             errors.meta_description?.message
                               ? "border-red"
                               : "border-gray-500"
-                          }  rounded-md`}
+                          }  `}
                           type="text"
                           {...register("meta_description")}
                         />
@@ -424,7 +484,7 @@ function CreatePost() {
                         errors.description?.message
                           ? "border-red"
                           : "border-gray-500"
-                      }  rounded-md`}
+                      }  `}
                       {...register("description")}
                     />
                     <span className="text-xs text-red">
@@ -432,7 +492,7 @@ function CreatePost() {
                         errors.description &&
                         errors.description?.message}
                     </span>
-                  </div>  */}
+                  </div>
                 </div>
                 <div className="flex justify-end">
                   {isSubmitting ? (

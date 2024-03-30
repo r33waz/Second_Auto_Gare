@@ -26,7 +26,7 @@ import UserPost from "./pages/User/userpost/usepost";
 import UserPostUpdate from "./pages/User/userpost/userPostUpdate";
 import Loading from "./components/common/loading";
 import Booking from "./pages/page/booking";
-import CreatePost from "./pages/auth/createPost";
+import CreatePost from "./pages/User/userpost/createPost";
 function App() {
   const paths = [
     "/login",

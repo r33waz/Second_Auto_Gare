@@ -5,6 +5,7 @@ import loginslice from "../loginslice/loginslice";
 import vehicleslice from "../vehicleslice/vehicleslice";
 import userslice from "../userslice/userslice";
 import commentSlice from "../commentslice/commentslice";
+import otpslice from "../sendotp/otpslice";
 const persistConfig = {
   key: "root",
   storage: storage,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   user: userslice,
   vehicle: vehicleslice,
   comment: commentSlice,
+  sendotp: otpslice,
 });
 
 const store = configureStore({

@@ -1,12 +1,13 @@
 import { toast } from "react-toastify";
 import { main_uri, photo_url } from ".";
+import { ErrorToast } from "../components/common/toast";
 
 export const postData = async (url, data) => {
   try {
     const resp = await main_uri.post(url, data);
     return resp.data;
   } catch (error) {
-    toast.error(error.response.data?.message);
+    ErrorToast({ message: error.response.data?.message });
   }
 };
 export const getData = async (url) => {
@@ -15,7 +16,7 @@ export const getData = async (url) => {
     // console.log(resp);
     return resp.data;
   } catch (error) {
-    toast.error(error.response.data?.message);
+     ErrorToast({ message: error.response.data?.message });
   }
 };
 
@@ -24,7 +25,7 @@ export const deleteData = async (url) => {
     const resp = await main_uri.delete(url);
     return resp.data;
   } catch (error) {
-    toast.error(error.response.data?.message);
+     ErrorToast({ message: error.response.data?.message });
   }
 };
 
@@ -34,7 +35,7 @@ export const updateData = async (url, data) => {
     return resp.data;
   } catch (error) {
     console.log(error);
-    toast.error(error.response.data?.message);
+     ErrorToast({ message: error.response.data?.message });
   }
 };
 
@@ -45,6 +46,6 @@ export const postImageData = async (url, data) => {
     return resp.data;
   } catch (error) {
     console.log(error);
-    toast.error(error.response.data?.message);
+     ErrorToast({ message: error.response.data?.message });
   }
 };

@@ -1,5 +1,11 @@
-import { deleteData, getData, updateData } from "../../service/axiosservice";
+import { deleteData, getData, postImageData, updateData } from "../../service/axiosservice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+export const CreateVehicle = createAsyncThunk("vehicle/create", async (data) => {
+  const resp = await postImageData("/api/v1/add_vehicle",data)
+  console.log(resp)
+  return resp?.data
+})
 
 export const FetchVehicle = createAsyncThunk("vehicle/fetch", async () => {
   const resp = await getData("/api/v1/get_allvehicles");
@@ -17,8 +23,7 @@ export const GetSingleVehicle = createAsyncThunk(
 export const UpdateVehicle = createAsyncThunk(
   "vehicle/update",
   async ({ id, data }) => {
-    console.log("userid", id);
-    console.log("userdata", data);
+
     const resp = await updateData(`/api/v1/update_vehicle/${id}`, data);
     return resp?.data;
   }
