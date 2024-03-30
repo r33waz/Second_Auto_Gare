@@ -1,6 +1,7 @@
+import toast from "react-hot-toast";
 import { postData } from "../../service/axiosservice";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { SucessToast } from "../../components/common/toast";
 
 export const postComment = createAsyncThunk("postComment", async (comment) => {
   const resp = await postData("/api/v1/comment", comment);
@@ -24,7 +25,7 @@ const commentSlice = createSlice({
     });
     builder.addCase(postComment.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
-      toast.success("Commented sucessfully");
+      SucessToast({ message: "Commented sucessfully" });
     });
     builder.addCase(postComment.rejected, (state, action) => {
       state.error = action.error.message;

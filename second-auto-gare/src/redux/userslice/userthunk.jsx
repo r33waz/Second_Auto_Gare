@@ -20,8 +20,7 @@ export const GetSingleUser = createAsyncThunk(
 );
 
 export const Updateuser = createAsyncThunk("Updateuser", async ({ id, data }) => {
-  console.log("userid", id);
-  console.log("userdata", data);
+
   const resp = await updateData(`/api/v1/updateuser/${id}`, data);
   return resp.data;
 });

@@ -3,7 +3,7 @@ import axios from "axios";
 const MainAxiosInstance = (headers) => {
   return axios.create({
     baseURL: `${import.meta.env.VITE_MAIN_URL}`,
-    timeout: 5000,
+    timeout: 10000,
     headers, //*Here sending the headers through the MainAxiosInstance parameter
     withCredentials: true,
   });

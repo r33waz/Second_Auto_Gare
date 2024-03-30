@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { createSlice } from "@reduxjs/toolkit";
 import { DeleteUser, GetAllUser, GetSingleUser, Updateuser } from "./userthunk";
+import toast from "react-hot-toast";
 
 const initialState = {
   data: [],

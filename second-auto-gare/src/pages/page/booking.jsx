@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function Booking() {
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  console.log(startDate, endDate);
+
+
   return (
     <div className="mx-auto contianer">
       <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
@@ -27,7 +34,32 @@ function Booking() {
           </div>
         </section>
         {/* to map the vehicle that are for  booking */}
-        <section className="pt-4"></section>
+        <section className="pt-4">
+          <div className="flex items-center gap-1">
+            <div className="flex flex-col gap-1 font-light">
+              <label>Select start date</label>
+              <input
+                className="p-1 border-2 border-gray-400 rounded-md"
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                }}
+              />
+            </div>
+            <div className="flex flex-col gap-1 font-light">
+              <label>Select end date</label>
+              <input
+                className="p-1 border-2 border-gray-400 rounded-md"
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                }}
+              />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

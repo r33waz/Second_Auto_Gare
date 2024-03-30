@@ -5,9 +5,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { postData } from "../../service/axiosservice";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/loginslice/loginslice";
+import toast from "react-hot-toast";
+import { ErrorToast, SucessToast } from "../../components/common/toast";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors,isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: { email: "", password: "" },
     resolver: yupResolver(loginSchema),
@@ -40,12 +41,12 @@ function Login() {
     if (resp?.status && resp.data.role === "user") {
       navigate("/home");
       dispatch(login(resp.data));
-      toast.success(resp.message);
-    }
-
+      SucessToast({ message: resp.message });
+    } 
     if (resp?.status && resp.data.role === "admin") {
       navigate("/admin");
-      toast.success(resp.message);
+      dispatch(login(resp.data));
+      SucessToast({ message: resp.message });
     }
   };
 
@@ -115,7 +116,7 @@ function Login() {
                   )}
                 </span>
               </div>
-              <div className="flex flex-col  gap-5">
+              <div className="flex flex-col gap-5">
                 {isSubmitting ? (
                   <button
                     type="submit"
@@ -165,7 +166,7 @@ function Login() {
                   or
                 </span>
               </div>
-              <div className="flex md:gap-2 gap-2 md:items-center md:justify-between md:flex-nowrap flex-wrap justify-center items-center w-full">
+              <div className="flex flex-wrap items-center justify-center w-full gap-2 md:gap-2 md:items-center md:justify-between md:flex-nowrap">
                 <div className="flex items-center gap-2 p-1 text-black  border rounded-sm shadow-[0px_1px_2px_2px_#00000024] w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

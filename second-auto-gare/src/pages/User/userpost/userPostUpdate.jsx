@@ -72,9 +72,9 @@ function UserPostUpdate() {
     description: yup.string().max(250),
     kilometer: yup
       .number()
-      .typeError("Kilometer of people must be a number")
-      .positive("Kilometer of people must be a positive number")
-      .integer("Kilometer of people must be an integer"),
+      .typeError("Kilometer of vehicle must be a number")
+      .positive("Kilometer of vehicle must be a positive number")
+      .integer("Kilometer of vehicle must be an integer"),
   });
 
   const {

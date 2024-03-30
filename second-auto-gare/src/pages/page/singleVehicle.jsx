@@ -11,8 +11,23 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/loading";
 import { postComment } from "../../redux/commentslice/commentslice";
 import { GetSingleVehicle } from "../../redux/vehicleslice/vehiclethunk";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../shadcn_ui/ui/dialog";
+
+import { Button } from "../../shadcn_ui/ui/button";
+import { SendOtp } from "../../redux/sendotp/otpthunk";
+import Otpvalidation from "../../components/otpValidation";
+import { SucessToast } from "../../components/common/toast";
 
 function SingleVehicle() {
+  const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
@@ -20,7 +35,7 @@ function SingleVehicle() {
   const { singleVehicle, singleVehicleLoading } = useSelector(
     (state) => state.vehicle
   );
-  console.log("single vehicle",singleVehicle)
+  console.log("single vehicle", singleVehicle);
   // console.log("single vehicle", SingleVehicle);
   useEffect(() => {
     if (id) {
@@ -48,6 +63,19 @@ function SingleVehicle() {
     });
     reset();
   };
+  const sendOtp = () => {
+    dispatch(
+      SendOtp({
+        data: {
+          email: login?.email,
+        },
+      }),
+    );
+    setOpen(true);
+  };
+
+  
+ 
   if (singleVehicleLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -426,12 +454,12 @@ function SingleVehicle() {
                         </svg>
                         <span> Drive Type </span>
                       </p>
-                      <p>{singleVehicle?.drivetype}</p>
+                      <p>{singleVehicle?.drive_type}</p>
                     </div>
                   </div>
                   {/*  */}
                   <div className="flex flex-col gap-3 p-2 border-2 ">
-                    {singleVehicle?.user?.photo? (
+                    {singleVehicle?.user?.photo ? (
                       <img
                         src={singleVehicle?.user?.photo.url}
                         alt="user image"
@@ -482,10 +510,60 @@ function SingleVehicle() {
                         <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between gap-2">
-                      <Link className="py-3 text-lg text-center text-white rounded-xl bg-purple">
-                        Message Dealer
-                      </Link>
+                    <div className="flex flex-col justify-between gap-2 relative">
+                      {login?.verified ? (
+                        <Link className="py-3 text-lg text-center text-white rounded-xl bg-purple">
+                          Message Dealer
+                        </Link>
+                      ) : (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button className="py-3 text-lg text-center text-white rounded-xl bg-purple">
+                              Message Dealer
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent
+                            className={`mt-6 ${
+                              isOpen ? "h-56  w-full " : " h-32 w-full"
+                            } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-80 bg-black text-white`}
+                          >
+                            <DialogClose />
+                            <DialogTitle className="text-sm font-light flex gap-2 items-center">
+                              <span>Verify your account</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 15 15"
+                              >
+                                <path
+                                  fill="none"
+                                  stroke="currentColor"
+                                  d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"
+                                />
+                              </svg>
+                            </DialogTitle>
+                            <DialogHeader>
+                              <DialogDescription className="flex flex-col justify-center items-center">
+                                <Button
+                                  onClick={sendOtp}
+                                  className="border md:w-40 border-white font-semibold text-lg p-2 rounded-xl"
+                                >
+                                  Send OTP
+                                </Button>
+
+                                <div
+                                  className={`mt-5 ${
+                                    isOpen ? "visivle" : "hidden"
+                                  }`}
+                                >
+                                  <Otpvalidation/>
+                                </div>
+                              </DialogDescription>
+                            </DialogHeader>
+                          </DialogContent>
+                        </Dialog>
+                      )}
                       <a
                         href={`https://wa.me/${singleVehicle?.user?.phonenumber}/?text=hi`}
                         className="py-3 text-lg text-center text-white rounded-xl bg-green"

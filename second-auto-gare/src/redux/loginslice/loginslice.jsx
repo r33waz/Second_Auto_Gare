@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  login: [],
-  vehicle: [],
+  login: null,
 };
 
 const loginslice = createSlice({
