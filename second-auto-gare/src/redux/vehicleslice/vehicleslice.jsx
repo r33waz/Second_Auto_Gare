@@ -7,6 +7,7 @@ import {
   UpdateVehicle,
 } from "./vehiclethunk";
 import toast from "react-hot-toast";
+import { SucessToast } from "../../components/common/toast";
 
 const initialState = {
   isLoading: false,
@@ -67,7 +68,7 @@ const vehicleSlice = createSlice({
     });
     builder.addCase(UpdateVehicle.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
-      toast.success("Vehicle updated sucessfully");
+      SucessToast({ message: "Vehicle updated sucessfully" });
     });
     builder.addCase(UpdateVehicle.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error.message);

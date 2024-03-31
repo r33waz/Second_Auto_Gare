@@ -1,7 +1,7 @@
 import Renting from "../models/renting.model.js";
 import User from "../models/user.model.js";
 import Vehicle from "../models/vehicle.model.js";
-import moment from "moment"
+import moment from "moment";
 export const createBooking = async (req, res) => {
   try {
     // get data from body
@@ -91,8 +91,7 @@ export const createBooking = async (req, res) => {
       startDate: startDate,
       endDate: endDate,
     });
-    existingUser.booking.push(booking?._id);
-    await booking.save();
+
     return res.status(200).json({
       status: true,
       data: booking,
@@ -279,7 +278,6 @@ export const findBookingByUser = async (req, res) => {
     if (bookings.length === 0) {
       return res.status(400).json({
         status: false,
-        message: "No bookings found for this user",
       });
     }
     return res.status(200).json({
@@ -287,7 +285,6 @@ export const findBookingByUser = async (req, res) => {
       bookings: bookings,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: false,
       message: "Internal server error",

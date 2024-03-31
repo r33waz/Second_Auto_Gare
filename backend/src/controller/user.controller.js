@@ -49,9 +49,9 @@ export const Signup = async (req, res) => {
 export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email,password)
-    const user = await User.findOne({email} );
-    console.log("user",user)
+    console.log(email, password);
+    const user = await User.findOne({ email });
+    console.log("user", user);
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -124,8 +124,7 @@ export const getAllUser = async (req, res) => {
     const user = await User.find().populate(
       "post",
       "model brand color year fule_type kilometer displacement mileage transmission imageUrl doors price number_of_people category status"
-    )
-    .populate("booking", "_id user vehicle startDate endDate");
+    );
     if (user) {
       return res.status(200).json({
         status: true,
@@ -154,14 +153,8 @@ export const getUserById = async (req, res) => {
         "post",
         "model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
       )
-      .populate({
-        path: "booking",
-        model: "Renting",
-        populate: {
-          path: "vehicle",
-          selected:"model brand color year fule_type displacement mileage transmission imageUrl doors price number_of_people category status"
-        },
-      });
+      .select("-password");
+
     if (!user) {
       return res.status(400).json({
         status: false,
@@ -285,7 +278,6 @@ export const userUpdate = async (req, res) => {
     });
   }
 };
-
 
 //*API for user update
 export const userDelete = async (req, res) => {

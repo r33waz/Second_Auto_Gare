@@ -5,29 +5,27 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "../shadcn_ui/ui/input-otp";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { Button } from "../shadcn_ui/ui/button";
-import { VerifyOtp } from "../redux/sendotp/otpthunk";
 import { SucessToast } from "./common/toast";
-import loginslice from "../redux/loginslice/loginslice";
+import { postData } from "../service/axiosservice";
+import { useNavigate } from "react-router-dom";
 
-function Otpvalidation() {
+function Otpvalidation({data}) {
   const [value, setValue] = useState("");
   console.log(value);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { login } = useSelector((state) => state.login);
   console.log("login", login);
-  const handelValidate = () => {
-    dispatch(
-      VerifyOtp({
-        data: {
-          userId: login?.id,
-          token: parseInt(value),
-        },
-      }).then(() => {
-          dispatch(loginslice())
-      })
-    );
+  const handelValidate = async () => {
+    const resp = await postData("/api/v1/verify_otp", {
+      userId: login?.id,
+      token: value,
+    });
+    if (resp?.status) {
+      navigate(`/vehicle/${data}`);
+      SucessToast({ message: resp.message });
+    }
   };
   return (
     <>
@@ -41,7 +39,7 @@ function Otpvalidation() {
             {/* Render the first three InputOTPSlot components */}
             {[0, 1, 2].map((index) => (
               <InputOTPSlot
-                className="bg-white rounded-md text-black"
+                className="text-black bg-white rounded-md"
                 key={index}
                 index={index}
               />
@@ -52,7 +50,7 @@ function Otpvalidation() {
             {/* Render the last three InputOTPSlot components */}
             {[3, 4, 5].map((index) => (
               <InputOTPSlot
-                className="bg-white rounded-md text-black"
+                className="text-black bg-white rounded-md"
                 key={index}
                 index={index}
               />

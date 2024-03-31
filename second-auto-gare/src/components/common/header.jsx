@@ -220,7 +220,9 @@ function Header() {
                             d="M26 4h-4V2h-2v2h-8V2h-2v2H6c-1.1 0-2 .9-2 2v20c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 22H6V12h20zm0-16H6V6h4v2h2V6h8v2h2V6h4z"
                           />
                         </svg>
-                        <Link className="w-full">Booking</Link>
+                        <Link to="/user-booking" className="w-full">
+                          Booking
+                        </Link>
                       </div>
                       <div className="flex items-center w-full gap-2 py-2 rounded-md hover:bg-purple hover:text-white">
                         <svg

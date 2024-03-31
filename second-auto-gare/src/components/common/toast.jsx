@@ -16,7 +16,7 @@ export const SucessToast = ({ message }) => {
 };
 
 export const ErrorToast = ({ message }) => {
-  return toast.success(message, {
+  return toast.error(message, {
     style: {
       border: "1px solid red",
       padding: "16px",

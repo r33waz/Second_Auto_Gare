@@ -22,9 +22,9 @@ import {
 } from "../../shadcn_ui/ui/dialog";
 
 import { Button } from "../../shadcn_ui/ui/button";
-import { SendOtp } from "../../redux/sendotp/otpthunk";
 import Otpvalidation from "../../components/otpValidation";
 import { SucessToast } from "../../components/common/toast";
+import { postData } from "../../service/axiosservice";
 
 function SingleVehicle() {
   const [isOpen, setOpen] = useState(false);
@@ -63,19 +63,15 @@ function SingleVehicle() {
     });
     reset();
   };
-  const sendOtp = () => {
-    dispatch(
-      SendOtp({
-        data: {
-          email: login?.email,
-        },
-      }),
-    );
+  const sendOtp = async () => {
+    const resp = await postData("/api/v1/send_otp", {email:login?.email});
+    console.log("resp",resp)
+    if (resp.status) {
+      SucessToast({ message: resp?.message });
+    }
     setOpen(true);
   };
 
-  
- 
   if (singleVehicleLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -510,7 +506,7 @@ function SingleVehicle() {
                         <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between gap-2 relative">
+                    <div className="relative flex flex-col justify-between gap-2">
                       {login?.verified ? (
                         <Link className="py-3 text-lg text-center text-white rounded-xl bg-purple">
                           Message Dealer
@@ -525,10 +521,10 @@ function SingleVehicle() {
                           <DialogContent
                             className={`mt-6 ${
                               isOpen ? "h-56  w-full " : " h-32 w-full"
-                            } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-80 bg-black text-white`}
+                            } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-40 bg-black text-white`}
                           >
                             <DialogClose />
-                            <DialogTitle className="text-sm font-light flex gap-2 items-center">
+                            <DialogTitle className="flex items-center gap-2 text-sm font-light">
                               <span>Verify your account</span>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -544,10 +540,10 @@ function SingleVehicle() {
                               </svg>
                             </DialogTitle>
                             <DialogHeader>
-                              <DialogDescription className="flex flex-col justify-center items-center">
+                              <DialogDescription className="flex flex-col items-center justify-center">
                                 <Button
                                   onClick={sendOtp}
-                                  className="border md:w-40 border-white font-semibold text-lg p-2 rounded-xl"
+                                  className="p-2 text-lg font-semibold border border-white md:w-40 rounded-xl"
                                 >
                                   Send OTP
                                 </Button>
@@ -557,7 +553,7 @@ function SingleVehicle() {
                                     isOpen ? "visivle" : "hidden"
                                   }`}
                                 >
-                                  <Otpvalidation/>
+                                  <Otpvalidation data={singleVehicle?.id} />
                                 </div>
                               </DialogDescription>
                             </DialogHeader>
@@ -580,7 +576,7 @@ function SingleVehicle() {
               <h1 className="text-4xl font-medium">Comment</h1>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <div className="flex flex-col gap-3 overflow-y-scroll h-96">
+                  <div className="flex flex-col gap-3 overflow-y-scroll ">
                     {singleVehicle?.comments.map((e) => {
                       return (
                         <div
