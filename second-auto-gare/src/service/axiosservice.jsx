@@ -13,7 +13,6 @@ export const postData = async (url, data) => {
 export const getData = async (url) => {
   try {
     const resp = await main_uri.get(url);
-    // console.log(resp);
     return resp.data;
   } catch (error) {
      ErrorToast({ message: error.response.data?.message });
@@ -42,7 +41,6 @@ export const updateData = async (url, data) => {
 export const postImageData = async (url, data) => {
   try {
     const resp = await photo_url.post(url, data);
-    console.log(resp);
     return resp.data;
   } catch (error) {
     console.log(error);

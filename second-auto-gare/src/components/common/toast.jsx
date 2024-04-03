@@ -5,27 +5,30 @@ export const SucessToast = ({ message }) => {
     style: {
       border: "1px solid green",
       padding: "16px",
-      color: "green",
+      color: "white",
+      backgroundColor: "green",
     },
     iconTheme: {
-      primary: "green",
-      secondary: "white",
+      primary: "white",
+      secondary: "green",
     },
     duration: 2000,
   });
 };
 
 export const ErrorToast = ({ message }) => {
-  return toast.success(message, {
+  return toast.error(message, {
     style: {
       border: "1px solid red",
       padding: "16px",
-      color: "red",
+      color: "white",
+      backgroundColor: "red",
     },
     iconTheme: {
-      primary: "red",
-      secondary: "white",
+      primary: "white",
+      secondary: "red",
     },
     duration: 2000,
   });
 };
+

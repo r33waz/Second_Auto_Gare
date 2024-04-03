@@ -23,9 +23,8 @@ const commentSlice = createSlice({
     builder.addCase(postComment.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(postComment.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
-      SucessToast({ message: "Commented sucessfully" });
+    builder.addCase(postComment.fulfilled, (state) => {
+      state.isLoading = false;
     });
     builder.addCase(postComment.rejected, (state, action) => {
       state.error = action.error.message;

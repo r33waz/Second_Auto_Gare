@@ -47,7 +47,6 @@ const userSlice = createSlice({
     builder.addCase(Updateuser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = action.payload;
-      toast.success("User updated successfully");
     });
 
     builder.addCase(Updateuser.rejected, (state, action) => {
@@ -63,7 +62,6 @@ const userSlice = createSlice({
     builder.addCase(DeleteUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = action.payload;
-      toast.success("User deleted successfully");
     });
 
     builder.addCase(DeleteUser.rejected, (state, action) => {

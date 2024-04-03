@@ -5,12 +5,12 @@ import loginslice from "../loginslice/loginslice";
 import vehicleslice from "../vehicleslice/vehicleslice";
 import userslice from "../userslice/userslice";
 import commentSlice from "../commentslice/commentslice";
-import otpslice from "../sendotp/otpslice";
+import bookingslice from "../booking/bookingslice";
 const persistConfig = {
   key: "root",
   storage: storage,
   whitelist: ["login"],
-  blacklist: ["vehicle", "user", "comment"],
+  blacklist: ["vehicle", "user", "comment","booking"],
 };
 
 // Apply persist configuration only to the login slice
@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   user: userslice,
   vehicle: vehicleslice,
   comment: commentSlice,
-  sendotp: otpslice,
+  booking: bookingslice,
 });
 
 const store = configureStore({

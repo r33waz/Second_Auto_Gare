@@ -1,34 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-// import required modules
-import { Autoplay } from "swiper/modules";
 import { SmallCard } from "../../components/common/card";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/loading";
 import { postComment } from "../../redux/commentslice/commentslice";
 import { GetSingleVehicle } from "../../redux/vehicleslice/vehiclethunk";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../shadcn_ui/ui/dialog";
-
-import { Button } from "../../shadcn_ui/ui/button";
-import Otpvalidation from "../../components/otpValidation";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Autoplay } from "swiper/modules";
 import { SucessToast } from "../../components/common/toast";
+import { Button } from "../../shadcn_ui/ui/button";
+import { DialogHeader } from "../../shadcn_ui/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../../shadcn_ui/ui/dialog";
+import Otpvalidation from "../../components/otpValidation";
 import { postData } from "../../service/axiosservice";
+import { CreateBooking } from "../../redux/booking/bookingthunk";
 
-function SingleVehicle() {
+function VehicleBooking() {
   const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
   console.log("login", login);
@@ -37,12 +31,28 @@ function SingleVehicle() {
   );
   console.log("single vehicle", singleVehicle);
   // console.log("single vehicle", SingleVehicle);
+
+
+
   useEffect(() => {
     if (id) {
       console.log("Dispatching GetSingleVehicle with id:", id);
       dispatch(GetSingleVehicle(id));
     }
   }, [dispatch, id]);
+
+  const vehicleBooking = async () => {
+     dispatch(
+       CreateBooking({
+         data: {
+           user: login?.id,
+           vehicle: singleVehicle?._id,
+           startDate: startDate,
+           endDate: endDate,
+         },
+       })
+     );
+  }
 
   const {
     register,
@@ -64,8 +74,8 @@ function SingleVehicle() {
     reset();
   };
   const sendOtp = async () => {
-    const resp = await postData("/api/v1/send_otp", {email:login?.email});
-    console.log("resp",resp)
+    const resp = await postData("/api/v1/send_otp", { email: login?.email });
+    console.log("resp", resp);
     if (resp.status) {
       SucessToast({ message: resp?.message });
     }
@@ -455,117 +465,90 @@ function SingleVehicle() {
                   </div>
                   {/*  */}
                   <div className="flex flex-col gap-3 p-2 border-2 ">
-                    {singleVehicle?.user?.photo ? (
-                      <img
-                        src={singleVehicle?.user?.photo.url}
-                        alt="user image"
-                        className="object-cover w-16 h-16 rounded-full"
-                      />
-                    ) : (
-                      "User"
-                    )}
-                    {/* <img
-                      src={singleVehicle?.user?.photo.url}
-                      alt="user image"
-                      className="object-cover w-16 h-16 rounded-full"
-                    /> */}
-                    <h1 className="text-xl font-medium">
-                      {singleVehicle?.user?.firstname}{" "}
-                      {singleVehicle?.user?.lastname}
-                    </h1>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="30"
-                          height="30"
-                          viewBox="0 0 24 24"
-                          className="p-1 rounded-full bg-purple bg-opacity-20 text-purple"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
-                          />
-                        </svg>
-                        <span>{singleVehicle?.user?.email}</span>
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="flex flex-col gap-1 font-light w-full">
+                        <label>Select start date</label>
+                        <input
+                          className="p-1 w-full border-2 border-gray-400 rounded-md"
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => {
+                            setStartDate(e.target.value);
+                          }}
+                        />
                       </div>
-                      {/*  */}
-                      <div className="flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="30"
-                          height="30"
-                          viewBox="0 0 24 24"
-                          className="p-1 rounded-full bg-purple bg-opacity-20 text-purple"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-2 0l-8 5l-8-5zm0 12H4V8l8 5l8-5z"
-                          />
-                        </svg>
-                        <span>{singleVehicle?.user?.phonenumber}</span>
+                      <div className="flex flex-col gap-1 font-light w-full">
+                        <label>Select end date</label>
+                        <input
+                          className="p-1 w-full border-2 border-gray-400 rounded-md"
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => {
+                            setEndDate(e.target.value);
+                          }}
+                        />
                       </div>
-                    </div>
-                    <div className="relative flex flex-col justify-between gap-2">
-                      {login?.verified ? (
-                        <Link className="py-3 text-lg text-center text-white rounded-xl bg-purple">
-                          Message Dealer
-                        </Link>
-                      ) : (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="py-3 text-lg text-center text-white rounded-xl bg-purple">
-                              Message Dealer
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent
-                            className={`mt-6 ${
-                              isOpen ? "h-56  w-full " : " h-32 w-full"
-                            } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-40 bg-black text-white`}
-                          >
-                            <DialogClose />
-                            <DialogTitle className="flex items-center gap-2 text-sm font-light">
-                              <span>Verify your account</span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="15"
-                                height="15"
-                                viewBox="0 0 15 15"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="currentColor"
-                                  d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"
-                                />
-                              </svg>
-                            </DialogTitle>
-                            <DialogHeader>
-                              <DialogDescription className="flex flex-col items-center justify-center">
-                                <Button
-                                  onClick={sendOtp}
-                                  className="p-2 text-lg font-semibold border border-white md:w-40 rounded-xl"
-                                >
-                                  Send OTP
-                                </Button>
-
-                                <div
-                                  className={`mt-5 ${
-                                    isOpen ? "visivle" : "hidden"
-                                  }`}
-                                >
-                                  <Otpvalidation data={singleVehicle?.id} />
-                                </div>
-                              </DialogDescription>
-                            </DialogHeader>
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      <a
-                        href={`https://wa.me/${singleVehicle?.user?.phonenumber}/?text=hi`}
-                        className="py-3 text-lg text-center text-white rounded-xl bg-green"
+                      <Button
+                        onClick={vehicleBooking}
+                        className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple"
                       >
-                        Message via whatsapp
-                      </a>
+                        Book Now
+                      </Button>
+                      {/* <div className="relative w-full flex flex-col justify-between gap-2">
+                        {login?.verified ? (
+                          <Button className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple">
+                            Book Now
+                          </Button>
+                        ) : (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple">
+                                Book Now
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent
+                              className={`mt-6 ${
+                                isOpen ? "h-56  w-full " : " h-32 w-full"
+                              } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-40 bg-black text-white`}
+                            >
+                              <DialogClose />
+                              <DialogTitle className="flex items-center gap-2 text-sm font-light">
+                                <span>Verify your account</span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="15"
+                                  height="15"
+                                  viewBox="0 0 15 15"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="currentColor"
+                                    d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"
+                                  />
+                                </svg>
+                              </DialogTitle>
+                              <DialogHeader>
+                                <DialogDescription className="flex flex-col items-center justify-center">
+                                  <Button
+                                    onClick={sendOtp}
+                                    className="p-2 text-lg font-semibold border border-white md:w-40 rounded-xl"
+                                  >
+                                    Send OTP
+                                  </Button>
+
+                                  <div
+                                    className={`mt-5 ${
+                                      isOpen ? "visivle" : "hidden"
+                                    }`}
+                                  >
+                                    <Otpvalidation data={singleVehicle?.id} />
+                                  </div>
+                                </DialogDescription>
+                              </DialogHeader>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -637,42 +620,6 @@ function SingleVehicle() {
                     </form>
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex flex-col gap-2">
-                    <h1 className="md:text-xl">Tags:</h1>
-                    <h1 className="px-4 py-1.5 font-medium text-white rounded-md md:text-xl bg-purple w-fit">
-                      Vehicles-{singleVehicle?.category}
-                    </h1>
-                  </div>
-                  <Swiper
-                    slidesPerView={1}
-                    spaceBetween={10}
-                    pagination={{
-                      clickable: true,
-                    }}
-                    autoplay={{
-                      delay: 2500,
-                      disableOnInteraction: false,
-                    }}
-                    breakpoints={{
-                      640: {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                      },
-                      768: {
-                        slidesPerView: 2,
-                        spaceBetween: 40,
-                      },
-                      1024: {
-                        slidesPerView: 2,
-                        spaceBetween: 50,
-                      },
-                    }}
-                    modules={[Autoplay]}
-                    className="py-4"
-                  ></Swiper>
-                </div>
               </div>
             </section>
           </div>
@@ -682,4 +629,4 @@ function SingleVehicle() {
   );
 }
 
-export default SingleVehicle;
+export default VehicleBooking;

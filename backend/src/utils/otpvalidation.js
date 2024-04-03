@@ -5,7 +5,7 @@ export const OTPexpire = async (otptime) => {
         //add otp expiry time to the current time
         const timeDifference = (otptime - dateNow) / 1000
         timeDifference /= 60
-        if (Math.abs(timeDifference) > 3) {
+        if (Math.abs(timeDifference) > 5) {
             return true
         } else {
             return

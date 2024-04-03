@@ -11,7 +11,7 @@ const vehicleSchema = new mongoose.Schema(
     displacement: { type: Number, required: true },
     mileage: { type: Number, required: true },
     transmission: { type: String, required: true },
-    drivetype: { type: String, required: true },
+    drive_type: { type: String, required: true },
     description: { type: String, required: true },
     kilometer: { type: Number, required: true },
     meta_description: {
@@ -50,7 +50,7 @@ const vehicleSchema = new mongoose.Schema(
     avilable: {
       startdate: { type: String },
       enddate: { type: String },
-      isAvilable: { type: Boolean, default: false },
+      isAvilable: { type: Boolean, default: true },
     },
   },
   {

@@ -27,6 +27,8 @@ import UserPostUpdate from "./pages/User/userpost/userPostUpdate";
 import Loading from "./components/common/loading";
 import Booking from "./pages/page/booking";
 import CreatePost from "./pages/User/userpost/createPost";
+import UserBooking from "./pages/User/userpost/usersBooking";
+import VehicleBooking from "./pages/page/vehicleBooking";
 function App() {
   const paths = [
     "/login",
@@ -92,6 +94,8 @@ function App() {
               <Route path="/userpost" element={<UserPost />} />
               <Route path="/updatepost/:id" element={<UserPostUpdate />} />
               <Route path="/createpost" element={<CreatePost />} />
+              <Route path="/user-booking" element={<UserBooking />} />
+              <Route path="/vehicle-booking/:id" element={<VehicleBooking />} />
               {/* </Route> */}
               <Route path="*" element={<Noroute />} />
             </Routes>
