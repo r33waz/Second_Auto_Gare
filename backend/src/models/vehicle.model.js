@@ -50,7 +50,7 @@ const vehicleSchema = new mongoose.Schema(
     avilable: {
       startdate: { type: String },
       enddate: { type: String },
-      isAvilable: { type: Boolean, default: false },
+      isAvilable: { type: Boolean, default: true },
     },
   },
   {

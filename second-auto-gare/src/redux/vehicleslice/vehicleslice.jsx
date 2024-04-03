@@ -68,7 +68,6 @@ const vehicleSlice = createSlice({
     });
     builder.addCase(UpdateVehicle.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
-      SucessToast({ message: "Vehicle updated sucessfully" });
     });
     builder.addCase(UpdateVehicle.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error.message);
@@ -79,7 +78,6 @@ const vehicleSlice = createSlice({
     });
     builder.addCase(DeleteVehicle.fulfilled, (state, action) => {
       (state.isLoading = false), (state.data = action.payload);
-      toast.success("Deleted Successfully");
     });
     builder.addCase(DeleteVehicle.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error.message);

@@ -30,9 +30,7 @@ function Login() {
     resolver: yupResolver(loginSchema),
   });
 
-  useEffect(() => {
-    document.title = "Login";
-  });
+  
 
   const onSumit = async (data) => {
     console.log(data);

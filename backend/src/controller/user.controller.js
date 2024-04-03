@@ -123,7 +123,7 @@ export const getAllUser = async (req, res) => {
   try {
     const user = await User.find().populate(
       "post",
-      "model brand color year fule_type kilometer displacement mileage transmission imageUrl doors price number_of_people category status"
+      "model brand color drive_type year fule_type kilometer displacement mileage transmission imageUrl doors price number_of_people category status"
     );
     if (user) {
       return res.status(200).json({

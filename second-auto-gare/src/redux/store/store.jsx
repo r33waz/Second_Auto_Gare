@@ -10,7 +10,7 @@ const persistConfig = {
   key: "root",
   storage: storage,
   whitelist: ["login"],
-  blacklist: ["vehicle", "user", "comment","bookings"],
+  blacklist: ["vehicle", "user", "comment","booking"],
 };
 
 // Apply persist configuration only to the login slice

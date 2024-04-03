@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GetSingleUserBooking } from "./bookingthunk";
+import { CreateBooking, GetSingleUserBooking } from "./bookingthunk";
+import { SucessToast } from "../../components/common/toast";
 
 const initialState = {
   isLoading: false,
-  data: null,
+  data: [],
   error: null,
 };
 
 const bookingSlice = createSlice({
-  name: "bookings",
+  name: "booking",
   initialState,
-  reducers: {},
+  reducers: {}, 
   extraReducers: (builder) => {
     builder.addCase(GetSingleUserBooking.pending, (state) => {
       state.isLoading = true;
@@ -23,6 +24,18 @@ const bookingSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
+
+     builder.addCase(CreateBooking.pending, (state) => {
+       state.isLoading = true;
+     });
+     builder.addCase(CreateBooking.fulfilled, (state, action) => {
+       state.isLoading = false;
+       state.data = action.payload;
+     });
+     builder.addCase(CreateBooking.rejected, (state, action) => {
+       state.isLoading = false;
+       state.error = action.error.message;
+     });
   },
 });
 

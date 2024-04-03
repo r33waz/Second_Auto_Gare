@@ -35,14 +35,22 @@ export const createBooking = async (req, res) => {
         message: "End Date field is missing",
       });
     }
+
+     if (moment(startDate).isBefore(moment(), "day")) {
+       return res.status(400).json({
+         status: false,
+         message: "Past date  is not allowed for Start Date.",
+       });
+     }
+
+     if (moment(endDate).isBefore(moment(), "day")) {
+       return res.status(400).json({
+         status: false,
+         message: "Past date  is not allowed for End Date.",
+       });
+     }
     // check if the user exists in database
     const existingUser = await User.findOne({ _id: user });
-    if (!existingUser) {
-      return res.status(400).json({
-        status: false,
-        message: "Invalid User ID",
-      });
-    }
     if (!existingUser?.verified) {
       return res.status(400).json({
         status: false,
@@ -57,6 +65,10 @@ export const createBooking = async (req, res) => {
         { endDate: { $gte: startDate, $lte: endDate } },
       ],
     });
+
+    // check if the start date is before the current date
+
+   
 
     if (existingBookings.length > 0) {
       return res.status(400).json({
@@ -80,7 +92,7 @@ export const createBooking = async (req, res) => {
           avilable: {
             startdate: startDate,
             enddate: endDate,
-            isAvilable: true,
+            isAvilable: false,
           },
         },
       }
@@ -91,7 +103,7 @@ export const createBooking = async (req, res) => {
       startDate: startDate,
       endDate: endDate,
     });
-
+    await booking.save();
     return res.status(200).json({
       status: true,
       data: booking,
@@ -203,11 +215,19 @@ export const deleteRentingsVehicle = async (req, res) => {
       "vehicle",
       "_id model brand color imageUrl number_of_people"
     );
-    return res.status(200).json({
-      status: true,
-      data: deletevehicle,
-      message: "Vehicle deleted successfully",
-    });
+    if (!deletevehicle) {
+      return res.status(400).json({
+        status: false,
+      });
+    } else {
+      const deleteBooking = await Renting.findByIdAndDelete({ _id: id });
+      if (deleteBooking) {
+        return res.status(200).json({
+          status: true,
+          message: "Booking deleted  successfully!",
+        });
+      }
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -273,16 +293,17 @@ export const findBookingByUser = async (req, res) => {
     const userId = req.params.id;
     const bookings = await Renting.find({ user: userId }).populate({
       path: "vehicle",
-      select: "_id model brand color imageUrl number_of_people",
+      select:
+        "model brand color year fule_type kilometer displacement mileage transmission imageUrl doors price number_of_people category status avilable",
     });
-    if (bookings.length === 0) {
+    if (!bookings) {
       return res.status(400).json({
         status: false,
       });
     }
     return res.status(200).json({
       status: true,
-      bookings: bookings,
+      data: bookings,
     });
   } catch (error) {
     return res.status(500).json({
