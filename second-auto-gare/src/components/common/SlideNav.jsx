@@ -91,7 +91,7 @@ function SideNav() {
         <div className="flex gap-4 ">
           <div
             className={`min-h-screen bg-sideNav ${
-              open ? "lg:w-72 md:w-60 w-48 sticky z-50 " : "lg:w-16 md:w-16 w-10 sticky z-50 "
+              open ? "lg:w-72 md:w-40 w-48 sticky z-50 " : "lg:w-16 md:w-16 w-10 sticky z-50 "
             } duration-700`}
           >
             <div
@@ -125,7 +125,7 @@ function SideNav() {
                     title={i?.name}
                     key={idx}
                     to={i.link}
-                    className={`flex items-center text-sm gap-3.5 font-medium text-white lg:p-2 md:p-2  group ${
+                    className={`flex items-center  gap-3.5  text-white lg:p-2 md:p-2  ${
                       i.link === pathname
                         ? "bg-purple rounded text-white"
                         : "hover:bg-purple/50 rounded"
@@ -133,7 +133,7 @@ function SideNav() {
                   >
                     <span>{i.svg}</span>
                     <h1
-                      className={`duration-500 text-lg font-semibold ${
+                      className={`duration-500 text-base font-extralight ${
                         !open && "opacity-0 translate-x-28 overflow-hidden"
                       }`}
                     >

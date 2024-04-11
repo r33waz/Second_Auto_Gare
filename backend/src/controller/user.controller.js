@@ -12,7 +12,7 @@ export const Signup = async (req, res) => {
   const saltRounds = 10;
   console.log(req.body);
   try {
-    const { firstname, lastname, email, phonenumber, password, category } =
+    const { firstname, lastname, email, phonenumber, password, role } =
       req.body;
     // Check for existing user with the same username
     const existingUserEmail = await User.findOne({ email });
@@ -29,7 +29,7 @@ export const Signup = async (req, res) => {
       email,
       password: hashpassword,
       phonenumber,
-      role: category,
+      role,
     });
     await newUser.save();
     return res.status(200).json({

@@ -21,9 +21,7 @@ function UserBooking() {
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = vehicles
-    ?.filter((vehicle) => vehicle)
-    .slice(itemOffset, endOffset);
+  const currentItems = vehicles.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(currentItems?.length / itemsPerPage);
   console.log("currentItems", currentItems);
   // Invoke when user click to request another page.
@@ -41,7 +39,7 @@ function UserBooking() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-col h-screen px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
+      <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
         <section className="flex items-center">
           <Link to="/home">
             <svg

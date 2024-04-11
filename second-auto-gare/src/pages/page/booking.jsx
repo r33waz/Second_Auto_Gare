@@ -22,7 +22,7 @@ function Booking() {
   const currentItems = vehicle
     ?.filter(
       (vehicle) =>
-        vehicle.status === "rent" && vehicle.avilable?.isAvilable === true
+        vehicle.status === "rent" && vehicle?.avilable?.isAvilable === true
     )
     .slice(itemOffset, endOffset);
   const pageCount = Math.ceil(currentItems?.length / itemsPerPage);
@@ -42,7 +42,7 @@ function Booking() {
 
   return (
     <div className="mx-auto contianer">
-      <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
+      <div className="flex flex-col h-screen px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
         <section className="flex flex-start">
           <div className="flex gap-3">
             <Link to="/home">

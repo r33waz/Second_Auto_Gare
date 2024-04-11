@@ -70,8 +70,8 @@ function UserPost() {
     return <Loading />;
   }
   return (
-    <div className="container mx-auto">
-      <section className="flex flex-col px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
+    <div className="container flex flex-col h-screen mx-auto">
+      <section className="px-2 mt-8  md:mt-16 lg:px-12 md:px-12">
         <div className="flex flex-col gap-2 w-fit">
           <Link to="/home">
             <svg

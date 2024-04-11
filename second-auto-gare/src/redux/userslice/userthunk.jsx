@@ -9,7 +9,7 @@ export const GetAllUser = createAsyncThunk("GetAllUser", async () => {
       `${import.meta.env.VITE_MAIN_URL}/api/v1/users`
     );
     console.log("thunk all user", resp);
-    return resp.data;
+    return resp?.data?.data;
   } catch (error) {
     ErrorToast({ message: error.response.data?.message });
   }
@@ -54,7 +54,7 @@ export const Updateuser = createAsyncThunk(
 export const DeleteUser = createAsyncThunk("DeleteUser", async (id,{rejectWithValue}) => {
   try {
     const resp = await deleteData(`/api/v1/usersdelete/${id}`);
-    SucessToast({ message: resp?.data?.message });
+    SucessToast({ message: resp?.message });
     return resp?.data;
   } catch (error) {
     ErrorToast({ message: error.response.data?.message });

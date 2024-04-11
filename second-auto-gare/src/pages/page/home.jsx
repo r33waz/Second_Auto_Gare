@@ -13,9 +13,12 @@ import leftRevel from "../../assets/images/leftrevel.png";
 import centerRevel from "../../assets/images/center.png";
 import { Fade } from "react-awesome-reveal";
 import { Button } from "../../shadcn_ui/ui/button";
+import Cookies from "js-cookie";
 
 function Home() {
-  const navigate = useNavigate()
+  const token = Cookies.get("access-token");
+  console.log("token",token)
+  const navigate = useNavigate();
   function LeftArrow({ onClick }) {
     return (
       <div onClick={onClick}>
@@ -97,7 +100,7 @@ function Home() {
 
   const createPost = () => {
     navigate("/createpost");
-  }
+  };
 
   // eslint-disable-next-line no-sparse-arrays
   const carLogos = [

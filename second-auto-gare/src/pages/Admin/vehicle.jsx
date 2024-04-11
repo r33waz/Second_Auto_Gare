@@ -113,7 +113,7 @@ function Vehicle() {
           </div>
 
           <div className="w-full px-2">
-            <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
+            {/* <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
               <div className="flex flex-col w-full gap-2">
                 <label className="text-lg font-light">Filter by brand</label>
                 <select
@@ -196,7 +196,7 @@ function Vehicle() {
                   <option value="Hybrid">Hybrid</option>
                 </select>
               </div>
-            </div>
+            </div> */}
             <Tabs defaultValue="sell" className="w-full ">
               <TabsList className="grid w-full grid-cols-2 gap-4 bg-gray-500 bg-opacity-40">
                 <TabsTrigger
