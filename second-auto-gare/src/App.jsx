@@ -29,6 +29,7 @@ import Booking from "./pages/page/booking";
 import CreatePost from "./pages/User/userpost/createPost";
 import UserBooking from "./pages/User/userpost/usersBooking";
 import VehicleBooking from "./pages/page/vehicleBooking";
+import Inbox from "./pages/page/inbox";
 function App() {
   const paths = [
     "/login",
@@ -82,7 +83,7 @@ function App() {
 
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              {/* <Route element={<PrivateRoutes />}> */}
+              <Route element={<PrivateRoutes />}>
               <Route path="/home" element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
@@ -96,7 +97,8 @@ function App() {
               <Route path="/createpost" element={<CreatePost />} />
               <Route path="/user-booking" element={<UserBooking />} />
               <Route path="/vehicle-booking/:id" element={<VehicleBooking />} />
-              {/* </Route> */}
+              <Route path="/inbox" element={<Inbox />} />
+              </Route>
               <Route path="*" element={<Noroute />} />
             </Routes>
             {!pathname && <Footer />}

@@ -2,12 +2,12 @@ import express from "express";
 import {
   createConservation,
   getAllConservation,
-  getSingleUserMessage,
+  getSingleUserConversation,
 } from "../controller/conservation.controller.js";
 const router = express.Router();
 
-router.post("/message", createConservation);
-router.get("/get_all_message", getAllConservation);
-router.get("/get_all_message/:id", getSingleUserMessage);
+router.post("/conversation", createConservation);
+router.get("/get_all_conversation", getAllConservation);
+router.get("/single_user_conversation/:id", getSingleUserConversation);
 
 export default router;

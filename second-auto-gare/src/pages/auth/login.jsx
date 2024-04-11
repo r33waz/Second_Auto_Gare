@@ -6,9 +6,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { postData } from "../../service/axiosservice";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/loginslice/loginslice";
 import toast from "react-hot-toast";
 import { ErrorToast, SucessToast } from "../../components/common/toast";
+import { userLogin } from "../../redux/loginslice/loginThunk";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,23 +30,15 @@ function Login() {
     resolver: yupResolver(loginSchema),
   });
 
-  
-
   const onSumit = async (data) => {
-    console.log(data);
-    const resp = await postData("/api/v1/login", data);
-    console.log(resp);
-    if (resp?.status && resp.data.role === "user") {
-      navigate("/home");
-      dispatch(login(resp.data));
-      SucessToast({ message: resp.message });
-    } 
-    if (resp?.status && resp.data.role === "admin") {
-      navigate("/admin");
-      dispatch(login(resp.data));
-      SucessToast({ message: resp.message });
-    }
+    dispatch(userLogin(data));
+    navigate("/home");
   };
+  // if (resp?.status && resp.data.role === "admin") {
+  //   navigate("/admin");
+  //   dispatch(login(resp.data));
+  //   SucessToast({ message: resp.message });
+  // }
 
   return (
     <div className="container mx-auto :bg--bg">
@@ -61,7 +53,7 @@ function Login() {
                   autoComplete="off"
                   className={`w-full pl-2 text-black bg-transparent ${
                     errors.email?.message ? "border-red" : "border-gray-500"
-                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none h-14`}
+                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024]  h-14`}
                   placeholder="Email"
                   {...register("email")}
                 />
@@ -76,7 +68,7 @@ function Login() {
                   type={showpassword ? "text" : "password"}
                   className={`w-full pl-2 text-black bg-transparent ${
                     errors.password?.message ? "border-red" : "border-gray-500"
-                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none h-14`}
+                  } border border-gray-500 rounded-sm shadow-[0px_1px_2px_1px_#00000024]  h-14`}
                   placeholder="Password"
                   {...register("password")}
                 />
@@ -93,6 +85,7 @@ function Login() {
                       width="20"
                       height="20"
                       viewBox="0 0 24 24"
+                      className="text-gray-300"
                     >
                       <path
                         fill="black"
@@ -105,6 +98,7 @@ function Login() {
                       width="20"
                       height="20"
                       viewBox="0 0 24 24"
+                      className="text-gray-300"
                     >
                       <path
                         fill="black"

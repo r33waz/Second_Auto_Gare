@@ -25,6 +25,7 @@ import { Button } from "../../shadcn_ui/ui/button";
 import Otpvalidation from "../../components/otpValidation";
 import { SucessToast } from "../../components/common/toast";
 import { postData } from "../../service/axiosservice";
+import Chat from "./chat";
 
 function SingleVehicle() {
   const [isOpen, setOpen] = useState(false);
@@ -35,7 +36,6 @@ function SingleVehicle() {
   const { singleVehicle, singleVehicleLoading } = useSelector(
     (state) => state.vehicle
   );
-  console.log("single vehicle", singleVehicle);
   // console.log("single vehicle", SingleVehicle);
   useEffect(() => {
     if (id) {
@@ -64,8 +64,8 @@ function SingleVehicle() {
     reset();
   };
   const sendOtp = async () => {
-    const resp = await postData("/api/v1/send_otp", {email:login?.email});
-    console.log("resp",resp)
+    const resp = await postData("/api/v1/send_otp", { email: login?.email });
+    console.log("resp", resp);
     if (resp.status) {
       SucessToast({ message: resp?.message });
     }
@@ -83,7 +83,7 @@ function SingleVehicle() {
   return (
     <>
       {singleVehicle && (
-        <div className="container mx-auto">
+        <div className="container mx-auto relative">
           <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
             <section className="flex items-center justify-start gap-3">
               <Link to="/home">
@@ -506,11 +506,11 @@ function SingleVehicle() {
                         <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
-                    <div className="relative flex flex-col justify-between gap-2">
+                    <div className=" flex flex-col justify-between gap-2">
                       {login?.verified ? (
-                        <Link className="py-3 text-lg text-center text-white rounded-xl bg-purple">
-                          Message Dealer
-                        </Link>
+                        <>
+                            <Chat key={singleVehicle?.user?._id} data={singleVehicle?.user} />
+                        </>
                       ) : (
                         <Dialog>
                           <DialogTrigger asChild>

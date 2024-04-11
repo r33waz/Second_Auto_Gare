@@ -4,10 +4,9 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { postData } from "../../service/axiosservice";
 // import { toast } from "react-toastify";
-import { logout } from "../../redux/loginslice/loginslice";
 import { Primary_btn } from "./button";
-import toast from "react-hot-toast";
 import { SucessToast } from "./toast";
+import { userLogut } from "../../redux/loginslice/loginThunk";
 
 function Header() {
   const location = useLocation();
@@ -68,12 +67,8 @@ function Header() {
   }, []);
 
   const handleLogout = async () => {
-    const resp = await postData("/api/v1/logout");
-    if (resp.status) {
-      dispatch(logout(resp.data));
-      navigate("/login");
-      SucessToast({ message: resp?.message });
-    }
+    dispatch(userLogut());
+    navigate("/login");
   };
   return (
     <>
@@ -141,7 +136,23 @@ function Header() {
           </button>
           {user?.login?.islogin === true ? (
             <>
-              <div className="relative">
+              <div className="relative flex gap-3">
+                <Link to="/inbox">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 21 21"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.418 4.214A9.283 9.283 0 0 0 10.5 3.75c-4.418 0-8 3.026-8 6.759c0 1.457.546 2.807 1.475 3.91L3 19l3.916-2.447a9.181 9.181 0 0 0 3.584.714c4.418 0 8-3.026 8-6.758c0-.685-.12-1.346-.345-1.969M16.5 3.5v4m2-2h-4"
+                    />
+                  </svg>
+                </Link>
                 <button onClick={() => setIsopen(!isOpen)}>
                   {/* <img src="/images/avatar" alt="img" /> */}
                   <svg
@@ -161,7 +172,7 @@ function Header() {
                   </svg>
                 </button>
                 <div
-                  className={`absolute z-50 duration-500  right-5 rounded-lg px-2  bg-white ${
+                  className={`absolute z-50 duration-500  right-5 rounded-lg px-2 top-14 shadow-xl  bg-white ${
                     isOpen ? "   h-72 w-60  " : "h-0 w-60"
                   }
               rounded-lg overflow-hidden`}

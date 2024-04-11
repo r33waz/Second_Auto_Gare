@@ -5,24 +5,34 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 import { postData, postImageData } from "../../service/axiosservice";
-import * as yup from "yup"
+import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-yupResolver
+yupResolver;
 function Signup() {
   const naviagte = useNavigate();
-  const [showpassword, setShowpassword] = useState(false);
-//  const SigninSchema = yup.object({
-//    email: yup
-//      .string()
-//      .required("Enter your email")
-//      .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid Email"),
-//    password: yup.string().required("Enter your password"),
-//  });
+  const [isShow, setShow] = useState(false);
+  const [newPassword, setnewPassword] = useState(false);
+  const SigninSchema = yup.object({
+    firstname: yup.string().required("Enter your  First Name"),
+    lastname: yup.string().required("Enter your Last Name"),
+    email: yup
+      .string()
+      .required("Enter your Email")
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email"),
+    phonenumber: yup.string().required("Enter Phone Number"),
+    role: yup.string().required("Select  Your Role"),
+    newpassword: yup.string(),
+    confirmnewpassword: yup
+      .string()
+      .oneOf([yup.ref("newpassword"), null], "Passwords must match"),
+  });
   const {
     register,
     handleSubmit,
-    formState: { errors,isSubmitting },
-  } = useForm();
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(SigninSchema),
+  });
 
   const OnSubmit = async (data) => {
     const formData = new FormData();
@@ -30,8 +40,8 @@ function Signup() {
     formData.append("lastname", data.lastname);
     formData.append("email", data.email);
     formData.append("phonenumber", data.phonenumber);
-    formData.append("password", data.password);
-    formData.append("category", data.category);
+    formData.append("password", data.confirmnewpassword);
+    formData.append("role", data.role);
     const resp = await postData("/api/v1/signup", formData);
     if (resp?.status) {
       naviagte("/login");
@@ -55,15 +65,15 @@ function Signup() {
                     type="text"
                     className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
                       errors.firstname ? "border-red" : "border-gray-500"
-                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
                     placeholder="First name"
                     {...register("firstname", { required: true })}
                     autoComplete="off"
                     autoFocus="on"
                   />
-                  <span className="text-red">
-                    {errors.firstname && <small>Enter your firstname</small>}
-                  </span>
+                  <small className="tracking-wider text-red">
+                    {errors.firstname?.message}
+                  </small>
                 </div>
                 <div className="flex flex-col w-full gap-1">
                   <input
@@ -71,14 +81,14 @@ function Signup() {
                     type="text"
                     className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
                       errors.lastname ? "border-red" : "border-gray-500"
-                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
                     placeholder="Last name"
                     {...register("lastname", { required: true })}
                     autoComplete="off"
                   />
-                  <span className="text-red">
-                    {errors.lastname && <small>Enter your lastname</small>}
-                  </span>
+                  <small className="tracking-wider text-red">
+                    {errors.lastname?.message}
+                  </small>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
@@ -87,47 +97,49 @@ function Signup() {
                   type="text"
                   className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
                     errors.email ? "border-red" : "border-gray-500"
-                  }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
+                  }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
                   placeholder="Email"
-                  {...register("email", {
-                    required: true,
-                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  })}
+                  {...register("email")}
                   autoComplete="off"
                 />
-                <span className="text-red">
-                  {errors.email && <small>Enter your Email</small>}
-                </span>
+                <small className="tracking-wider text-red">
+                  {errors.email?.message}
+                </small>
               </div>
-              <div className="flex flex-wrap gap-5 lg:flex-nowrap md:flex-nowrap ">
-                <div className="relative w-full">
+              <div className="flex flex-col  gap-5 ">
+                <div className="flex flex-col gap-1.5 relative">
                   <input
-                    id="password"
-                    type={showpassword ? "text" : "password"}
+                    type={newPassword ? "text" : "password"}
+                    autoComplete="off"
                     className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
-                      errors.password ? "border-red" : "border-gray-500"
-                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
-                    placeholder="Password"
-                    {...register("password", { required: true })}
+                      errors.newpassword ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
+                    id="newpassword"
+                    placeholder="Create Password"
+                    {...register("newpassword")}
                   />
-                  <span className="text-red">
-                    {errors.password && <small>Enter your password</small>}
-                  </span>
                   <span
-                    className="absolute top-3 right-1"
-                    onClick={() => setShowpassword(!showpassword)}
+                    onClick={() => setnewPassword(!newPassword)}
+                    className="absolute cursor-pointer right-5 top-2.5"
                   >
-                    {showpassword ? (
+                    {newPassword ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
                         height="20"
                         viewBox="0 0 24 24"
+                        className="text-gray-500"
                       >
-                        <path
-                          fill="black"
-                          d="M12 16q1.875 0 3.188-1.313T16.5 11.5q0-1.875-1.313-3.188T12 7q-1.875 0-3.188 1.313T7.5 11.5q0 1.875 1.313 3.188T12 16Zm0-1.8q-1.125 0-1.913-.788T9.3 11.5q0-1.125.788-1.913T12 8.8q1.125 0 1.913.788T14.7 11.5q0 1.125-.787 1.913T12 14.2Zm0 4.8q-3.65 0-6.65-2.038T1 11.5q1.35-3.425 4.35-5.463T12 4q3.65 0 6.65 2.038T23 11.5q-1.35 3.425-4.35 5.463T12 19Zm0-7.5Zm0 5.5q2.825 0 5.188-1.488T20.8 11.5q-1.25-2.525-3.613-4.013T12 6Q9.175 6 6.812 7.488T3.2 11.5q1.25 2.525 3.613 4.013T12 17Z"
-                        />
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path d="M2 12s3-7 10-7s10 7 10 7s-3 7-10 7s-10-7-10-7" />
+                          <circle cx="12" cy="12" r="3" />
+                        </g>
                       </svg>
                     ) : (
                       <svg
@@ -135,14 +147,85 @@ function Signup() {
                         width="20"
                         height="20"
                         viewBox="0 0 24 24"
+                        className="text-gray-500"
                       >
-                        <path
-                          fill="black"
-                          d="m16.1 13.3l-1.45-1.45q.225-1.175-.675-2.2t-2.325-.8L10.2 7.4q.425-.2.863-.3T12 7q1.875 0 3.188 1.313T16.5 11.5q0 .5-.1.938t-.3.862Zm3.2 3.15l-1.45-1.4q.95-.725 1.688-1.587T20.8 11.5q-1.25-2.525-3.588-4.013T12 6q-.725 0-1.425.1T9.2 6.4L7.65 4.85q1.025-.425 2.1-.638T12 4q3.575 0 6.425 1.887T22.7 10.8q.075.125.1.313t.025.387q0 .2-.037.388t-.088.312q-.575 1.275-1.437 2.35t-1.963 1.9Zm-.2 5.45l-3.5-3.45q-.875.275-1.762.413T12 19q-3.575 0-6.425-1.888T1.3 12.2q-.075-.125-.1-.312t-.025-.388q0-.2.025-.375t.1-.3Q1.825 9.7 2.55 8.75T4.15 7L2.075 4.9Q1.8 4.625 1.8 4.212t.3-.712q.275-.275.7-.275t.7.275l17 17q.275.275.288.688t-.288.712q-.275.275-.7.275t-.7-.275ZM5.55 8.4q-.725.65-1.325 1.425T3.2 11.5q1.25 2.525 3.588 4.013T12 17q.5 0 .975-.063t.975-.137l-.9-.95q-.275.075-.525.113T12 16q-1.875 0-3.188-1.312T7.5 11.5q0-.275.038-.525t.112-.525L5.55 8.4Zm7.975 2.325ZM9.75 12.6Z"
-                        />
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24m-3.39-9.04A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                          <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" />
+                        </g>
                       </svg>
                     )}
                   </span>
+                  <small className="tracking-wider text-red">
+                    {errors.newpassword?.message}
+                  </small>
+                </div>
+                <div className="flex flex-col gap-1.5 relative">
+                  <input
+                    type={isShow ? "text" : "password"}
+                    autoComplete="off"
+                    className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
+                      errors.confirmnewpassword ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
+                    id="confirmnewpassword"
+                    placeholder="Re-type  your password"
+                    {...register("confirmnewpassword", {
+                      required: true,
+                    })}
+                  />
+                  <span
+                    onClick={() => setShow(!isShow)}
+                    className="absolute cursor-pointer right-5 top-2.5"
+                  >
+                    {isShow ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        className="text-gray-500"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path d="M2 12s3-7 10-7s10 7 10 7s-3 7-10 7s-10-7-10-7" />
+                          <circle cx="12" cy="12" r="3" />
+                        </g>
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        className="text-gray-500"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24m-3.39-9.04A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                          <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" />
+                        </g>
+                      </svg>
+                    )}
+                  </span>
+                  <small className="tracking-wider text-red">
+                    {errors?.confirmnewpassword?.message}
+                  </small>
                 </div>
               </div>
               <div className="flex flex-wrap gap-5 lg:flex-nowrap md:flex-nowrap">
@@ -152,23 +235,21 @@ function Signup() {
                     type="text"
                     className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
                       errors.phonenumber ? "border-red" : "border-gray-500"
-                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
                     placeholder="Phone number"
                     {...register("phonenumber", { required: true })}
                     autoComplete="off"
                   />
-                  <span className="text-red">
-                    {errors.phonenumber && (
-                      <small>Enter your phonenumber</small>
-                    )}
-                  </span>
+                  <small className="tracking-wider text-red">
+                    {errors.phonenumber?.message}
+                  </small>
                 </div>
                 <div className="flex flex-col w-full gap-1">
                   <select
                     className={`w-full bg-white h-10 text-gray-500 pl-2  bg-transparent border ${
-                      errors.category ? "border-red" : "border-gray-500"
-                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] outline-none`}
-                    {...register("category", { required: true })}
+                      errors.role ? "border-red" : "border-gray-500"
+                    }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
+                    {...register("role")}
                     defaultValue="" // Set the default value to an empty string
                   >
                     <option value="" disabled selected hidden>
@@ -178,7 +259,7 @@ function Signup() {
                     <option value="user">User</option>
                   </select>
                   <span className="text-xs font-semibold text-red">
-                    {errors.category && <p>Category is required</p>}
+                    {errors.role?.message}
                   </span>
                 </div>
               </div>
@@ -218,7 +299,7 @@ function Signup() {
                   </button>
                 )}
                 <span className="text-center text-black">
-                  Already have an account?
+                  Already have an account?&nbsp;
                   <NavLink
                     to="/login"
                     className="font-medium underline text-purple"

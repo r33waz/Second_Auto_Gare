@@ -1,27 +1,27 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import loginslice from "../loginslice/loginslice";
 import vehicleslice from "../vehicleslice/vehicleslice";
 import userslice from "../userslice/userslice";
 import commentSlice from "../commentslice/commentslice";
 import bookingslice from "../booking/bookingslice";
+import conversationSlice from "../conversation/conversationSlice";
+import messageSlice from "../message/messageSlice";
+import loginslice from "../loginslice/loginslice";
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["login"],
-  blacklist: ["vehicle", "user", "comment","booking"],
 };
 
 // Apply persist configuration only to the login slice
-const persistedLoginReducer = persistReducer(persistConfig, loginslice);
-
 const rootReducer = combineReducers({
-  login: persistedLoginReducer,
+  login: persistReducer(persistConfig, loginslice),
   user: userslice,
   vehicle: vehicleslice,
   comment: commentSlice,
   booking: bookingslice,
+  connvo: conversationSlice,
+  message: messageSlice,
 });
 
 const store = configureStore({

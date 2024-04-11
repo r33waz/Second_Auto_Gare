@@ -5,7 +5,7 @@ const conversationSchema = new mongoose.Schema(
     members: {
       //in this type array we store sender id and  receiver id
       // but if the user is not logged in then it will be null
-      type: [],
+      type: Array,
       required: true,
     },
   },

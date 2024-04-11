@@ -26,11 +26,10 @@ export const GetSingleUserBooking = createAsyncThunk(
   "user/booking",
   async ({ id }, { rejectWithValue }) => {
     try {
-      const resp = await axios.post(
+      const resp = await axios.get(
         `${import.meta.env.VITE_MAIN_URL}/api/v1/bookings/${id}`
       );
-      SucessToast({ message: resp?.message });
-      return resp?.data;
+      return resp?.data?.data;
     } catch (error) {
       ErrorToast({ message: error.response.data?.message });
       return rejectWithValue(error.message);

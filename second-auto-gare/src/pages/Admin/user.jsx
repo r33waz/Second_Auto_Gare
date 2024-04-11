@@ -6,6 +6,17 @@ import Loading from "../../components/common/loading";
 import { Card } from "../../components/common/card";
 import { Link, useNavigate } from "react-router-dom";
 import { GetAllUser, DeleteUser } from "../../redux/userslice/userthunk";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../shadcn_ui/ui/dialog";
+import { Button } from "../../shadcn_ui/ui/button";
 
 function User() {
   const dispatch = useDispatch();
@@ -26,7 +37,7 @@ function User() {
   };
 
   const EiditUser = async (id) => {
-    console.log(id)
+    console.log(id);
     navigate(`/admin/updateProfile/${id}`);
   };
 
@@ -82,7 +93,7 @@ function User() {
                       </svg>
                     </div>
                     <h1 className="text-5xl text-purple">
-                      {user?.filter((user) => user.role === "user").length}
+                      {user?.filter((user) => user?.role === "user").length}
                     </h1>
                   </div>
                 </Card>
@@ -177,12 +188,12 @@ function User() {
             </div>
             <div className="w-full  lg:pt-24 md:pt-[px] pt-[500px]">
               <div className="relative">
-                <input
+                {/* <input
                   type="text"
                   className="h-10 pl-8 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
                   placeholder="Serach user"
                   onChange={(e) => setSearchUser(e.target.value)}
-                />
+                /> */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -265,13 +276,54 @@ function User() {
                                       </button>
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-end">
-                                      <button
-                                        onClick={() => deletUeser(e?._id)}
-                                        type="button"
-                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                      >
-                                        Delete
-                                      </button>
+                                      <Dialog>
+                                        <DialogTrigger>
+                                          <button
+                                            type="button"
+                                            className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                          >
+                                            Delete
+                                          </button>
+                                        </DialogTrigger>
+                                        <DialogContent
+                                          className={`mt-6 
+                                           
+                                           sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-60 bg-white `}
+                                        >
+                                          <DialogHeader>
+                                            <DialogTitle>
+                                              Are you absolutely sure?
+                                            </DialogTitle>
+                                            <DialogDescription>
+                                              This action cannot be undone. This
+                                              will permanently delete user
+                                              account and remove your data from
+                                              our servers.
+                                            </DialogDescription>
+                                          </DialogHeader>
+                                          <DialogFooter>
+                                            <div className="flex items-end justify-end gap-2 w-full">
+                                              <DialogClose>
+                                                <Button
+                                                  type="button"
+                                                  className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg bg-gray-500 text-white gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                                >
+                                                  Close
+                                                </Button>
+                                              </DialogClose>
+                                              <Button
+                                                onClick={() =>
+                                                  deletUeser(e?._id)
+                                                }
+                                                type="button"
+                                                className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg bg-red text-white gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                              >
+                                                Delete
+                                              </Button>
+                                            </div>
+                                          </DialogFooter>
+                                        </DialogContent>
+                                      </Dialog>
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
                                       <button
@@ -302,6 +354,13 @@ function User() {
 }
 
 export default User;
+//  <button
+//    onClick={() => deletUeser(e?._id)}
+//    type="button"
+//    className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+//  >
+//    Delete
+//  </button>;
 
 // useEffect(() => {
 //   const debouncing = setTimeout(() => {

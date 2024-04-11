@@ -1,4 +1,5 @@
 import Conversation from "../models/conservation.model.js";
+import User from "../models/user.model.js";
 
 export const createConservation = async (req, res) => {
   try {
@@ -58,19 +59,70 @@ export const getAllConservation = async (req, res) => {
   }
 };
 
-export const getSingleUserMessage = async (req, res) => {
+// export const getSingleUserConversation = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const conversation = await Conversation.find({ members: { $in: [id] } });
+//     const userConservation = await Promise.all(
+//       conversation.map(async (connv) => {
+//         const reciverId = connv.members.find((member) => member !== id);
+//         const user = await User.findById({ _id: reciverId }).select(
+//           "-password"
+//         );
+//         return res.status(200).json({
+//           status: true,
+//           data: {
+//             user: {
+//               id: user?._id,
+//               firstname: user?.firstname,
+//               lastname: user?.lastname,
+//             },
+//             conservationId: connv._id,
+//           },
+//         });
+//       })
+//     );
+//     return res.status(200).json({
+//       status: true,
+//       data:  userConservation,
+//       count: userConservation.length(),
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({
+//       status: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// };
+
+export const getSingleUserConversation = async (req, res) => {
   try {
     const id = req.params.id;
-    const messages = await Conversation.find({ members: { $in: [id] } }).sort({
-      createdAt: -1,
-    });
+    const conversation = await Conversation.find({ members: { $in: [id] } });
+    const userConversations = await Promise.all(
+      conversation.map(async (conv) => {
+        const receiverId = conv.members.find((member) => member !== id);
+        const user = await User.findById(receiverId)
+          .select("-password")
+          .sort({ createdAt: -1 });
+        return {
+          userId: user?._id,
+          firstname: user?.firstname,
+          lastname: user?.lastname,
+          photo: user?.photo?.url,
+          conversationId: conv._id,
+        };
+      })
+    );
     return res.status(200).json({
       status: true,
-      data: messages,
+      data: userConversations,
+      count: userConversations.length,
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: false,
       message: "Internal Server Error",
     });
