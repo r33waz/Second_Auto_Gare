@@ -6,7 +6,7 @@ import reviweRoute from "./reviews.routes.js";
 import commentRoute from "./comment.routes.js";
 import conversationRoute from "./conservation.routes.js";
 import messageRoute from "./message.routes.js";
-
+import chartsRoute from "./charts.routes.js";
 const router = express.Router();
 router.use("/api/v1", userRoute);
 router.use("/api/v1", vehicleRoute);
@@ -15,4 +15,5 @@ router.use("/api/v1", reviweRoute);
 router.use("/api/v1", commentRoute);
 router.use("/api/v1", conversationRoute);
 router.use("/api/v1", messageRoute);
+router.use("/api/v1", chartsRoute);
 export default router;

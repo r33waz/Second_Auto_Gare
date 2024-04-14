@@ -5,8 +5,11 @@ import {
   SendOTP,
   Signup,
   VerifyOtp,
+  forgetPassoword,
   getAllUser,
   getUserById,
+  resetPassword,
+  setPassword,
   userDelete,
   userSearchByEmail,
   userUpdate,
@@ -42,5 +45,8 @@ router.delete(
 router.get("/user", userSearchByEmail);
 router.post("/send_otp", otpVerification, SendOTP);
 router.post("/verify_otp", verifyOtpValidation, VerifyOtp);
+router.post("/forget_password", forgetPassoword);
+router.get("/reset_password/:id/:token", resetPassword);
+router.post("/set_password:id/:token", setPassword);
 
 export default router;
