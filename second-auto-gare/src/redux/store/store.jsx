@@ -8,6 +8,7 @@ import bookingslice from "../booking/bookingslice";
 import conversationSlice from "../conversation/conversationSlice";
 import messageSlice from "../message/messageSlice";
 import loginslice from "../loginslice/loginslice";
+import chartSlice from "../charts/chartSlice";
 const persistConfig = {
   key: "root",
   storage: storage,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   booking: bookingslice,
   connvo: conversationSlice,
   message: messageSlice,
+  chart: chartSlice,
 });
 
 const store = configureStore({

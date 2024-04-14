@@ -51,18 +51,29 @@ export const Updateuser = createAsyncThunk(
   }
 );
 
-export const DeleteUser = createAsyncThunk("DeleteUser", async (id,{rejectWithValue}) => {
-  try {
-    const resp = await deleteData(`/api/v1/usersdelete/${id}`);
-    SucessToast({ message: resp?.message });
-    return resp?.data;
-  } catch (error) {
-    ErrorToast({ message: error.response.data?.message });
-    return rejectWithValue(error?.message);
+export const DeleteUser = createAsyncThunk(
+  "DeleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const resp = await deleteData(`/api/v1/usersdelete/${id}`);
+      SucessToast({ message: resp?.message });
+      return resp?.data;
+    } catch (error) {
+      ErrorToast({ message: error.response.data?.message });
+      return rejectWithValue(error?.message);
+    }
   }
-});
+);
 
-export const SearchUser = createAsyncThunk("SearchUser", async (data) => {
-  const resp = await getData(`/api/v1/user/?email=${data}`);
-  return resp.data;
-});
+export const SearchUser = createAsyncThunk(
+  "SearchUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      const resp = await getData(`/api/v1/user/?email=${data}`);
+      return resp?.data;
+    } catch (error) {
+      ErrorToast({ message: error.response.data?.message });
+      return rejectWithValue(error?.message);
+    }
+  }
+);

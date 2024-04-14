@@ -7,7 +7,7 @@ import { validationResult } from "express-validator";
 import { OTPexpire, TwominOTPexpire } from "../utils/otpvalidation.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
-
+import randomstring from "randomstring";
 export const Signup = async (req, res) => {
   const saltRounds = 10;
   console.log(req.body);
@@ -439,6 +439,117 @@ export const VerifyOtp = async (req, res) => {
       status: true,
       message: "OTP verified successfully!",
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const forgetPassoword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "Email doesnot  exist.",
+      });
+    }
+    if (user) {
+      const RandomString = randomstring.generate();
+      await Token.findOneAndUpdate(
+        { userId: user._id },
+        { token: RandomString, createdAT: Date.now() },
+        { upsert: true, new: true }
+      );
+      const URL = `${process.env.BASE_URL}/id=${user?._id}/token=${RandomString}`;
+
+      const message = `<p>Dear ${user.firstname} ${user.lastname},</p><br>
+<p>We have received a request to reset your password for your Money Mitra account.<br> If you did not request a password reset, please ignore this email.</p>
+<p>To reset your password, please click the link below:</p>
+<a href="${URL}">Reset Password</a>`;
+      sendEmail(user.email, "Reset password", message);
+      return res.status(200).json({
+        status: true,
+        message: `An link has been sent to your email.`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const user = await User.findOne({ id });
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "User not found!",
+      });
+    } else {
+      // Checking for validity of token
+      const secret = process.env.JWT_SECRET_KEY + user?.password;
+      try {
+        const verify = jwt.verify(token, secret);
+        if (user && verify?._id) {
+          res.status(201).json({
+            _id: user._id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            message: "User valid",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          status: false,
+          message: "Internal Server Error",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const setPassword = async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+  try {
+    const otpData = await Token.findOne({ userId: id, token });
+    if (!otpData) {
+      return res.status(400).json({
+        status: false,
+        message: "User not found!",
+      });
+    } else {
+      if (password) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const new_password = await User.findByIdAndUpdate(
+          { _id: id },
+          { password: hashedPassword },
+          { new: true }
+        );
+        new_password.save();
+        return res.status(200).json({
+          status: true,
+          message: "Password updated successfully.",
+        });
+      }
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({

@@ -5,7 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/loading";
 import { Card } from "../../components/common/card";
 import { Link, useNavigate } from "react-router-dom";
-import { GetAllUser, DeleteUser } from "../../redux/userslice/userthunk";
+import {
+  GetAllUser,
+  DeleteUser,
+  SearchUser,
+} from "../../redux/userslice/userthunk";
 import {
   Dialog,
   DialogClose,
@@ -27,7 +31,7 @@ function User() {
     dispatch(GetAllUser());
   }, [dispatch]);
 
-  const deletUeser = async (id) => {
+  const deletUeser = (id) => {
     console.log(id);
     if (id) {
       dispatch(DeleteUser(id)).then(() => {
@@ -36,9 +40,22 @@ function User() {
     }
   };
 
+  const allUser = () => {
+    dispatch(GetAllUser());
+  };
+
   const EiditUser = async (id) => {
     console.log(id);
     navigate(`/admin/updateProfile/${id}`);
+  };
+
+  const handelUserSearch = (e) => {
+    e.preventDefault();
+    const user = e.target.value;
+    setTimeout(() => {
+      console.log("userSearch", user);
+      dispatch(SearchUser(user));
+    }, 1000);
   };
 
   return (
@@ -93,7 +110,10 @@ function User() {
                       </svg>
                     </div>
                     <h1 className="text-5xl text-purple">
-                      {user?.filter((user) => user?.role === "user").length}
+                      {
+                        user?.list?.filter((user) => user?.role === "user")
+                          .length
+                      }
                     </h1>
                   </div>
                 </Card>
@@ -138,7 +158,10 @@ function User() {
                       </svg>
                     </div>
                     <h1 className="text-5xl text-purple">
-                      {user?.filter((user) => user.role === "dealer").length}
+                      {
+                        user?.list?.filter((user) => user.role === "dealer")
+                          .length
+                      }
                     </h1>
                   </div>
                 </Card>
@@ -181,25 +204,40 @@ function User() {
                         </g>
                       </svg>
                     </div>
-                    <h1 className="text-5xl text-purple">{user?.length}</h1>
+                    <h1 className="text-5xl text-purple">
+                      {user?.list?.length}
+                    </h1>
                   </div>
                 </Card>
               </div>
             </div>
-            <div className="w-full  lg:pt-24 md:pt-[px] pt-[500px]">
-              <div className="relative">
-                {/* <input
+            <div className="w-full  lg:pt-16 md:pt-16 pt-[500px]">
+              <div className="relative flex items-center justify-between gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 512 512"
+                  onClick={allUser}
+                  className="p-1 ml-4 text-white rounded-full bg-purple"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M497.333 239.999H80.092l95.995-95.995l-22.627-22.627L18.837 256L153.46 390.623l22.627-22.627l-95.997-95.997h417.243z"
+                  />
+                </svg>
+                <input
                   type="text"
-                  className="h-10 pl-8 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
+                  className="h-10 pl-2 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
                   placeholder="Serach user"
-                  onChange={(e) => setSearchUser(e.target.value)}
-                /> */}
+                  onChange={handelUserSearch}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
                   viewBox="0 0 256 256"
-                  className="absolute top-5 left-5 text-purple"
+                  className="absolute top-5 right-4 text-purple"
                 >
                   <path
                     fill="currentColor"
@@ -254,7 +292,7 @@ function User() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {user?.map((e) => {
+                            {user?.list?.map((e) => {
                               return (
                                 <>
                                   <tr>
@@ -268,12 +306,7 @@ function User() {
                                       {e?.email}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                      <button
-                                        type="button"
-                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                      >
-                                        {e?.role}
-                                      </button>
+                                      {e?.role}
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-end">
                                       <Dialog>
@@ -302,11 +335,11 @@ function User() {
                                             </DialogDescription>
                                           </DialogHeader>
                                           <DialogFooter>
-                                            <div className="flex items-end justify-end gap-2 w-full">
+                                            <div className="flex items-end justify-end w-full gap-2 text-white">
                                               <DialogClose>
                                                 <Button
                                                   type="button"
-                                                  className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg bg-gray-500 text-white gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                                  className="inline-flex items-center text-sm font-semibold text-blue-600 bg-gray-500 border border-transparent border-none rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                                                 >
                                                   Close
                                                 </Button>
@@ -316,7 +349,7 @@ function User() {
                                                   deletUeser(e?._id)
                                                 }
                                                 type="button"
-                                                className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg bg-red text-white gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                                className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent border-none rounded-lg bg-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                                               >
                                                 Delete
                                               </Button>

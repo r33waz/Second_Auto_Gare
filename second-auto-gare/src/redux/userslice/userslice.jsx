@@ -1,9 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { DeleteUser, GetAllUser, GetSingleUser, Updateuser } from "./userthunk";
+import {
+  DeleteUser,
+  GetAllUser,
+  GetSingleUser,
+  SearchUser,
+  Updateuser,
+} from "./userthunk";
 import toast from "react-hot-toast";
 
 const initialState = {
-  data: [],
+  data: {
+    list: [],
+  },
   isLoading: false,
   error: null,
   singleUser: null,
@@ -22,7 +30,8 @@ const userSlice = createSlice({
     });
 
     builder.addCase(GetAllUser.fulfilled, (state, action) => {
-      (state.isLoading = false), (state.data = action.payload);
+      state.isLoading = false;
+      state.data = { ...state.data, list: action.payload };
     });
 
     builder.addCase(GetAllUser.rejected, (state, action) => {
@@ -65,6 +74,21 @@ const userSlice = createSlice({
     });
 
     builder.addCase(DeleteUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+
+    //search user
+    builder.addCase(SearchUser.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(SearchUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data.list = action.payload;
+    });
+
+    builder.addCase(SearchUser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
