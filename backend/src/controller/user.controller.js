@@ -7,7 +7,7 @@ import { validationResult } from "express-validator";
 import { OTPexpire, TwominOTPexpire } from "../utils/otpvalidation.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
-import randomstring from "randomstring";
+
 export const Signup = async (req, res) => {
   const saltRounds = 10;
   console.log(req.body);
@@ -67,7 +67,7 @@ export const Login = async (req, res) => {
     }
     const token = jwt.sign(
       { userID: user._id, role: user.role },
-      process.env.JWT_SECRET_KEY,
+      process.env.SECRET_KEY,
       {
         expiresIn: "1h",
       }
@@ -459,23 +459,27 @@ export const forgetPassoword = async (req, res) => {
       });
     }
     if (user) {
-      const RandomString = randomstring.generate();
-      await Token.findOneAndUpdate(
-        { userId: user._id },
-        { token: RandomString, createdAT: Date.now() },
-        { upsert: true, new: true }
+      const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY, {
+        expiresIn: "300s",
+      });
+      const setusertoken = await User.findByIdAndUpdate(
+        { _id: user._id },
+        { verifytoken: token },
+        { new: true }
       );
-      const URL = `${process.env.BASE_URL}/id=${user?._id}/token=${RandomString}`;
-
-      const message = `<p>Dear ${user.firstname} ${user.lastname},</p><br>
+      if (setusertoken) {
+        const URL = `${process.env.BASE_URL}/ressetPassword/${user?._id}/${token}`;
+        const message = `<p>Dear ${user.firstname} ${user.lastname},</p><br>
 <p>We have received a request to reset your password for your Money Mitra account.<br> If you did not request a password reset, please ignore this email.</p>
 <p>To reset your password, please click the link below:</p>
+<p >Note :<span style="color: red ;">that link expires in 5 minutes</span></p>
 <a href="${URL}">Reset Password</a>`;
-      sendEmail(user.email, "Reset password", message);
-      return res.status(200).json({
-        status: true,
-        message: `An link has been sent to your email.`,
-      });
+        sendEmail(user.email, "Reset password", message);
+        return res.status(200).json({
+          status: true,
+          message: `An link has been sent to your email.`,
+        });
+      }
     }
   } catch (error) {
     console.log(error);
@@ -487,74 +491,49 @@ export const forgetPassoword = async (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
+  const { id, token } = req.params;
+  console.log(id, token);
   try {
-    const { id, token } = req.params;
-    const user = await User.findOne({ id });
-    if (!user) {
-      return res.status(400).json({
-        status: false,
-        message: "User not found!",
-      });
+    const validuser = await User.findOne({ _id: id, verifytoken: token });
+    const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+    console.log("token", verifyToken);
+    if (validuser && verifyToken._id) {
+      res.status(201).json({ status: 201, message: "Valid Token" });
     } else {
-      // Checking for validity of token
-      const secret = process.env.JWT_SECRET_KEY + user?.password;
-      try {
-        const verify = jwt.verify(token, secret);
-        if (user && verify?._id) {
-          res.status(201).json({
-            _id: user._id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            message: "User valid",
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-          status: false,
-          message: "Internal Server Error",
-        });
-      }
+      res.status(401).json({ status: 401, message: "user not exist" });
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal Server Error",
-    });
+    res.status(401).json({ status: 401, message: "Token expired" });
   }
 };
 
 export const setPassword = async (req, res) => {
   const { id, token } = req.params;
   const { password } = req.body;
+  console.log(password)
   try {
-    const otpData = await Token.findOne({ userId: id, token });
-    if (!otpData) {
-      return res.status(400).json({
-        status: false,
-        message: "User not found!",
-      });
+    const validuser = await User.findOne({ _id: id, verifytoken: token });
+
+    const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+
+    if (validuser && verifyToken._id) {
+      const newpassword = await bcrypt.hash(password, 10);
+
+      const setnewuserpass = await User.findByIdAndUpdate(
+        { _id: id },
+        { password: newpassword }
+      );
+
+      setnewuserpass.save();
+      res.status(201).json({ status: 201, setnewuserpass });
     } else {
-      if (password) {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const new_password = await User.findByIdAndUpdate(
-          { _id: id },
-          { password: hashedPassword },
-          { new: true }
-        );
-        new_password.save();
-        return res.status(200).json({
-          status: true,
-          message: "Password updated successfully.",
-        });
-      }
+      res.status(401).json({ status: 401, message: "user not exist" });
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal Server Error",
-    });
+     console.log(error);
+     return res.status(500).json({
+       status: false,
+       message: "Internal Server Error",
+     });
   }
 };

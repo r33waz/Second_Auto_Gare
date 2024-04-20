@@ -67,8 +67,9 @@ function Header() {
   }, []);
 
   const handleLogout = async () => {
-    dispatch(userLogut());
-    navigate("/login");
+    dispatch(userLogut()).then(() => {
+      navigate("/login");
+    });
   };
   return (
     <>
@@ -173,7 +174,7 @@ function Header() {
                 </button>
                 <div
                   className={`absolute z-50 duration-500  right-5 rounded-lg px-2 top-14 shadow-xl  bg-white ${
-                    isOpen ? "   h-72 w-60  " : "h-0 w-60"
+                    isOpen ? "   h-60 w-60  " : "h-0 w-60"
                   }
               rounded-lg overflow-hidden`}
                 >
@@ -249,20 +250,6 @@ function Header() {
                         <Link to="/userpost" className="w-full">
                           Posts
                         </Link>
-                      </div>
-                      <div className="flex items-center gap-2 py-2 rounded-md hover:bg-purple hover:text-white ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="22"
-                          height="22"
-                          viewBox="0 0 32 32"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M24 4v22.75l-7.1-3.59l-.9-.45l-.9.45L8 26.75V4zm0-2H8a2 2 0 0 0-2 2v26l10-5l10 5V4a2 2 0 0 0-2-2"
-                          />
-                        </svg>
-                        <Link className="w-full">Watchlist</Link>
                       </div>
                     </div>
                     <div className="flex items-center w-full gap-2 py-2 rounded-md hover:bg-purple hover:text-white">

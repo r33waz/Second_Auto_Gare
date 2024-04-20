@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import SideNav from "../../components/common/SlideNav";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/loading";
 import { Card } from "../../components/common/card";
 import { Link, useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import {
   GetAllUser,
   DeleteUser,
@@ -21,8 +22,13 @@ import {
   DialogTrigger,
 } from "../../shadcn_ui/ui/dialog";
 import { Button } from "../../shadcn_ui/ui/button";
+import { Loader } from "lucide-react";
 
 function User() {
+  const [itemsPerPage] = useState(12);
+  const [itemOffset, setItemOffset] = useState(0);
+  const Userref = useRef();
+  const [searchValue, setSearchvalue] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: user, isLoading } = useSelector((state) => state.user);
@@ -36,6 +42,7 @@ function User() {
     if (id) {
       dispatch(DeleteUser(id)).then(() => {
         dispatch(GetAllUser());
+        navigate("/admin/user");
       });
     }
   };
@@ -49,374 +56,248 @@ function User() {
     navigate(`/admin/updateProfile/${id}`);
   };
 
-  const handelUserSearch = (e) => {
-    e.preventDefault();
-    const user = e.target.value;
-    setTimeout(() => {
-      console.log("userSearch", user);
-      dispatch(SearchUser(user));
-    }, 1000);
+  const endOffset = itemOffset + itemsPerPage;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  const currentItems = user?.list?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(currentItems?.length / itemsPerPage);
+  console.log(currentItems);
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % user?.list.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
+  const handelUserSearch = () => {
+    const user = searchValue;
+    console.log("userSearch", user);
+    dispatch(SearchUser(user));
   };
 
   return (
     <>
       <div className="flex w-full">
         <SideNav />
-        {isLoading ? (
-          <div className="flex items-center justify-center w-full h-screen">
-            <Loading />
-          </div>
-        ) : (
-          <div className="flex flex-col w-full">
-            <div className="relative z-50 w-full h-40 bg-purple">
-              <div className="absolute flex flex-wrap justify-center w-full gap-8 lg:flex-nowrap md:flex-nowrap lg:top-20 md:top-12 top-12">
-                <Card>
-                  <div className="flex flex-col animate__animated animate__fadeInUp">
-                    <div className="flex justify-between">
-                      <h1 className="text-2xl"> Normal User</h1>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          strokeDasharray="28"
-                          strokeDashoffset="28"
-                          strokeLinecap="round"
-                          strokeWidth="2"
-                        >
-                          <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                          <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.5s"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </div>
-                    <h1 className="text-5xl text-purple">
-                      {
-                        user?.list?.filter((user) => user?.role === "user")
-                          .length
-                      }
-                    </h1>
-                  </div>
-                </Card>
-
-                <Card>
-                  <div className="flex flex-col animate__animated animate__fadeInUp">
-                    <div className="flex justify-between">
-                      <h1 className="text-2xl">Dealers</h1>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          strokeDasharray="28"
-                          strokeDashoffset="28"
-                          strokeLinecap="round"
-                          strokeWidth="2"
-                        >
-                          <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                          <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.5s"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </div>
-                    <h1 className="text-5xl text-purple">
-                      {
-                        user?.list?.filter((user) => user.role === "dealer")
-                          .length
-                      }
-                    </h1>
-                  </div>
-                </Card>
-                <Card>
-                  <div className="flex flex-col animate__animated animate__fadeInUp">
-                    <div className="flex justify-between">
-                      <h1 className="text-2xl">Total Users</h1>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      >
-                        <g
-                          fill="none"
-                          stroke="currentColor"
-                          strokeDasharray="28"
-                          strokeDashoffset="28"
-                          strokeLinecap="round"
-                          strokeWidth="2"
-                        >
-                          <path d="M4 21V20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                          <path d="M12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11Z">
-                            <animate
-                              fill="freeze"
-                              attributeName="stroke-dashoffset"
-                              begin="0.5s"
-                              dur="0.4s"
-                              values="28;0"
-                            />
-                          </path>
-                        </g>
-                      </svg>
-                    </div>
-                    <h1 className="text-5xl text-purple">
-                      {user?.list?.length}
-                    </h1>
-                  </div>
-                </Card>
+        <div className="flex flex-col w-full pt-5">
+          <h2 className="text-4xl">User Table</h2>
+          <div className="w-full pt-10">
+            <div className="flex items-center gap-3 md:justify-between">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 512 512"
+                onClick={allUser}
+                className="p-1 ml-4 text-white rounded-full bg-purple"
+              >
+                <path
+                  fill="currentColor"
+                  d="M497.333 239.999H80.092l95.995-95.995l-22.627-22.627L18.837 256L153.46 390.623l22.627-22.627l-95.997-95.997h417.243z"
+                />
+              </svg>
+              <div className="flex items-center ">
+                <input
+                  onChange={(e) => setSearchvalue(e.target?.value)}
+                  type="text"
+                  className="w-40 h-10 pl-2 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 placeholder:text-gray-500"
+                  placeholder="Serach user"
+                />
+                <Button onClick={handelUserSearch}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 256 256"
+                    className="rounded-md bg-purple p-1.5 text-white"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="m226.83 221.17l-52.7-52.7a84.1 84.1 0 1 0-5.66 5.66l52.7 52.7a4 4 0 0 0 5.66-5.66M36 112a76 76 0 1 1 76 76a76.08 76.08 0 0 1-76-76"
+                    />
+                  </svg>
+                </Button>
               </div>
             </div>
-            <div className="w-full  lg:pt-16 md:pt-16 pt-[500px]">
-              <div className="relative flex items-center justify-between gap-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 512 512"
-                  onClick={allUser}
-                  className="p-1 ml-4 text-white rounded-full bg-purple"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M497.333 239.999H80.092l95.995-95.995l-22.627-22.627L18.837 256L153.46 390.623l22.627-22.627l-95.997-95.997h417.243z"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  className="h-10 pl-2 mt-2 ml-3 border-2 border-gray-500 rounded-lg outline-none lg:w-60 md:w-60 w-fit placeholder:text-gray-500"
-                  placeholder="Serach user"
-                  onChange={handelUserSearch}
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 256 256"
-                  className="absolute top-5 right-4 text-purple"
-                >
-                  <path
-                    fill="currentColor"
-                    d="m228.24 219.76l-51.38-51.38a86.15 86.15 0 1 0-8.48 8.48l51.38 51.38a6 6 0 0 0 8.48-8.48M38 112a74 74 0 1 1 74 74a74.09 74.09 0 0 1-74-74"
-                  />
-                </svg>
-              </div>
-              <section>
-                <div className="flex flex-col px-2">
-                  <div className="-m-1.5 overflow-x-auto">
-                    <div className="p-1.5 min-w-full inline-block align-middle">
-                      <div className="overflow-hidden">
-                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                          <thead>
-                            <tr>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-start"
-                              >
-                                Firstname
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-start"
-                              >
-                                Lastname
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-start"
-                              >
-                                Email
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-start"
-                              >
-                                Role
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-end"
-                              >
-                                Role
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-6 py-3 text-xs font-medium text-gray-500 uppercase text-end"
-                              >
-                                Role
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {user?.list?.map((e) => {
-                              return (
-                                <>
-                                  <tr>
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap ">
-                                      {e?.firstname}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                      {e?.lastname}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                      {e?.email}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap ">
-                                      {e?.role}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-end">
-                                      <Dialog>
-                                        <DialogTrigger>
-                                          <button
-                                            type="button"
-                                            className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                          >
-                                            Delete
-                                          </button>
-                                        </DialogTrigger>
-                                        <DialogContent
-                                          className={`mt-6 
+            <section>
+              <div className="flex flex-col px-2">
+                <div className="overflow-x-auto">
+                  <div className="w-full pt-10 overflow-x-auto overflow-y-auto h-[700px]">
+                    {isLoading ? (
+                      <Loader />
+                    ) : (
+                      <table className="w-full mb-4 bg-white border divide-y divide-gray-200 rounded shadow-md dark:divide-gray-700">
+                        <thead className="border-b-2">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Firstname
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Lastname
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Email
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Role
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 font-medium text-gray-500 uppercase text-end"
+                            ></th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 font-medium text-gray-500 uppercase text-end"
+                            ></th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-sm font-light text-center divide-y divide-gray-200 dark:divide-gray-700">
+                          {currentItems?.map((e) => {
+                            return (
+                              <>
+                                <tr>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                    {e?.firstname}
+                                  </td>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                    {e?.lastname}
+                                  </td>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                    {e?.email}
+                                  </td>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                    {e?.role}
+                                  </td>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap "></td>
+                                  <td className="px-6 py-4 text-gray-800 whitespace-nowrap "></td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-end">
+                                    <Dialog>
+                                      <DialogTrigger>
+                                        <button
+                                          type="button"
+                                          className="inline-flex items-center text-sm font-semibold cursor-pointer text-red gap-x-2"
+                                        >
+                                          Delete User
+                                        </button>
+                                      </DialogTrigger>
+                                      <DialogContent
+                                        className={`mt-6 
                                            
                                            sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-60 bg-white `}
-                                        >
-                                          <DialogHeader>
-                                            <DialogTitle>
-                                              Are you absolutely sure?
-                                            </DialogTitle>
-                                            <DialogDescription>
-                                              This action cannot be undone. This
-                                              will permanently delete user
-                                              account and remove your data from
-                                              our servers.
-                                            </DialogDescription>
-                                          </DialogHeader>
-                                          <DialogFooter>
-                                            <div className="flex items-end justify-end w-full gap-2 text-white">
-                                              <DialogClose>
-                                                <Button
-                                                  type="button"
-                                                  className="inline-flex items-center text-sm font-semibold text-blue-600 bg-gray-500 border border-transparent border-none rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                                >
-                                                  Close
-                                                </Button>
-                                              </DialogClose>
-                                              <Button
-                                                onClick={() =>
-                                                  deletUeser(e?._id)
-                                                }
-                                                type="button"
-                                                className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent border-none rounded-lg bg-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                              >
-                                                Delete
-                                              </Button>
-                                            </div>
-                                          </DialogFooter>
-                                        </DialogContent>
-                                      </Dialog>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
-                                      <button
-                                        onClick={() => EiditUser(e?._id)}
-                                        type="button"
-                                        className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                                       >
-                                        Eidit
-                                      </button>
-                                    </td>
-                                  </tr>
-                                </>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+                                        <DialogHeader>
+                                          <DialogTitle>
+                                            Are you absolutely sure?
+                                          </DialogTitle>
+                                          <DialogDescription>
+                                            This action cannot be undone. This
+                                            will permanently delete user account
+                                            and remove your data from our
+                                            servers.
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <DialogFooter>
+                                          <div className="flex items-end justify-end w-full gap-2 text-white">
+                                            <DialogClose>
+                                              <Button
+                                                type="button"
+                                                className="inline-flex items-center text-sm font-semibold text-blue-600 bg-gray-500 border border-transparent border-none rounded-lg gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                              >
+                                                Close
+                                              </Button>
+                                            </DialogClose>
+                                            <Button
+                                              onClick={() => deletUeser(e?._id)}
+                                              type="button"
+                                              className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent border-none rounded-lg bg-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                            >
+                                              Delete
+                                            </Button>
+                                          </div>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
+                                  </td>
+                                  <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
+                                    <Button
+                                      onClick={() => EiditUser(e?._id)}
+                                      type="button"
+                                      className="text-sm font-semibold text-center text-blue-600 rounded-lg cursor-pointer gap-x-2"
+                                    >
+                                      View User
+                                    </Button>
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
                   </div>
+                  <ReactPaginate
+                    previousLabel={
+                      <span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="32"
+                          height="32"
+                          viewBox="0 0 1024 1024"
+                          className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="m272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9z"
+                          />
+                        </svg>
+                      </span>
+                    }
+                    nextLabel={
+                      <span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="32"
+                          height="32"
+                          viewBox="0 0 1024 1024"
+                          className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512L181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5m304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512L485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5"
+                          />
+                        </svg>
+                      </span>
+                    }
+                    // breakLabel={"..."}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    containerClassName="flex items-center justify-center my-8 gap-4 "
+                    pageClassName="border rounded-full block hover:bg-purple hover:text-white w-10 h-10 flex justify-center items-center "
+                    pageLinkClassName="page-link"
+                    activeClassName="bg-purple text-white"
+                  />
                 </div>
-              </section>
-            </div>
+              </div>
+            </section>
           </div>
-        )}
+        </div>
       </div>
     </>
   );
 }
-
 export default User;
-//  <button
-//    onClick={() => deletUeser(e?._id)}
-//    type="button"
-//    className="inline-flex items-center text-sm font-semibold text-blue-600 border border-transparent rounded-lg text-red gap-x-2 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-//  >
-//    Delete
-//  </button>;
-
-// useEffect(() => {
-//   const debouncing = setTimeout(() => {
-//     searchUser();
-//   }, 700);
-//   return () => clearTimeout(debouncing);
-// }, [userSearch]);
-// const deleteUser = async (id) => {
-//   const resp = await deleteData(`api/v1/usersdelete/${id}`);
-//   console.log(resp);
-//   if (resp?.status) {
-//     toast.success(resp.message);
-//   }
-// };
-
-// const updateUser = async (id) => {
-//   navigate(`updateProfile/${id}`);
-// };
-
-// const searchUser = async () => {
-//   const resp = await getData(`api/v1/user/?email=${userSearch}`);
-//   console.log(resp);
-//   if (resp.status) {
-//     setUserData(resp.data);
-//   }
-// };

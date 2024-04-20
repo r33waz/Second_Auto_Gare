@@ -14,6 +14,7 @@ import centerRevel from "../../assets/images/center.png";
 import { Fade } from "react-awesome-reveal";
 import { Button } from "../../shadcn_ui/ui/button";
 import Cookies from "js-cookie";
+import Slider from "react-slick";
 
 function Home() {
   const token = Cookies.get("access-token");
@@ -198,8 +199,9 @@ function Home() {
           </Button>
         </div>
       </div>
-      <div className="mt-16 lg:mt-32 md:mt-32">
+      <div className="mt-16 lg:mt-32 md:mt-32 ">
         <section>
+          asdasdasd
           {/* <Slider {...settings}>
             {carLogos.map((i, idx) => {
               return (

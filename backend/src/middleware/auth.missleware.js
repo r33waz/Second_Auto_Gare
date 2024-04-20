@@ -5,7 +5,7 @@ export const authentication = async (req, res, next) => {
     return res.sendStatus(403);
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const data = jwt.verify(token, process.env.SECRET_KEY);
     req.userId = data.id;
     req.userRole = data.role;
     return next();

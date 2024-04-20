@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetSingleUser, Updateuser } from "../../redux/userslice/userthunk";
 import Loading from "../../components/common/loading";
 import logo from "../../assets/images/kidmfond.jpg";
-import { Save_btn } from "../../components/common/button";
+import { Button } from "../../shadcn_ui/ui/button";
 function UpdateUser() {
   const [isShow, setShow] = useState(false);
   const [newPassword, setnewPassword] = useState(false);
@@ -31,7 +31,13 @@ function UpdateUser() {
     lastname: yup.string(),
     email: yup.string(),
     phonenumber: yup.string(),
-    newpassword: yup.string(),
+    newpassword: yup
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .matches(
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
     confirmnewpassword: yup
       .string()
       .oneOf([yup.ref("newpassword"), null], "Passwords must match"),
@@ -91,12 +97,23 @@ function UpdateUser() {
           <div className="px-2 lg:px-12 md:px-12">
             <section className="mt-8">
               <div className="flex items-start justify-center h-screen ">
-                <div className="flex gap-2 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md bg-purple bg-opacity-40 lg:flex-nowrap md:flex-nowrap flex-wrap relative">
-                  <img
-                    src={logo}
-                    alt="img"
-                    className="absolute rounded-full h-14 w-14 left-3 top-3"
-                  />
+                <div className="flex  gap-2 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md bg-purple bg-opacity-40 lg:flex-nowrap md:flex-nowrap flex-wrap relative">
+                  <Link
+                    to="/admin/user"
+                    className="absolute z-50 p-1 text-sm text-white rounded-full top-5 left-5 bg-purple"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1z"
+                      />
+                    </svg>
+                  </Link>
                   <div className="flex flex-col items-center justify-center w-full gap-3 p-3 text-white rounded-md lg:w-80 md:w-80 bg-sideNav">
                     {user?.photo?.url ? (
                       <img
@@ -385,7 +402,7 @@ function UpdateUser() {
                           </div>
                         </div>
                         {/*  */}
-                        <Save_btn>
+                        <Button className="text-lg text-white bg-purple">
                           {isSubmitting ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -413,9 +430,9 @@ function UpdateUser() {
                               </path>
                             </svg>
                           ) : (
-                            "Save chnage"
+                            "Save change"
                           )}
-                        </Save_btn>
+                        </Button>
                       </div>
                     </div>
                   </form>

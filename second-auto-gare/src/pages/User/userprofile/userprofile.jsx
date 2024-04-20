@@ -9,10 +9,11 @@ import logo from "../../../assets/images/kidmfond.jpg";
 
 import { GetSingleUser, Updateuser } from "../../../redux/userslice/userthunk";
 import { Button } from "../../../shadcn_ui/ui/button";
+import { Link } from "react-router-dom";
 function Userprofile() {
   const dispatch = useDispatch();
   const { login } = useSelector((state) => state.login);
-  const { singleUser: data, singleUserLoading:isLoading } = useSelector(
+  const { singleUser: data, singleUserLoading: isLoading } = useSelector(
     (state) => state.user
   );
   console.log("user", data);
@@ -29,7 +30,13 @@ function Userprofile() {
     lastname: yup.string(),
     email: yup.string(),
     phonenumber: yup.string(),
-    newpassword: yup.string(),
+    newpassword: yup
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .matches(
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
     confirmnewpassword: yup
       .string()
       .oneOf([yup.ref("newpassword"), null], "Passwords must match"),
@@ -76,7 +83,7 @@ function Userprofile() {
           <div className="px-2 md:mt-16 lg:px-12 md:px-12">
             <section className="mt-8">
               <div className="flex items-start justify-center h-screen ">
-                <div className="flex gap-2 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md bg-purple bg-opacity-40 lg:flex-nowrap md:flex-nowrap flex-wrap relative">
+                <div className="flex gap-4 border-2 border-gray-400 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md bg-purple bg-opacity-40 lg:flex-nowrap md:flex-nowrap flex-wrap relative">
                   <img
                     src={logo}
                     alt="img"
@@ -87,7 +94,7 @@ function Userprofile() {
                       <img
                         src={data?.photo?.url}
                         alt="image"
-                        className="object-cover rounded-full h-60 w-60"
+                        className="object-fill rounded-full h-60 w-60"
                       />
                     ) : (
                       <svg
@@ -155,6 +162,12 @@ function Userprofile() {
                         </p>
                       </div>
                     </div>
+                    <Link
+                      to="/forgetpassword"
+                      className="font-light underline text-purple"
+                    >
+                      Forget password?
+                    </Link>
                   </div>
 
                   <form onSubmit={handleSubmit(OnSubmit)}>
@@ -357,7 +370,7 @@ function Userprofile() {
                             <input
                               id="photo"
                               type="file"
-                              className="w-full h-8 pt-1 pl-2 bg-white rounded-sm"
+                              className="w-full h-10 pt-1 pl-2 bg-white rounded-sm"
                               {...register("photo", { required: true })}
                             />
                           </div>

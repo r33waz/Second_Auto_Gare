@@ -4,7 +4,7 @@ const MainAxiosInstance = (headers) => {
   return axios.create({
     baseURL: `${import.meta.env.VITE_MAIN_URL}`,
     timeout: 10000,
-    headers, //*Here sending the headers through the MainAxiosInstance parameter
+    headers,
     withCredentials: true,
   });
 };

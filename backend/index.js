@@ -80,8 +80,8 @@ io.on("connection", (socket) => {
 
 app.use(mainRouter);
 server.listen(SOCKET_PORT, () => {
-  console.log(`Server running!${SOCKET_PORT}`);
+  console.log(`Socket is running at ${SOCKET_PORT}`);
 });
 app.listen(PORT, () => {
-  console.log(`Server is running at ${PORT}/`);
+  console.log(`Server is running at ${PORT}`);
 });

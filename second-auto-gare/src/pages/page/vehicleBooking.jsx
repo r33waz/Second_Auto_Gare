@@ -5,7 +5,7 @@ import { GetSingleVehicle } from "../../redux/vehicleslice/vehiclethunk";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,7 +13,14 @@ import { Autoplay } from "swiper/modules";
 import { SucessToast } from "../../components/common/toast";
 import { Button } from "../../shadcn_ui/ui/button";
 import { DialogHeader } from "../../shadcn_ui/ui/dialog";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../../shadcn_ui/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "../../shadcn_ui/ui/dialog";
 import Otpvalidation from "../../components/otpValidation";
 import { postData } from "../../service/axiosservice";
 import { CreateBooking } from "../../redux/booking/bookingthunk";
@@ -21,6 +28,8 @@ import { CreateBooking } from "../../redux/booking/bookingthunk";
 function VehicleBooking() {
   const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
+  const { authenticate } = useSelector((state) => state.login);
+
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const dispatch = useDispatch();
@@ -32,8 +41,6 @@ function VehicleBooking() {
   console.log("single vehicle", singleVehicle);
   // console.log("single vehicle", SingleVehicle);
 
-
-
   useEffect(() => {
     if (id) {
       console.log("Dispatching GetSingleVehicle with id:", id);
@@ -42,17 +49,26 @@ function VehicleBooking() {
   }, [dispatch, id]);
 
   const vehicleBooking = async () => {
-     dispatch(
-       CreateBooking({
-         data: {
-           user: login?.id,
-           vehicle: singleVehicle?._id,
-           startDate: startDate,
-           endDate: endDate,
-         },
-       })
-     );
-  }
+    dispatch(
+      CreateBooking({
+        data: {
+          user: login?.id,
+          vehicle: singleVehicle?._id,
+          startDate: startDate,
+          endDate: endDate,
+        },
+      })
+    );
+  };
+
+  const sendOtp = async () => {
+    const resp = await postData("/api/v1/send_otp", { email: login?.email });
+    console.log("resp", resp);
+    if (resp.status) {
+      SucessToast({ message: resp?.message });
+    }
+    setOpen(true);
+  };
 
   const {
     register,
@@ -72,14 +88,6 @@ function VehicleBooking() {
       dispatch(GetSingleVehicle(id));
     });
     reset();
-  };
-  const sendOtp = async () => {
-    const resp = await postData("/api/v1/send_otp", { email: login?.email });
-    console.log("resp", resp);
-    if (resp.status) {
-      SucessToast({ message: resp?.message });
-    }
-    setOpen(true);
   };
 
   if (singleVehicleLoading) {
@@ -463,13 +471,12 @@ function VehicleBooking() {
                       <p>{singleVehicle?.drive_type}</p>
                     </div>
                   </div>
-                  {/*  */}
                   <div className="flex flex-col gap-3 p-2 border-2 ">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="flex flex-col gap-1 font-light w-full">
+                      <div className="flex flex-col w-full gap-1 font-light">
                         <label>Select start date</label>
                         <input
-                          className="p-1 w-full border-2 border-gray-400 rounded-md"
+                          className="w-full p-1 border-2 border-gray-400 rounded-md"
                           type="date"
                           min={new Date().toISOString().split("T")[0]}
                           onChange={(e) => {
@@ -477,10 +484,10 @@ function VehicleBooking() {
                           }}
                         />
                       </div>
-                      <div className="flex flex-col gap-1 font-light w-full">
+                      <div className="flex flex-col w-full gap-1 font-light">
                         <label>Select end date</label>
                         <input
-                          className="p-1 w-full border-2 border-gray-400 rounded-md"
+                          className="w-full p-1 border-2 border-gray-400 rounded-md"
                           type="date"
                           min={new Date().toISOString().split("T")[0]}
                           onChange={(e) => {
@@ -488,21 +495,28 @@ function VehicleBooking() {
                           }}
                         />
                       </div>
-                      <Button
-                        onClick={vehicleBooking}
-                        className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple"
-                      >
-                        Book Now
-                      </Button>
-                      {/* <div className="relative w-full flex flex-col justify-between gap-2">
-                        {login?.verified ? (
-                          <Button className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple">
-                            Book Now
-                          </Button>
+
+                      <div className="relative flex flex-col justify-between w-full gap-2">
+                        {!authenticate ? (
+                          <Link
+                            to="/login"
+                            className="py-3 text-lg text-center text-white rounded-xl bg-purple"
+                          >
+                            Message Dealer
+                          </Link>
+                        ) : login?.verified ? (
+                          <>
+                            <Button
+                              onClick={vehicleBooking}
+                              className="w-full py-3 text-lg text-center text-white rounded-xl bg-purple"
+                            >
+                              Book Now
+                            </Button>
+                          </>
                         ) : (
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button className="py-3 w-full text-lg text-center text-white rounded-xl bg-purple">
+                              <Button className="w-full py-3 text-lg text-center text-white rounded-xl bg-purple">
                                 Book Now
                               </Button>
                             </DialogTrigger>
@@ -548,7 +562,7 @@ function VehicleBooking() {
                             </DialogContent>
                           </Dialog>
                         )}
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -567,9 +581,9 @@ function VehicleBooking() {
                           className="flex flex-col gap-3 p-4 border shadow-md"
                         >
                           <div className="flex items-center gap-2">
-                            {e?.author?.photo[0]?.url ? (
+                            {e?.author?.photo?.url ? (
                               <img
-                                src={e?.author?.photo[0]?.url}
+                                src={e?.author?.photo?.url}
                                 alt="image"
                                 className="w-8 h-8 rounded-full"
                               />
@@ -609,12 +623,21 @@ function VehicleBooking() {
                           <span className="text-red">Write your comment</span>
                         )}
                         <div className="flex justify-end">
-                          <button
-                            type="submit"
-                            className="px-4 py-2 font-medium text-center text-white rounded-md bg-purple w-fit"
-                          >
-                            Submit
-                          </button>
+                          {!authenticate ? (
+                            <Link
+                              to="/login"
+                              className="px-4 py-2 font-medium text-center text-white rounded-md bg-purple w-fit"
+                            >
+                              Login
+                            </Link>
+                          ) : (
+                            <button
+                              type="submit"
+                              className="px-4 py-2 font-medium text-center text-white rounded-md bg-purple w-fit"
+                            >
+                              Submit
+                            </button>
+                          )}
                         </div>
                       </div>
                     </form>

@@ -22,7 +22,7 @@ export const Addvehicle = async (req, res) => {
       mileage,
       fule_type,
       kilometer,
-      drivetype,
+      drive_type,
       transmission,
       description,
       meta_description,
@@ -100,7 +100,7 @@ export const Addvehicle = async (req, res) => {
         message: "Kilometers is required",
       });
     }
-    if (!drivetype) {
+    if (!drive_type) {
       return res.status(400).json({
         status: false,
         message: "Drive Type is required",
@@ -153,7 +153,7 @@ export const Addvehicle = async (req, res) => {
       mileage,
       fule_type,
       kilometer,
-      drivetype,
+      drive_type,
       transmission,
       imageUrl: results,
       doors,
@@ -347,9 +347,9 @@ export const updateVehicle = async (req, res) => {
           {
             $set: {
               ...req.body,
-              imageUrl: results.length > 0 ? results : vehicle?.imageUrl, 
+              imageUrl: results.length > 0 ? results : vehicle?.imageUrl,
             },
-          }, 
+          },
           { new: true }
         );
         if (!updateVehicle) {
@@ -408,61 +408,71 @@ export const searchByModel = async (req, res) => {
 };
 //get vehicle accordeng tha schema
 export const searchVehicle = async (req, res) => {
-  let {
-    model,
-    brand,
-    color,
-    year,
-    fule_type,
-    displacement,
-    min,
-    max,
-    transmission,
-    category,
-    doors,
-    status,
-  } = req.query;
   try {
-    const query = {
-      model: { $regex: model, $options: "i" } || { $exists: true },
-      brand: { $regex: brand, $options: "i" } || { $exists: true },
-      color: { $regex: color, $options: "i" } || { $exists: true },
-      year: year ? parseInt(year) : { $gte: 1900 },
-      fule_type: { $regex: fule_type, $options: "i" } || { $exists: true },
-      displacement: { $regex: displacement, $options: "i" } || {
-        $exists: true,
-      },
-      transmission: { $regex: transmission, $options: "i" } || {
-        $exists: true,
-      },
-      doors: doors ? parseInt(doors) : { $gte: 2 },
-      price: { $gte: parseInt(min) || 0, $lte: parseInt(max) || Infinity },
-      category: { $regex: category, $options: "i" } || { $exists: true },
-      status: { $regex: status, $options: "i" } || { $exists: true },
-    };
+    let {
+      model,
+      brand,
+      color,
+      year,
+      fuel_type,
+      displacement,
+      min,
+      max,
+      transmission,
+      category,
+    } = req.query;
+
+    const query = {};
+
+    if (model) {
+      query.model = { $regex: model, $options: "i" };
+    }
+    if (brand) {
+      query.brand = { $regex: brand, $options: "i" };
+    }
+    if (color) {
+      query.color = { $regex: color, $options: "i" };
+    }
+    if (year) {
+      query.year = parseInt(year);
+    }
+    if (fuel_type) {
+      query.fuel_type = { $regex: fuel_type, $options: "i" };
+    }
+    if (displacement) {
+      query.displacement = parseInt(displacement);
+    }
+    if (transmission) {
+      query.transmission = { $regex: transmission, $options: "i" };
+    }
+    if (category) {
+      query.category = { $regex: category, $options: "i" };
+    }
+    if (min || max) {
+      query.price = {};
+      if (min) {
+        query.price.$gte = parseInt(min);
+      }
+      if (max) {
+        query.price.$lte = parseInt(max);
+      }
+    }
+
     const vehicles = await Vehicle.find(query)
-      .populate({
-        path: "comments",
-        model: "Comment",
-        populate: {
-          path: "author",
-          select: "_id firstname lastname",
-        },
-      })
-      .sort([["price", "ascending"]]);
+      .populate("user", "_id firstname lastname email phonenumber photo")
+      .sort({ createdAt: -1 });
+
     if (vehicles.length === 0) {
-      return res.status(400).json({
+      return res.status(404).json({
         status: false,
         message: "No matching results were found",
       });
     } else {
-      const formattedVehicles = vehicles.map((vehicle) => ({
-        ...vehicle,
-        imageUrl: vehicle.imageUrl.map((image) => image.url),
-      }));
+      const formattedVehicles = vehicles
       return res.status(200).json({
         status: true,
         data: formattedVehicles,
+        count: formattedVehicles.length,
       });
     }
   } catch (error) {

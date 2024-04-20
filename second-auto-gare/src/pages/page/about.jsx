@@ -51,7 +51,6 @@ function About() {
                 spaceBetween: 40,
               },
             }}
-            navigation={true}
             modules={[]}
             className="mySwiper"
           >

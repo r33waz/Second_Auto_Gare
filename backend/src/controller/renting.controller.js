@@ -164,7 +164,7 @@ export const updateRentalToCompleted = async (req, res) => {
 export const getAllRentingsVehicle = async (req, res) => {
   try {
     const bookedvehicle = await Renting.find()
-      .populate("user", "_id firstname lastname email phonenumber")
+      .populate("user", "_id firstname lastname email phonenumber photo")
       .populate("vehicle", "_id model brand color imageUrl number_of_people")
       .sort("startDate");
     if (bookedvehicle.length === 0) {
@@ -192,8 +192,8 @@ export const getRentingsVehicleById = async (req, res) => {
   const id = req.params.id;
   try {
     const bookedvehicle = await Renting.findById({ _id: id })
-      .populate("user", "_id firstname lastname email phonenumber")
-      .populate("vehicle", "_id model brand color imageUrl number_of_people")
+      .populate("user", "_id firstname lastname email phonenumber photo")
+      .populate("vehicle")
       .sort("startDate");
     return res.status(200).json({
       status: true,
