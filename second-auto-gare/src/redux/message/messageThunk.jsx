@@ -8,7 +8,7 @@ export const getMessagesByConvId = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const resp = await main_uri.get(
-        `${import.meta.env.VITE_MAIN_URL}/api/v1/message/${id}`
+        `/api/v1/message/${id}`
       );
       return resp.data?.data;
     } catch (error) {
@@ -24,7 +24,7 @@ export const createMessage = createAsyncThunk(
       console.log(data)
     try {
       const resp = await main_uri.post(
-        `${import.meta.env.VITE_MAIN_URL}/api/v1/message`,
+        `/api/v1/message`,
         data
       );
       return resp.data;

@@ -35,8 +35,8 @@ export const GetSingleVehicle = createAsyncThunk(
   "vehicle/single",
   async (id, { rejectWithValue }) => {
     try {
-      const resp = await getData(`/api/v1/get_vehicle/${id}`);
-      return resp?.data;
+      const resp = await main_uri.get(`/api/v1/get_vehicle/${id}`);
+      return resp?.data?.data;
     } catch (error) {
       ErrorToast({ message: error.response.data?.message });
       return rejectWithValue(error?.message);
@@ -48,7 +48,7 @@ export const UpdateVehicle = createAsyncThunk(
   "vehicle/update",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const resp = await updateData(`/api/v1/update_vehicle/${id}`, data);
+      const resp = await main_uri.patch(`/api/v1/update_vehicle/${id}`, data);
       SucessToast({ message: resp?.message });
       return resp?.data?.data;
     } catch (error) {
@@ -62,7 +62,22 @@ export const DeleteVehicle = createAsyncThunk(
   "vehicle/delete",
   async (id, { rejectWithValue }) => {
     try {
-      const resp = await deleteData(`/api/v1/delete_vehicle/${id}`);
+      const resp = await main_uri.delete(`/api/v1/delete_vehicle/${id}`);
+      SucessToast({ message: resp?.message });
+      return resp?.data?.data;
+    } catch (error) {
+      ErrorToast({ message: error.response.data?.message });
+      return rejectWithValue(error?.message);
+    }
+  }
+);
+
+
+export const SearchVehicle = createAsyncThunk(
+  "vehicle/search",
+  async (id, { rejectWithValue }) => {
+    try {
+      const resp = await main_uri.delete(`/api/v1/delete_vehicle/${id}`);
       SucessToast({ message: resp?.message });
       return resp?.data?.data;
     } catch (error) {

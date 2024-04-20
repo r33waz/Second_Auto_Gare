@@ -9,6 +9,7 @@ import {
   TabsTrigger,
 } from "../../shadcn_ui/ui/tabs";
 import { Swiper, SwiperSlide } from "swiper/react";
+import ErrorImage from "../../assets/images/ErrorImage.png";
 
 // Import Swiper styles
 import "swiper/css";
@@ -19,13 +20,20 @@ import SideNav from "../../components/common/SlideNav";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchVehicle } from "../../redux/vehicleslice/vehiclethunk";
 import Loading from "../../components/common/loading";
+import { useNavigate } from "react-router-dom";
 
 function Vehicle() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: vehicle, isLoadng } = useSelector((state) => state.vehicle);
+  console.log(vehicle)
   useEffect(() => {
     dispatch(FetchVehicle());
   }, [dispatch]);
+
+  const viewDetails = (id) => {
+    navigate(`/admin/vehicle_detail/${id}`);
+  };
 
   if (isLoadng) {
     return <Loading />;
@@ -34,96 +42,20 @@ function Vehicle() {
     <>
       <div className="flex w-full">
         <SideNav />
-        <div className="flex flex-col w-full gap-80 lg:gap-12 md:gap-14">
-          <div className="relative z-50 w-full h-40 gap-20 bg-purple ">
-            <div className="absolute flex flex-wrap justify-center w-full gap-8 lg:flex-nowrap md:flex-nowrap lg:top-20 md:top-12 top-12">
-              <Card>
-                <div className="flex flex-col animate__animated animate__fadeInUp">
-                  <div className="flex justify-between">
-                    <h1 className="text-2xl">Total Vehicles</h1>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M6 19v1q0 .425-.288.713T5 21H4q-.425 0-.712-.288T3 20v-8l2.1-6q.15-.45.538-.725T6.5 5H9V3h6v2h2.5q.475 0 .863.275T18.9 6l2.1 6v8q0 .425-.287.713T20 21h-1q-.425 0-.712-.288T18 20v-1zm-.2-9h12.4l-1.05-3H6.85zM5 12v5zm2.5 4q.625 0 1.063-.437T9 14.5q0-.625-.437-1.062T7.5 13q-.625 0-1.062.438T6 14.5q0 .625.438 1.063T7.5 16m9 0q.625 0 1.063-.437T18 14.5q0-.625-.437-1.062T16.5 13q-.625 0-1.062.438T15 14.5q0 .625.438 1.063T16.5 16M5 17h14v-5H5z"
-                      />
-                    </svg>
-                  </div>
-                  <h1 className="text-5xl text-purple">
-                    {vehicle?.count ? vehicle?.count : "0"}
-                  </h1>
-                </div>
-              </Card>
-
-              <Card>
-                <div className="flex flex-col animate__animated animate__fadeInUp">
-                  <div className="flex justify-between">
-                    <h1 className="text-2xl">For Sale</h1>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 256 256"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M128 88a40 40 0 1 0 40 40a40 40 0 0 0-40-40m0 64a24 24 0 1 1 24-24a24 24 0 0 1-24 24m112-96H16a8 8 0 0 0-8 8v128a8 8 0 0 0 8 8h224a8 8 0 0 0 8-8V64a8 8 0 0 0-8-8m-46.35 128H62.35A56.78 56.78 0 0 0 24 145.65v-35.3A56.78 56.78 0 0 0 62.35 72h131.3A56.78 56.78 0 0 0 232 110.35v35.3A56.78 56.78 0 0 0 193.65 184M232 93.37A40.81 40.81 0 0 1 210.63 72H232ZM45.37 72A40.81 40.81 0 0 1 24 93.37V72ZM24 162.63A40.81 40.81 0 0 1 45.37 184H24ZM210.63 184A40.81 40.81 0 0 1 232 162.63V184Z"
-                      />
-                    </svg>
-                  </div>
-                  <h1 className="text-5xl text-purple">
-                    {vehicle?.filter((e) => e.status === "sell").length
-                      ? vehicle?.filter((e) => e.status === "sell").length
-                      : "0"}
-                  </h1>
-                </div>
-              </Card>
-              <Card>
-                <div className="flex flex-col animate__animated animate__fadeInUp">
-                  <div className="flex justify-between">
-                    <h1 className="text-2xl">For Rent</h1>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="p-2 rounded-md bg-purple bg-opacity-20 text-purple"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M8.385 6.885q-1.042 0-1.771-.729q-.73-.728-.73-1.77q0-1.04.73-1.77t1.77-.731q.893 0 1.562.572t.904 1.428h7.265v1h-1v2h-1v-2H10.85q-.235.855-.904 1.428q-.67.572-1.561.572m0-1q.617 0 1.058-.442q.442-.441.442-1.058q0-.618-.442-1.059q-.441-.441-1.058-.441q-.618 0-1.059.44q-.441.442-.441 1.06q0 .617.441 1.058q.441.442 1.059.442m.23 11.038q.31 0 .54-.23q.23-.23.23-.54q0-.309-.23-.539q-.23-.23-.54-.23q-.31 0-.539.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23m6.769 0q.31 0 .539-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.309 0-.539.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23M6 14.407l1.496-4.3q.067-.216.241-.335q.174-.12.386-.12h7.754q.212 0 .386.12q.174.12.24.335l1.497 4.3V20.2q0 .199-.128.326q-.127.128-.326.128h-.092q-.199 0-.326-.128Q17 20.4 17 20.2v-1.546H7V20.2q0 .199-.128.326q-.127.128-.326.128h-.092q-.199 0-.326-.128Q6 20.4 6 20.2zm1.304-.754h9.392l-1.046-3h-7.3zm-.304 1v3zm0 3h10v-3H7z"
-                      />
-                    </svg>
-                  </div>
-                  <h1 className="text-5xl text-purple">
-                    {vehicle?.filter((e) => e.status === "rent").length
-                      ? vehicle?.filter((e) => e.status === "rent").length
-                      : "0"}
-                  </h1>
-                </div>
-              </Card>
-            </div>
-          </div>
-
-          <div className="w-full px-2">
-            {/* <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
+        <div className="flex flex-col w-full pt-5">
+          <h2 className="text-4xl">Vehicle Deatils </h2>
+          <div className="w-full px-2 mt-5">
+            <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
               <div className="flex flex-col w-full gap-2">
                 <label className="text-lg font-light">Filter by brand</label>
                 <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out rounded"
+                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
                   onChange={(e) =>
                     e.target.value && handelSearch(e.target.value)
                   }
                 >
-                  <option disabled selected>
-                    Select an option
+                  <option value="" className="text-gray-500">
+                    Select a Brand
                   </option>
                   <option value="kia">KIA</option>
                   <option value="hundai">Hundai</option>
@@ -142,15 +74,34 @@ function Vehicle() {
                 </select>
               </div>
               <div className="flex flex-col w-full gap-2">
+                <label className="text-lg font-light">Filter by Ctegory</label>
+                <select
+                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
+                  onChange={(e) =>
+                    e.target.value && handelSearch(e.target.value)
+                  }
+                >
+                  <option value="" className="text-gray-500">
+                    Select Category
+                  </option>
+                  <option value="kia">SUV</option>
+                  <option value="hundai">Sedan</option>
+                  <option value="nissan">Hatchback</option>
+                  <option value="toyota">Van</option>
+                  <option value="ford">Hybrid</option>
+                  <option value="honda">Truck</option>
+                </select>
+              </div>
+              <div className="flex flex-col w-full gap-2">
                 <label className="text-lg font-light">Filter by color</label>
                 <select
-                  className="h-8 pl-2 duration-700 rounded"
+                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
                   onChange={(e) =>
                     e.target.value && vehicleSearchColor(e.target.value)
                   }
                 >
-                  <option disabled selected>
-                    Select an option
+                  <option value="" className="text-gray-500">
+                    Select Color
                   </option>
                   <option value="red">Red</option>
                   <option value="green">Green</option>
@@ -165,13 +116,13 @@ function Vehicle() {
                   Filter by transmission
                 </label>
                 <select
-                  className="h-8 pl-2 rounded"
+                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
                   onChange={(e) =>
                     e.target.value && vehicleSearchTransmission(e.target.value)
                   }
                 >
-                  <option disabled selected>
-                    Select an option
+                  <option value="" className="text-gray-500">
+                    Select Transmission
                   </option>
                   <option value="automatic">Automatic</option>
                   <option value="manual">Manual</option>
@@ -182,13 +133,13 @@ function Vehicle() {
                   Filter by fule type
                 </label>
                 <select
-                  className="h-8 pl-2 rounded"
+                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
                   onChange={(e) =>
                     e.target.value && vehicleSearchFule(e.target.value)
                   }
                 >
-                  <option disabled selected>
-                    Select an option
+                  <option value="" className="text-gray-500">
+                    Select Fule Type
                   </option>
                   <option value="petrol">Petrol</option>
                   <option value="desele">Desele</option>
@@ -196,8 +147,8 @@ function Vehicle() {
                   <option value="Hybrid">Hybrid</option>
                 </select>
               </div>
-            </div> */}
-            <Tabs defaultValue="sell" className="w-full ">
+            </div>
+            <Tabs defaultValue="sell" className="w-full mt-3">
               <TabsList className="grid w-full grid-cols-2 gap-4 bg-gray-500 bg-opacity-40">
                 <TabsTrigger
                   className="w-full vehicle-sell h-8  data-[state=active]:bg-red rounded-md data-[state=active]:text-white text-lg duration-500"
@@ -215,461 +166,212 @@ function Vehicle() {
               {vehicle ? (
                 <>
                   <TabsContent value="sell">
-                    <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
-                      {vehicle
-                        ?.filter((e) => e.status === "sell")
-                        .map((i) => {
-                          return (
-                            <div
-                              key={i.id}
-                              className="flex flex-col items-center w-full gap-3 px-2 border shadow-[0px_0px_6px_2px_#00000024]"
+                    <>
+                      <table className="w-full mb-4 bg-white border divide-y divide-gray-200 rounded shadow-md dark:divide-gray-700">
+                        <thead className="border-b-2">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            ></th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
                             >
-                              <div>
-                                <div>Car Details</div>
-                              </div>
-                              <Swiper
-                                slidesPerView={1}
-                                spaceBetween={10}
-                                pagination={{
-                                  clickable: true,
-                                }}
-                                modules={[Pagination, Navigation]}
-                                className="w-48 h-40 md:w-96 md:h-96"
-                              >
-                                {i?.imageUrl?.map((e, idx) => {
-                                  return (
-                                    <SwiperSlide key={idx}>
+                              User Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Brand
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Model
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Status
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Year
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 font-medium text-gray-500 uppercase text-end"
+                            ></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {vehicle
+                            ?.filter((e) => e.status === "sell")
+                            .map((e) => {
+                              return (
+                                <>
+                                  <tr className="text-center">
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
                                       <img
-                                        src={e?.url}
-                                        alt={`Image ${idx}`}
-                                        className="object-cover"
+                                        src={
+                                          e?.user?.photo?.url
+                                            ? e?.user?.photo?.url
+                                            : ErrorImage
+                                        }
+                                        alt="img"
+                                        className="w-10 h-10 rounded-full"
                                       />
-                                    </SwiperSlide>
-                                  );
-                                })}
-                              </Swiper>
-                              <div className="grid gap-4">
-                                <div className="text-center">
-                                  <h2 className="text-2xl font-semibold">
-                                    {i?.model}
-                                  </h2>
-                                  <p className="text-gray-500 dark:text-gray-400">
-                                    Rs-{i?.price}
-                                  </p>
-                                </div>
-                                <form className="flex flex-col gap-2">
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label className="text-sm font-semibold">
-                                        Brand
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="brand"
-                                        type="text"
-                                        defaultValue={i?.brand}
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="color"
-                                      >
-                                        Color
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="color"
-                                        type="text"
-                                        defaultValue={i?.color}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="year"
-                                      >
-                                        Year of Manufacture
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="year"
-                                        type="text"
-                                        value="2020"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="mileage"
-                                      >
-                                        Mileage
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="mileage"
-                                        type="text"
-                                        value="15"
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="fuel_type"
-                                      >
-                                        Fuel Type
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="fuel_type"
-                                        type="text"
-                                        defaultValue="Petrol"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="transmission"
-                                      >
-                                        Transmission Type
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="transmission"
-                                        type="text"
-                                        defaultValue={i?.transmission}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="doors"
-                                      >
-                                        Number of Doors
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="doors"
-                                        type="text"
-                                        defaultValue={i?.doors}
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="people"
-                                      >
-                                        Number of People
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="people"
-                                        type="text"
-                                        defaultValue={i?.number_of_people}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="displacement"
-                                      >
-                                        Displacement
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="displacement"
-                                        type="text"
-                                        defaultValue={i?.displacement}
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="category"
-                                      >
-                                        Category
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="category"
-                                        type="text"
-                                        defaultValue={i?.category}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <label
-                                      className="text-sm font-semibold"
-                                      htmlFor="status"
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.user?.firstname && e.user?.lastname
+                                        ? e?.user?.firstname +
+                                          " " +
+                                          e.user?.lastname
+                                        : "-"}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.brand}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.model}
+                                    </td>
+                                    <td
+                                      className={`px-6 py-4 text-gray-800 whitespace-nowrap ${
+                                        e?.status ? "text-red" : ""
+                                      } `}
                                     >
-                                      Status
-                                    </label>
-                                    <select className="w-full h-8 pl-2 ">
-                                      <option
-                                        disabled
-                                        selected
-                                        defaultValue={i?.status}
+                                      {e?.status}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.year}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
+                                      <Button
+                                        onClick={() => viewDetails(e?._id)}
+                                        type="button"
+                                        className="text-sm font-semibold text-center text-blue-600 rounded-lg cursor-pointer gap-x-2"
                                       >
-                                        {i?.status}
-                                      </option>
-                                      <option value="sell">Sell</option>
-                                      <option value="rent">Rent</option>
-                                    </select>
-                                  </div>
-                                  <div className="flex w-full gap-2">
-                                    <Button className="w-full h-8 text-white rounded bg-blue">
-                                      Update
-                                    </Button>
-                                    <Button className="w-full h-8 text-white rounded bg-red">
-                                      Delete
-                                    </Button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
+                                        View Details
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </>
                   </TabsContent>
 
                   <TabsContent value="rent">
-                    {" "}
-                    <div className="grid gap-5 px-2 mt-8 place-items-center gap-x-4 lg:grid-cols-3 md:gris-cols-3 sm:grid-cols-1">
-                      {vehicle
-                        ?.filter((e) => e.status === "rent")
-                        .map((i) => {
-                          return (
-                            <div
-                              key={i.id}
-                              className="flex flex-col items-center w-full gap-3 px-2 border shadow-[0px_0px_6px_2px_#00000024]"
+                    <div
+                      className={`w-full pt-10 overflow-x-auto overflow-y-auto h-[500px]`}
+                    >
+                      <table className="w-full mb-4 bg-white border divide-y divide-gray-200 rounded shadow-md dark:divide-gray-700">
+                        <thead className="border-b-2">
+                          <tr>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            ></th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
                             >
-                              <div>
-                                <div>Car Details</div>
-                              </div>
-                              <div className="grid gap-4">
-                                <Swiper
-                                  slidesPerView={1}
-                                  spaceBetween={30}
-                                  keyboard={{
-                                    enabled: true,
-                                  }}
-                                  pagination={{
-                                    clickable: true,
-                                  }}
-                                  navigation={true}
-                                  modules={[Keyboard, Pagination, Navigation]}
-                                  className="mySwiper"
-                                >
-                                  {i?.imageUrl.map((e) => {
-                                    return (
-                                      <SwiperSlide key={e.id} className="h-40">
-                                        <img
-                                          src={e}
-                                          className="object-contain"
-                                        />
-                                      </SwiperSlide>
-                                    );
-                                  })}
-                                </Swiper>
-                                <div className="text-center">
-                                  <h2 className="text-2xl font-semibold">
-                                    {i?.model}
-                                  </h2>
-                                  <p className="text-gray-500 dark:text-gray-400">
-                                    Rs-{i?.price}
-                                  </p>
-                                </div>
-                                <form className="flex flex-col gap-2">
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label className="text-sm font-semibold">
-                                        Brand
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="brand"
-                                        type="text"
-                                        defaultValue={i?.brand}
+                              User Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Brand
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Model
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Status
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-sm font-medium text-center text-gray-500 uppercase"
+                            >
+                              Year
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 font-medium text-gray-500 uppercase text-end"
+                            ></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {vehicle
+                            ?.filter((e) => e.status === "rent")
+                            .map((e) => {
+                              return (
+                                <>
+                                  <tr className="text-center">
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      <img
+                                        src={
+                                          e?.user?.photo?.url
+                                            ? e?.user?.photo?.url
+                                            : ErrorImage
+                                        }
+                                        alt="img"
+                                        className="w-10 h-10 rounded-full"
                                       />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="color"
-                                      >
-                                        Color
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="color"
-                                        type="text"
-                                        defaultValue={i?.color}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="year"
-                                      >
-                                        Year of Manufacture
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="year"
-                                        type="text"
-                                        value="2020"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="mileage"
-                                      >
-                                        Mileage
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="mileage"
-                                        type="text"
-                                        value="15"
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="fuel_type"
-                                      >
-                                        Fuel Type
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="fuel_type"
-                                        type="text"
-                                        defaultValue="Petrol"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="transmission"
-                                      >
-                                        Transmission Type
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="transmission"
-                                        type="text"
-                                        defaultValue={i?.transmission}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="doors"
-                                      >
-                                        Number of Doors
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="doors"
-                                        type="text"
-                                        value="4"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="people"
-                                      >
-                                        Number of People
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="people"
-                                        type="text"
-                                        value="5"
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-1">
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="displacement"
-                                      >
-                                        Displacement
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="displacement"
-                                        type="text"
-                                        value="1200"
-                                      />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <label
-                                        className="text-sm font-semibold"
-                                        htmlFor="category"
-                                      >
-                                        Category
-                                      </label>
-                                      <input
-                                        className="w-full h-8 p-2 border border-gray-300 rounded-md"
-                                        id="category"
-                                        type="text"
-                                        value="compactsuv"
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <label
-                                      className="text-sm font-semibold"
-                                      htmlFor="status"
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.user?.firstname && e.user?.lastname
+                                        ? e?.user?.firstname +
+                                          " " +
+                                          e.user?.lastname
+                                        : "-"}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.brand}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.model}
+                                    </td>
+                                    <td
+                                      className={`px-6 py-4 text-gray-800 whitespace-nowrap ${
+                                        e?.status ? "text-red" : ""
+                                      } `}
                                     >
-                                      Status
-                                    </label>
-                                    <select className="w-full h-8 pl-2 ">
-                                      <option value="sell">Sell</option>
-                                      <option value="rent">Rent</option>
-                                    </select>
-                                  </div>
-                                  <div className="flex w-full gap-2">
-                                    <Button className="w-full h-8 text-white rounded bg-blue">
-                                      Update
-                                    </Button>
-                                    <Button className="w-full h-8 text-white rounded bg-red">
-                                      Delete
-                                    </Button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          );
-                        })}
+                                      {e?.status}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 whitespace-nowrap ">
+                                      {e?.year}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-blue whitespace-nowrap text-end">
+                                      <Button
+                                        // onClick={() => viewDetails(e?._id)}
+                                        type="button"
+                                        className="text-sm font-semibold text-center text-blue-600 rounded-lg cursor-pointer gap-x-2"
+                                      >
+                                        View Details
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            })}
+                        </tbody>
+                      </table>
                     </div>
                   </TabsContent>
                 </>

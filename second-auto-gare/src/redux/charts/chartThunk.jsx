@@ -7,7 +7,7 @@ export const userCategoryChart = createAsyncThunk(
   async () => {
     try {
       const resp = await main_uri.get(
-        `${import.meta.env.VITE_MAIN_URL}/api/v1/user_category`
+        `/api/v1/user_category`
       );
       return resp?.data?.data;
     } catch (error) {
@@ -21,7 +21,7 @@ export const vehicleCategoryChart = createAsyncThunk(
   async () => {
     try {
       const resp = await main_uri.get(
-        `${import.meta.env.VITE_MAIN_URL}/api/v1/vehicle_category`
+        `/api/v1/vehicle_category`
       );
       return resp?.data?.data;
     } catch (error) {
@@ -35,7 +35,7 @@ export const vehicleStatusChart = createAsyncThunk(
   async () => {
     try {
       const resp = await main_uri.get(
-        `${import.meta.env.VITE_MAIN_URL}/api/v1/vehicle_status`
+        `/api/v1/vehicle_status`
       );
       return resp?.data?.data;
     } catch (error) {

@@ -13,27 +13,13 @@ function Vehicle() {
 
   const [vehicle, setVehicle] = useState([]);
   const [itemsPerPage] = useState(12);
-  const inputRef = useRef();
   console.log("vehicle", vehicle);
 
   const { data, isLoading } = useSWR(
-    `api/v1/vehicle/category/?category=${category?.type}&max=${""}&min=${""}`,
+    `http://localhost:8085/api/v1/vehicles/search?transmission=&category=&brand=&fule_type=`,
     (url) => getData(url).then((res) => res)
   );
   // console.log(vehicle);
-
-  const handelOpen = () => {
-    const inputField = inputRef.current;
-    const currentWidth = inputField.offsetWidth;
-
-    if (currentWidth === 0) {
-      inputField.style.width = "200px";
-      inputField.style.border = "gray";
-    } else {
-      inputField.style.width = "0";
-      inputField.style.border = "none";
-    }
-  };
 
   useEffect(() => {
     setVehicle(data?.data);
@@ -87,90 +73,103 @@ function Vehicle() {
             </svg>
           </Link>
           <span className="text-xs font-light uppercase text-purple">
-            Vehicles / {category?.vehicle}
+            Vehicles / {category?.type}
           </span>
         </div>
         <section className="flex justify-center">
           <div className="bg-white flex items-center lg:flex-nowrap gap-4 md:flex-nowrap flex-wrap lg:w-[1000px] md:w-[900-px] w-full  justify-between border-2 shadow-md border-gray-400 lg:rounded-full py-4 px-6">
             <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
-              <select className="w-full bg-white">
-                <option value="" disabled selected>
-                  Model
+              <select
+                className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded"
+                onChange={(e) => e.target.value && handelSearch(e.target.value)}
+              >
+                <option value="" className="text-gray-500">
+                  Select a Brand
                 </option>
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+                <option value="kia">KIA</option>
+                <option value="hundai">Hundai</option>
+                <option value="nissan">Nissan</option>
+                <option value="toyota">Toyota</option>
+                <option value="ford">Ford</option>
+                <option value="honda">Honda</option>
+                <option value="mitsubisi">Mitsubisi</option>
+                <option value="renult">Renult</option>
+                <option value="mercedes">Mercedes</option>
+
+                <option value="bmw">BMW</option>
+                <option value="suzuki">Suzuki</option>
+                <option value="mahendra">Mahendra</option>
+                <option value="jeep">Jeep</option>
               </select>
             </div>
             {/* for model */}
             <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
-              <select className="w-full bg-white">
-                <option value="" disabled selected>
-                  Brand
+              <select
+                className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded"
+                onChange={(e) => e.target.value && handelSearch(e.target.value)}
+              >
+                <option value="" className="text-gray-500">
+                  Select Category
                 </option>
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+                <option value="kia">SUV</option>
+                <option value="hundai">Sedan</option>
+                <option value="nissan">Hatchback</option>
+                <option value="toyota">Van</option>
+                <option value="ford">Hybrid</option>
+                <option value="honda">Truck</option>
               </select>
             </div>
 
             {/* for category */}
             <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
-              <select className="w-full bg-white">
-                <option value="" disabled selected>
-                  Transmission
+              <select
+                className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded"
+                onChange={(e) =>
+                  e.target.value && vehicleSearchColor(e.target.value)
+                }
+              >
+                <option value="" className="text-gray-500">
+                  Select Color
                 </option>
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="gray">Gray</option>
               </select>
             </div>
             {/*for more option*/}
             <div className="w-full border-b-2 border-gray-500 lg:border-r-2 md:border-r-2 lg:border-b-0 md:border-b-0">
-              <select className="w-full bg-white">
-                <option value="" disabled selected>
-                  Fule type
+              <select
+                className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded"
+                onChange={(e) =>
+                  e.target.value && vehicleSearchTransmission(e.target.value)
+                }
+              >
+                <option value="" className="text-gray-500">
+                  Select Transmission
                 </option>
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+                <option value="automatic">Automatic</option>
+                <option value="manual">Manual</option>
               </select>
             </div>
             <div className="w-full ">
-              <select className="w-full bg-white">
-                <option value="" disabled selected>
-                  More filter
+              <select
+                className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded"
+                onChange={(e) =>
+                  e.target.value && vehicleSearchFule(e.target.value)
+                }
+              >
+                <option value="" className="text-gray-500">
+                  Select Fule Type
                 </option>
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+                <option value="petrol">Petrol</option>
+                <option value="desele">Desele</option>
+                <option value="electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
             </div>
-            <div>
-              <input
-                ref={inputRef}
-                type="text"
-                className="w-0 outline-none placeholder-purple"
-                placeholder="Search vehicle"
-              />
-            </div>
-            <button
-              className="text-white rounded-full bg-purple"
-              onClick={handelOpen}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                className="p-1"
-              >
-                <path
-                  fill="currentColor"
-                  d="M15.096 5.904a6.5 6.5 0 1 0-9.192 9.192a6.5 6.5 0 0 0 9.192-9.192M4.49 4.49a8.5 8.5 0 0 1 12.686 11.272l5.345 5.345l-1.414 1.414l-5.345-5.345A8.501 8.501 0 0 1 4.49 4.49"
-                />
-              </svg>
-            </button>
           </div>
         </section>
         <section className="mt-4 md:mt-8">

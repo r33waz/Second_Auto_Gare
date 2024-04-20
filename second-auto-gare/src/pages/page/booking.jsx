@@ -9,8 +9,8 @@ import { CarCard } from "../../components/common/card";
 function Booking() {
   const [itemsPerPage] = useState(12);
   const dispatch = useDispatch();
-  const { data: vehicle, isLoading } = useSelector((state) => state?.vehicle);
-  console.log("redux vehicle", vehicle);
+  const { data: vehicle } = useSelector((state) => state?.vehicle);
+  console.log("redux vehicle", vehicle)
 
   const [itemOffset, setItemOffset] = useState(0);
 

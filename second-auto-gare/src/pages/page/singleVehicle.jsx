@@ -31,12 +31,12 @@ function SingleVehicle() {
   const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { login } = useSelector((state) => state.login);
+  const { login, authenticate } = useSelector((state) => state.login);
   console.log("login", login);
   const { singleVehicle, singleVehicleLoading } = useSelector(
     (state) => state.vehicle
   );
-  // console.log("single vehicle", SingleVehicle);
+  console.log("single vehicle", singleVehicle);
   useEffect(() => {
     if (id) {
       console.log("Dispatching GetSingleVehicle with id:", id);
@@ -83,7 +83,7 @@ function SingleVehicle() {
   return (
     <>
       {singleVehicle && (
-        <div className="container mx-auto relative">
+        <div className="container relative mx-auto">
           <div className="px-2 mt-8 md:mt-16 lg:px-12 md:px-12">
             <section className="flex items-center justify-start gap-3">
               <Link to="/home">
@@ -115,7 +115,7 @@ function SingleVehicle() {
                     <p>{singleVehicle?.meta_description.slice(0, 100)}</p>
                   </div>
                   <p className="flex gap-2">
-                    Share{" "}
+                    Share
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -506,10 +506,20 @@ function SingleVehicle() {
                         <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
-                    <div className=" flex flex-col justify-between gap-2">
-                      {login?.verified ? (
+                    <div className="flex flex-col justify-between gap-2 ">
+                      {!authenticate ? (
+                        <Link
+                          to="/login"
+                          className="py-3 text-lg text-center text-white rounded-xl bg-purple"
+                        >
+                          Message Dealer
+                        </Link>
+                      ) : login?.verified ? (
                         <>
-                            <Chat key={singleVehicle?.user?._id} data={singleVehicle?.user} />
+                          <Chat
+                            key={singleVehicle?.user?._id}
+                            data={singleVehicle?.user}
+                          />
                         </>
                       ) : (
                         <Dialog>
@@ -576,7 +586,9 @@ function SingleVehicle() {
               <h1 className="text-4xl font-medium">Comment</h1>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <div className="flex flex-col gap-3 overflow-y-scroll ">
+                  <div
+                    className={`flex flex-col gap-3 overflow-y-scroll ${singleVehicle?.comments.length>5?"h-80":""}`}
+                  >
                     {singleVehicle?.comments.map((e) => {
                       return (
                         <div
@@ -584,9 +596,9 @@ function SingleVehicle() {
                           className="flex flex-col gap-3 p-4 border shadow-md"
                         >
                           <div className="flex items-center gap-2">
-                            {e?.author?.photo[0]?.url ? (
+                            {e?.author?.photo?.url ? (
                               <img
-                                src={e?.author?.photo[0]?.url}
+                                src={e?.author?.photo?.url}
                                 alt="image"
                                 className="w-8 h-8 rounded-full"
                               />

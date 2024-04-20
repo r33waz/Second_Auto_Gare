@@ -1,11 +1,48 @@
-import React from 'react';
+import React from "react";
 import { useEffect, useState } from "react";
 import logo from "../../assets/kidmfond.svg";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "../../shadcn_ui/ui/button";
+import { useDispatch } from "react-redux";
+import { userLogut } from "../../redux/loginslice/loginThunk";
 function SideNav() {
   const [open, setOpen] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const location = useLocation();
   const pathname = location.pathname;
+  const checkDeviceType = () => {
+    if (typeof window !== "undefined") {
+      const windowScreen = window.innerWidth;
+
+      if (windowScreen >= 1024) {
+        setIsDesktop(true);
+      } else {
+        setIsDesktop(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkDeviceType();
+  }, [isDesktop]);
+
+  useEffect(() => {
+    if (isDesktop) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [isDesktop]);
+
+  const handleLogout = async () => {
+    dispatch(userLogut()).then(() => {
+      navigate("/login");
+    });
+  };
+
   const Menus = [
     {
       name: "Dashboard",
@@ -22,7 +59,7 @@ function SideNav() {
             <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z" />
           </svg>
         </>
-      )
+      ),
     },
     {
       name: "Users",
@@ -40,9 +77,8 @@ function SideNav() {
             d="M6.196 17.485q1.275-.918 2.706-1.451Q10.335 15.5 12 15.5q1.667 0 3.098.534q1.43.533 2.706 1.45q.99-1.024 1.593-2.42Q20 13.666 20 12q0-3.355-2.337-5.663T12 4Q8.675 4 6.337 6.338T4 12q0 1.667.603 3.063q.603 1.397 1.593 2.422m5.805-4.985q-1.264 0-2.133-.868Q9 10.765 9 9.501t.868-2.133q.867-.868 2.131-.868t2.133.868Q15 8.235 15 9.499q0 1.264-.868 2.133q-.867.868-2.131.868M12 21q-1.883 0-3.535-.701q-1.642-.7-2.858-1.916q-1.215-1.216-1.916-2.858Q3 13.883 3 12t.701-3.535q.7-1.642 1.916-2.858q1.216-1.215 2.858-1.916Q10.117 3 12 3t3.535.701q1.642.7 2.858 1.916q1.215 1.216 1.916 2.858Q21 10.117 21 12t-.701 3.535q-.7 1.642-1.916 2.858q-1.216 1.215-2.858 1.916Q13.883 21 12 21m0-1q1.383 0 2.721-.484q1.339-.483 2.314-1.354q-.975-.782-2.356-1.237Q13.499 16.5 12 16.5q-1.498 0-2.788.445q-1.29.445-2.247 1.247q.975.84 2.314 1.354Q10.617 20 12 20m0-8.5q.842 0 1.421-.579Q14 10.342 14 9.5q0-.842-.579-1.421Q12.842 7.5 12 7.5q-.842 0-1.421.579Q10 8.658 10 9.5q0 .842.579 1.421q.579.579 1.421.579m0 6.75"
           />
         </svg>
-      )
-    }
-    ,
+      ),
+    },
     {
       name: "Vehicles",
       link: "/admin/vehicle",
@@ -61,11 +97,11 @@ function SideNav() {
             />
           </svg>
         </>
-      )
+      ),
     },
     {
       name: "Bookings",
-      link: "/admin/bookings",
+      link: "/admin/allbooking",
       svg: (
         <>
           <svg
@@ -81,8 +117,8 @@ function SideNav() {
             />
           </svg>
         </>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -91,7 +127,9 @@ function SideNav() {
         <div className="flex gap-4 ">
           <div
             className={`min-h-screen bg-sideNav ${
-              open ? "lg:w-72 md:w-40 w-48 sticky z-50 " : "lg:w-16 md:w-16 w-10 sticky z-50 "
+              open
+                ? "lg:w-72 md:w-40 w-48 sticky z-50 "
+                : "lg:w-16 md:w-16 w-10 sticky z-50 "
             } duration-700`}
           >
             <div
@@ -142,6 +180,23 @@ function SideNav() {
                   </NavLink>
                 );
               })}
+              <Button
+                onClick={handleLogout}
+                className="flex gap-1 text-base text-white hover:bg-purple font-extralight"
+              >
+                <h1>Logout</h1>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 256 256"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M116 216a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V40a4 4 0 0 1 4-4h64a4 4 0 0 1 0 8H52v168h60a4 4 0 0 1 4 4m110.83-90.83l-40-40a4 4 0 0 0-5.66 5.66L214.34 124H112a4 4 0 0 0 0 8h102.34l-33.17 33.17a4 4 0 0 0 5.66 5.66l40-40a4 4 0 0 0 0-5.66"
+                  />
+                </svg>
+              </Button>
             </div>
           </div>
         </div>

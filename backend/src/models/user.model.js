@@ -49,6 +49,9 @@ const UserSchema = new mongoose.Schema(
         ref: "Renting",
       },
     ],
+    verifytoken: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -26,27 +26,26 @@ const router = express.Router();
 router.post("/signup", Signup);
 router.post("/login", Login);
 router.post("/logout", Logout);
-router.get("/users", getAllUser);
-router.get("/users/:id", getUserById);
+router.get("/users", authentication, getAllUser);
+router.get("/users/:id", authentication, getUserById);
 router.patch(
   "/updateuser/:id",
-  // authentication,
-  // authorization("admin"),
+  authentication,
   upload.single("photo"),
   userUpdate
 );
 router.delete(
   "/usersdelete/:id",
-  // authentication,
-  // authorization("admin"),
+  authentication,
+  authorization("admin"),
   userDelete
 );
 
-router.get("/user", userSearchByEmail);
-router.post("/send_otp", otpVerification, SendOTP);
-router.post("/verify_otp", verifyOtpValidation, VerifyOtp);
+router.get("/user", authentication, authorization("admin"), userSearchByEmail);
+router.post("/send_otp", authentication, otpVerification, SendOTP);
+router.post("/verify_otp", authentication, verifyOtpValidation, VerifyOtp);
 router.post("/forget_password", forgetPassoword);
 router.get("/reset_password/:id/:token", resetPassword);
-router.post("/set_password:id/:token", setPassword);
+router.post("/set_password/:id/:token", setPassword);
 
 export default router;

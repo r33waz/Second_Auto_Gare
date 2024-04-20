@@ -3,12 +3,12 @@ import React, { useState } from "react";
 
 function Chat({ data }) {
   const [isOpen, setOpen] = useState(false);
-
+  console.log("user",data)
   return (
     <>
       <Button
         onClick={() => setOpen(!isOpen)}
-        className="py-3 text-lg h-12 text-center text-white rounded-xl bg-purple"
+        className="h-12 py-3 text-lg text-center text-white rounded-xl bg-purple"
       >
         Message Dealer
       </Button>
@@ -18,9 +18,9 @@ function Chat({ data }) {
         }`}
       >
         <div className="flex flex-col justify-between">
-          <div className="h-16 flex justify-between items-center w-full bg-purple/50 px-2">
+          <div className="flex items-center justify-between w-full h-16 px-2 bg-purple/50">
             <img
-              className="h-10 w-10 rounded-full"
+              className="w-10 h-10 rounded-full"
               src={data?.photo?.url}
               alt="image"
             />

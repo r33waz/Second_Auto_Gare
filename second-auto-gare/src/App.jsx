@@ -30,19 +30,12 @@ import CreatePost from "./pages/User/userpost/createPost";
 import UserBooking from "./pages/User/userpost/usersBooking";
 import VehicleBooking from "./pages/page/vehicleBooking";
 import Inbox from "./pages/page/inbox";
+import ForgetPassword from "./pages/auth/forgetPassword";
+import ResetPassword from "./pages/auth/resetPassword";
+import AllBooking from "./pages/Admin/allBooking";
+import BookingDetails from "./pages/Admin/bookingDetails";
+import VehicleDetail from "./pages/Admin/vehicleDetail";
 function App() {
-  const paths = [
-    "/login",
-    "/signup",
-    "/admin/dashboard",
-    "/admin/vehicle",
-    "/admin/user",
-    "/admin/bookings",
-    "/admin/updateProfile/:id",
-    "*",
-  ];
-  const location = useLocation();
-  const pathname = paths.includes(location.pathname);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,6 +44,7 @@ function App() {
       setLoading(false);
     }, 2000);
   }, []);
+
   return (
     <>
       {loading ? (
@@ -60,48 +54,206 @@ function App() {
       ) : (
         <Provider store={store}>
           <PersistGate persistor={persist}>
-            {!pathname && <Header />}
             <Routes>
-              {/* <Route element={<AdminRoute />}> */}
               <Route
                 path="/admin/*"
                 element={
                   <div className="flex">
                     <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/user" element={<User />} />
-                      <Route
-                        path="/updateProfile/:id"
-                        element={<UpdateUser />}
-                      />
-                      <Route path="/vehicle" element={<Vehicle />}></Route>
+                      <Route element={<AdminRoute />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/user" element={<User />} />
+                        <Route
+                          path="/updateProfile/:id"
+                          element={<UpdateUser />}
+                        />
+                        <Route path="/vehicle" element={<Vehicle />} />
+                        <Route path="/allbooking" element={<AllBooking />} />
+                        <Route
+                          path="/booking_detail/:id"
+                          element={<BookingDetails />}
+                        />
+                        <Route
+                          path="/vehicle_detail/:id"
+                          element={<VehicleDetail />}
+                        />
+                      </Route>
                     </Routes>
                   </div>
                 }
               />
-              {/* </Route> */}
-
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/login"
+                element={
+                  <>
+                    <Header />
+                    <Login />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <>
+                    <Header />
+                    <Signup />
+                    <Footer />
+                  </>
+                }
+              />
               <Route element={<PrivateRoutes />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/category" element={<Category />} />
-              <Route path="/booking" element={<Booking />} />
-              <Route path="/car/:type" element={<Vehicles />} />
-              <Route path="/vehicle/:id" element={<SingleVehicle />} />
-              <Route path="/profile" element={<Userprofile />} />
-              <Route path="/userpost" element={<UserPost />} />
-              <Route path="/updatepost/:id" element={<UserPostUpdate />} />
-              <Route path="/createpost" element={<CreatePost />} />
-              <Route path="/user-booking" element={<UserBooking />} />
-              <Route path="/vehicle-booking/:id" element={<VehicleBooking />} />
-              <Route path="/inbox" element={<Inbox />} />
+                <Route
+                  path="/createpost"
+                  element={
+                    <>
+                      <Header />
+                      <CreatePost />
+                      <Footer />
+                    </>
+                  }
+                />
+
+                <Route path="/inbox" element={<Inbox />} />
+                <Route
+                  path="/ressetPassword/:id/:token"
+                  element={<ResetPassword />}
+                />
               </Route>
+              <Route
+                path="/vehicle-booking/:id"
+                element={
+                  <>
+                    <Header />
+                    <VehicleBooking />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/user-booking"
+                element={
+                  <>
+                    <Header />
+                    <UserBooking />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/forgetpassword"
+                element={
+                  <>
+                    <Header />
+                    <ForgetPassword />
+                    <Footer />
+                  </>
+                }
+              />
+
+              <Route
+                path="/booking"
+                element={
+                  <>
+                    <Header />
+                    <Booking />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <>
+                    <Header />
+                    <Home />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/contact"
+                element={
+                  <>
+                    <Header />
+                    <Contact />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <>
+                    <Header />
+                    <About />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/category"
+                element={
+                  <>
+                    <Header />
+                    <Category />
+                    <Footer />
+                  </>
+                }
+              />
+
+              <Route
+                path="/car/:type"
+                element={
+                  <>
+                    <Header />
+                    <Vehicles />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/vehicle/:id"
+                element={
+                  <>
+                    <Header />
+                    <SingleVehicle />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <>
+                    <Header />
+                    <Userprofile />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/userpost"
+                element={
+                  <>
+                    <Header />
+                    <UserPost />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/updatepost/:id"
+                element={
+                  <>
+                    <Header />
+                    <UserPostUpdate />
+                    <Footer />
+                  </>
+                }
+              />
               <Route path="*" element={<Noroute />} />
             </Routes>
-            {!pathname && <Footer />}
           </PersistGate>
         </Provider>
       )}
