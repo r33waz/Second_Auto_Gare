@@ -4,6 +4,7 @@ import {
   DeleteVehicle,
   FetchVehicle,
   GetSingleVehicle,
+  SearchVehicle,
   UpdateVehicle,
 } from "./vehiclethunk";
 import toast from "react-hot-toast";
@@ -16,6 +17,9 @@ const initialState = {
   singleVehicle: null,
   singleVehicleErrror: null,
   singleVehicleLoading: false,
+  searchVehicle: [],
+  searchVehicleLoading: false,
+  searchVehicleError: null,
 };
 
 const vehicleSlice = createSlice({
@@ -81,6 +85,19 @@ const vehicleSlice = createSlice({
     });
     builder.addCase(DeleteVehicle.rejected, (state, action) => {
       (state.isLoading = false), (state.error = action.error.message);
+    });
+
+    //search vehicle
+    builder.addCase(SearchVehicle.pending, (state) => {
+      state.searchVehicleLoading = true;
+    });
+    builder.addCase(SearchVehicle.fulfilled, (state, action) => {
+      (state.searchVehicleLoading = false),
+        (state.searchVehicle = action.payload);
+    });
+    builder.addCase(SearchVehicle.rejected, (state, action) => {
+      (state.searchVehicleLoading = false),
+        state.error = action.error.message;
     });
   },
 });

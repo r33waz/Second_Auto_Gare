@@ -292,7 +292,7 @@ function Header() {
           )}
         </div>
       </div>
-      {
+      
         <div
           className={` bg-white z-50 fixed top-24   shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-500  ${
             isMobile ? "  h-72 w-full p-4 z-50" : "h-0 w-full"
@@ -331,7 +331,7 @@ function Header() {
             )}
           </nav>
         </div>
-      }
+      
     </>
   );
 }

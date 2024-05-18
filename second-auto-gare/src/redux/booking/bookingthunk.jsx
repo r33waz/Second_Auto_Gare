@@ -29,8 +29,8 @@ export const CreateBooking = createAsyncThunk(
   async ({ data }, { rejectWithValue }) => {
     try {
       const resp = await main_uri.post(`/api/v1/booking`, data, main_uri);
-      SucessToast({ message: resp?.message });
-      return resp?.data;
+      SucessToast({ message: resp?.data.message });
+      return resp?.data?.message;
     } catch (error) {
       ErrorToast({ message: error.response.data?.message });
       return rejectWithValue(error.message);

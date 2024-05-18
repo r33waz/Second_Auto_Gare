@@ -43,28 +43,3 @@ export const CreateComment = async (req, res) => {
     });
   }
 }
-//delete the comment 
-
-export const deleteComment = async (req, res) => {
-  try {
-    const commentId = req.params.commentId; 
-    const vehicleId = req.params.vehicleId; 
-    // Check if the comment exists
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
-    // Check if the comment is associated with the vehicle
-    if (comment.post.toString() !== vehicleId) {
-      return res.status(403).json({ message: "Comment is not associated with this vehicle" });
-    }
-    // Update the vehicle's comment array (if necessary)
-    await Vehicle.findByIdAndUpdate(vehicleId, {
-      $pull: { comments: commentId }
-    });
-    return res.status(200).json({ message: "Comment deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};

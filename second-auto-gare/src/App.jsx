@@ -60,7 +60,6 @@ function App() {
                 element={
                   <div className="flex">
                     <Routes>
-                      <Route element={<AdminRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/user" element={<User />} />
                         <Route
@@ -77,7 +76,6 @@ function App() {
                           path="/vehicle_detail/:id"
                           element={<VehicleDetail />}
                         />
-                      </Route>
                     </Routes>
                   </div>
                 }

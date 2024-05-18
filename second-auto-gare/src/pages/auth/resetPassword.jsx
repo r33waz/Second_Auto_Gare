@@ -24,7 +24,7 @@ function ResetPassword() {
   });
 
   const { id, token } = useParams();
-  const navigate = useNavigate();
+  
   const dispatch = useDispatch();
     useEffect(() => {
       dispatch(resetToken({ id, token }));

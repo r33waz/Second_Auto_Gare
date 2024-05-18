@@ -60,15 +60,8 @@ export const getAllReviews = async (req, res) => {
         })
     }
 }
-// filetr vehicles according to the dates ehat are avilable for booking
-export const filterVehiclesByDates = async (req, res) => {
-    
-    try {
-        
-    } catch (error) {
-        
-    }
-}
+
+
 //delete the reviwe
 export const deleteReview = async (req, res) => {
     const id = req.params.id

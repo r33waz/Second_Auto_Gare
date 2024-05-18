@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form";
-import { postData } from '../../service/axiosservice';
-import { toast } from 'react-toastify';
 import { Fade } from 'react-awesome-reveal';
+import { useDispatch } from 'react-redux';
+import { createFeedback } from '../../redux/contact/feedBackThunk';
 
 function Contact() {
     const [isOpen, setisOpen] = useState(false)
+    const dispatch = useDispatch()
+    
     const handelOpen = () => {
         setisOpen(!isOpen)
     }
     const { register, handleSubmit,reset, formState: { isSubmitting, errors,isSubmitSuccessful} } = useForm()
 
     const Onsubmit = async(value) => {
-        console.log(value)
-        const resp = await postData("/api/v1/feedback", value)
-        console.log(resp)
-        if (resp.status) {
-            toast.success(resp.message);
-        }
+       dispatch(createFeedback(value))
     }
 
     useEffect(() => {
@@ -139,7 +136,7 @@ function Contact() {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" className='text-purple'><path fill="currentColor" d="M5 5h13a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3m0 1c-.5 0-.94.17-1.28.47l7.78 5.03l7.78-5.03C18.94 6.17 18.5 6 18 6zm6.5 6.71L3.13 7.28C3.05 7.5 3 7.75 3 8v9a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8c0-.25-.05-.5-.13-.72z" /></svg>
                                     <input id='email' type='text' placeholder='Your email' className='w-full outline-none' {...register("email", { required: true })} />
                                 </div>
-                                {errors.fullname && <small className='text-xs text-red'>Enter your email </small>}
+                                {errors.email && <small className='text-xs text-red'>Enter your email </small>}
                             </div>
                             <div className='flex flex-col p-2 '>
                                 <div className='flex border border-gray-500 items-center gap-2 p-2 lg:w-[450px] w-full'>
@@ -147,7 +144,7 @@ function Contact() {
 
                                     <input id='phonenumber' type='text' placeholder='Your number' className='w-full outline-none' {...register("phonenumber", { required: true })} />
                                 </div>
-                                {errors.fullname && <small className='text-xs text-red'>Enter your phonenumber</small>}
+                                {errors.phonenumber && <small className='text-xs text-red'>Enter your phonenumber</small>}
                             </div>
 
 
