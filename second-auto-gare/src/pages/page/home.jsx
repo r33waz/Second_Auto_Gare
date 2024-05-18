@@ -103,52 +103,7 @@ function Home() {
     navigate("/createpost");
   };
 
-  // eslint-disable-next-line no-sparse-arrays
-  const carLogos = [
-    {
-      name: "Subaru",
-      logo: "https://www.carlogos.org/car-logos/subaru-logo-2019-640.png",
-    },
-    {
-      name: "Renault",
-      logo: "https://www.carlogos.org/logo/Renault-logo-2015-640x550.jpg",
-    },
-    {
-      name: "Honda",
-      logo: "https://www.carlogos.org/car-logos/honda-logo-2000-full-640.png",
-    },
-    {
-      name: "Toyota",
-      logo: "https://www.carlogos.org/car-logos/toyota-logo-2020-europe-download.png",
-    },
-    {
-      name: "Ford",
-      logo: "https://www.carlogos.org/car-logos/ford-logo-2017-640.png",
-    },
-    {
-      name: "Volkswagen",
-      logo: "https://www.carlogos.org/logo/Volkswagen-logo-2019-640x500.jpg",
-    },
-    {
-      name: "Mazda",
-      logo: "https://www.carlogos.org/car-logos/mazda-logo-2018-vertical-640.png",
-    },
-    ,
-    {
-      name: "Hundai",
-      logo: "https://www.carlogos.org/car-logos/hyundai-logo-2011-download.png",
-    },
-    ,
-    {
-      name: "Nissan",
-      logo: "https://www.carlogos.org/car-logos/nissan-logo-2020-black-show.png",
-    },
-    ,
-    {
-      name: "KIA",
-      logo: "https://www.carlogos.org/logo/Kia-symbol-640x321.jpg",
-    },
-  ];
+  
 
   return (
     <>
@@ -199,22 +154,7 @@ function Home() {
           </Button>
         </div>
       </div>
-      <div className="mt-16 lg:mt-32 md:mt-32 ">
-        <section>
-          asdasdasd
-          {/* <Slider {...settings}>
-            {carLogos.map((i, idx) => {
-              return (
-                <img
-                  key={idx}
-                  src={i?.logo}
-                  alt={i?.name}
-                  className="w-20 p-12 lg:p-16 md:p-14 lg:h-60 md:h-60 "
-                />
-              );
-            })}
-          </Slider> */}
-        </section>
+      <div className="mt-20">
         <section className="px-2 mt-5 bg-gray-300 lg:px-14 md:px-14">
           <div className="grid gap-4 pt-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
             <div className="">

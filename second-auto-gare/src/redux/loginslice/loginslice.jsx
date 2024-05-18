@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { forgetPassword, resetToken, userLogin, userLogut } from "./loginThunk";
+import {
+  forgetPassword,
+  resetToken,
+  userLogin,
+  userLogut,
+  userSignup,
+} from "./loginThunk";
 
 const initialState = {
   loading: false,
@@ -24,6 +30,16 @@ const loginslice = createSlice({
     builder.addCase(userLogin.rejected, (state) => {
       state.loading = false;
       state.authenticate = false;
+    });
+
+    builder.addCase(userSignup.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(userSignup.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(userSignup.rejected, (state) => {
+      state.loading = false;
     });
 
     //for logout

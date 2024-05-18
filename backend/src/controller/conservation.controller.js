@@ -59,43 +59,6 @@ export const getAllConservation = async (req, res) => {
   }
 };
 
-// export const getSingleUserConversation = async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const conversation = await Conversation.find({ members: { $in: [id] } });
-//     const userConservation = await Promise.all(
-//       conversation.map(async (connv) => {
-//         const reciverId = connv.members.find((member) => member !== id);
-//         const user = await User.findById({ _id: reciverId }).select(
-//           "-password"
-//         );
-//         return res.status(200).json({
-//           status: true,
-//           data: {
-//             user: {
-//               id: user?._id,
-//               firstname: user?.firstname,
-//               lastname: user?.lastname,
-//             },
-//             conservationId: connv._id,
-//           },
-//         });
-//       })
-//     );
-//     return res.status(200).json({
-//       status: true,
-//       data:  userConservation,
-//       count: userConservation.length(),
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       status: false,
-//       message: "Internal Server Error",
-//     });
-//   }
-// };
-
 export const getSingleUserConversation = async (req, res) => {
   try {
     const id = req.params.id;

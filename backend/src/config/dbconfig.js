@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
+import "dotenv/config.js"
+
+const MONGO_URL = process.env.MONGO_URL;
 
 export const Dbconnect = async () => {
   try {
-    const SERVER_URI = process.env.MONGO_URI;
-    await mongoose.connect(SERVER_URI, {
+    const database = await mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Mongo Databse is connected on ", mongoose.connection.host);
+    console.log(`MongoDB Connected ${database.connection.host}`);
   } catch (error) {
-    console.log("Mongo data is facing", error);
+     console.error("Database connection error:", error);
   }
 };

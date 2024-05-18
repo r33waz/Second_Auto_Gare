@@ -375,42 +375,11 @@ export const updateVehicle = async (req, res) => {
 };
 
 //search vehicle according to model
-export const searchByModel = async (req, res) => {
-  const vehiclebrand = req.query.brand || "";
-  const query = { brand: { $regex: vehiclebrand, $options: "i" } };
-  try {
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    if (singleVehicle.length === 0) {
-      return res.status(400).json({
-        status: false,
-        message: `No vehicles found with the model ${vehiclebrand}`,
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        count: singleVehicle.length,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
+
 //get vehicle accordeng tha schema
 export const searchVehicle = async (req, res) => {
   try {
     let {
-      model,
       brand,
       color,
       year,
@@ -424,9 +393,6 @@ export const searchVehicle = async (req, res) => {
 
     const query = {};
 
-    if (model) {
-      query.model = { $regex: model, $options: "i" };
-    }
     if (brand) {
       query.brand = { $regex: brand, $options: "i" };
     }
@@ -463,8 +429,9 @@ export const searchVehicle = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (vehicles.length === 0) {
-      return res.status(404).json({
-        status: false,
+      return res.status(200).json({
+        status: true,
+        data: [],
         message: "No matching results were found",
       });
     } else {
@@ -477,274 +444,6 @@ export const searchVehicle = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-
-//get vehicle according to max and min value
-export const getPriceRange = async (req, res) => {
-  let { min, max } = req.query;
-  [min, max] = [parseInt(min), parseInt(max)];
-  // Check for valid input
-  if (!min || !max || isNaN(min) || isNaN(max)) {
-    return res.status(400).json({
-      status: false,
-      message: "Invalid price range values provided.",
-    });
-  }
-  try {
-    const vehiclesInRange = await Vehicle.find({
-      price: { $gte: min, $lte: max },
-    })
-      .sort([["price", "ascending"]])
-      .populate({
-        path: "comments",
-        model: "Comment",
-        populate: {
-          path: "author",
-          select: "_id firstname lastname",
-        },
-      });
-    if (vehiclesInRange.length === 0 && vehiclesInRange) {
-      return res.status(400).json({
-        status: false,
-        message: "No cars in given price range.",
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        count: vehiclesInRange.length,
-        data: vehiclesInRange,
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "Internal Server Error",
-    });
-  }
-};
-//get vehicle accordin to color
-export const getColorVehicles = async (req, res) => {
-  const vehicolor = req.query.color || "";
-  const query = { color: { $regex: vehicolor, $options: "i" } };
-  try {
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    if (singleVehicle.length === 0) {
-      return res.status(400).json({
-        status: false,
-        message: `No vehicles available in this color`,
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-
-//find vehicle by theri fuletype
-export const getvehicleFuletype = async (req, res) => {
-  const vehiclefule = req.query.fule_type || "";
-  const query = { fule_type: { $regex: vehiclefule, $options: "i" } };
-  try {
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    if (singleVehicle.length === 0) {
-      return res.status(400).json({
-        status: false,
-        message: `No vehicles available `,
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        count: singleVehicle.length,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-
-//find vehicle according to its displacement
-export const findDisplacementVehicles = async (req, res) => {
-  const vehicleDisplacement = req.query.displacement || "";
-  console.log(vehicleDisplacement);
-  const query = {
-    displacement: { $regex: vehicleDisplacement, $options: "i" },
-  };
-  console.log(query);
-  try {
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    if (!singleVehicle.length === 0) {
-      return res.status(404).json({
-        status: false,
-        message: "No vehicle found",
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-// find vehicle by transmission
-export const findTransmissionVehicles = async (req, res) => {
-  const vehicleTransmission = req.query.transmission || "";
-  const query = {
-    transmission: { $regex: vehicleTransmission, $options: "i" },
-  };
-  console.log(query);
-  try {
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    if (singleVehicle.length === 0) {
-      return res.status(400).json({
-        status: false,
-        message: `No ${vehicleTransmission} vehicle is available`,
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-//find by category
-export const findByCategory = async (req, res) => {
-  let { category } = req.query;
-
-  console.log("category :", category);
-  let query = { category: { $regex: category, $options: "i" } };
-  console.log(query);
-  try {
-    const singleVehicle = await Vehicle.find(query)
-      .populate({
-        path: "comments",
-        model: "Comment",
-        populate: {
-          path: "author",
-          select: "_id firstname lastname photo",
-        },
-      })
-      .sort([["createdAt", -1]]);
-    if (singleVehicle.length === 0) {
-      return res.status(400).json({
-        status: false,
-        // message: "No vehicles found",
-      });
-    } else {
-      return res.status(200).json({
-        stauts: true,
-        data: singleVehicle,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error",
-    });
-  }
-};
-
-//filter vehicle by status
-export const vehicleByStatus = async (req, res) => {
-  try {
-    let statuses = req.query.status || "";
-    //console.log("Categories", categories);
-    // Construct query to match categories for selling or renting
-    const query = { status: { $in: ["sell", "rent"] } };
-    if (statuses) {
-      // If categories are provided, filter by those categories
-      query.status = { $in: statuses.split(",") };
-    }
-    // Find vehicles matching the query
-    const singleVehicle = await Vehicle.find(query).populate({
-      path: "comments",
-      model: "Comment",
-      populate: {
-        path: "author",
-        select: "_id firstname lastname",
-      },
-    });
-    // Check if vehicles are found for selling or renting
-    if (singleVehicle.length === 0) {
-      if (query.status.$in.includes("sell")) {
-        return res.status(403).json({
-          status: false,
-          message: "No vehicles available for selling",
-        });
-      } else if (query.status.$in.includes("rent")) {
-        return res.status(400).json({
-          status: false,
-          message: "No vehicles available for renting",
-        });
-      }
-    }
-    // Return the found vehicles
-    return res.status(200).json({
-      status: true,
-      count: singleVehicle.length,
-      data: singleVehicle,
-    });
-  } catch (error) {
-    console.error(error);
     return res.status(500).json({
       status: false,
       message: "Internal server error",

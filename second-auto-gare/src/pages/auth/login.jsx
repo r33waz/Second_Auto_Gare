@@ -30,17 +30,18 @@ function Login() {
 
   const onSumit = async (data) => {
     dispatch(userLogin(data));
-   
   };
- useEffect(() => {
-   if (login) {
-     if (login.role === "admin") {
-       navigate("/admin/dashboard");
-     } else {
-       navigate("/home");
-     }
-   }
- }, [login, navigate]);
+
+  useEffect(() => {
+    
+    if (login) {
+      if (login?.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/home");
+      }
+    }
+  }, [login, navigate]);
 
   return (
     <div className="container mx-auto :bg--bg">

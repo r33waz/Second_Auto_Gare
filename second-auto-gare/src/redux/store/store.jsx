@@ -9,6 +9,7 @@ import conversationSlice from "../conversation/conversationSlice";
 import messageSlice from "../message/messageSlice";
 import loginslice from "../loginslice/loginslice";
 import chartSlice from "../charts/chartSlice";
+import feedBackSlice from "../contact/feedBackSlice";
 const persistConfig = {
   key: "root",
   storage: storage,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   connvo: conversationSlice,
   message: messageSlice,
   chart: chartSlice,
+  feedBack:feedBackSlice,
 });
 
 const store = configureStore({

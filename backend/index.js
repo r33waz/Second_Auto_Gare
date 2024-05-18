@@ -1,6 +1,5 @@
 import express from "express";
 
-import "dotenv/config";
 
 import cors from "cors";
 
@@ -13,17 +12,14 @@ import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import {createServer} from "http"
 import User from "./src/models/user.model.js";
+import "dotenv/config.js";
 
 const app = express();
-
-// Use the same server instance for both Express and Socket.IO
-
 Dbconnect();
 
+// Use the same server instance for both Express and Socket.IO
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
-
 app.use(
   cors({
     origin: process.env.BASE_URL,
@@ -32,8 +28,7 @@ app.use(
 );
 
 app.use(cookieParser());
-const PORT = process.env.PORT || 3000;
-const SOCKET_PORT = process.env.SOCKET_PORT;
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -79,6 +74,9 @@ io.on("connection", (socket) => {
 });
 
 app.use(mainRouter);
+
+const PORT = process.env.PORT || 3000;
+const SOCKET_PORT = process.env.SOCKET_PORT;
 server.listen(SOCKET_PORT, () => {
   console.log(`Socket is running at ${SOCKET_PORT}`);
 });

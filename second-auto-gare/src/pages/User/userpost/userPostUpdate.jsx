@@ -30,8 +30,8 @@ function UserPostUpdate() {
   }, [dispatch, id]);
 
   const VehicleSchema = yup.object({
-    brand: yup.string(),
-    model: yup.string(),
+    brand: yup.string().required("Brand is required"),
+    model: yup.string().required("Model is required"),
     price: yup
       .number()
       .typeError("Price must be a number")
@@ -42,14 +42,14 @@ function UserPostUpdate() {
       .typeError("Displacement must be a number")
       .positive("Displacement must be a positive number")
       .integer("Displacement must be an integer"),
-    category: yup.string(),
+    category: yup.string().required("Category is required"),
     mileage: yup
       .number()
       .typeError("Mileage must be a number")
       .positive("Mileage must be a positive number")
       .integer("Mileage must be an integer"),
-    fule_type: yup.string(),
-    color: yup.string(),
+    fule_type: yup.string().required("Fule type is required"),
+    color: yup.string().required("Color is required"),
     year: yup
       .number()
       .typeError("Year must be a number")
@@ -60,16 +60,19 @@ function UserPostUpdate() {
       .typeError("Door count must be a number")
       .positive("Door count must be a positive number")
       .integer("Door count must be an integer"),
-    
+
     number_of_people: yup
       .number()
       .typeError("Number of people must be a number")
       .positive("Number of people must be a positive number")
       .integer("Number of people must be an integer"),
-    drive_type: yup.string(),
-    status: yup.string(),
-    meta_description: yup.string().max(100),
-    description: yup.string().max(250),
+    drive_type: yup.string().required("Drive type is required"),
+    status: yup.string().required("Status is required"),
+    meta_description: yup
+      .string()
+      .required("Meta description is required")
+      .max(100),
+    description: yup.string().required("Description is required").max(250),
     kilometer: yup
       .number()
       .typeError("Kilometer of vehicle must be a number")
@@ -183,21 +186,35 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Brand</label>
                       <input
                         id="brand"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.brand && errors.brand.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.brand}
                         {...register("brand")}
                       />
+                      <small className="text-xs text-red">
+                        {errors && errors.brand && errors.brand.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Model</label>
                       <input
                         id="model"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.model && errors.model.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.model}
                         {...register("model")}
                       />
+                      <small className="text-xs text-red">
+                        {errors && errors.model && errors.model.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Price</label>
@@ -223,7 +240,13 @@ function UserPostUpdate() {
                       </label>
                       <input
                         id="displacement"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md outline-none"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors &&
+                          errors.displacement &&
+                          errors.displacement.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.displacement}
                         {...register("displacement")}
@@ -240,11 +263,18 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Category</label>
                       <input
                         id="category"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.category && errors.category.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.category}
                         {...register("category")}
                       />
+                      <small className="text-xs text-red">
+                        {errors && errors.category && errors.category.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Mileage</label>
@@ -267,11 +297,18 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Fule type</label>
                       <input
                         id="fule_type"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.fule_type && errors.fule_type.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.fule_type}
                         {...register("fule_type")}
                       />
+                      <small className="text-xs text-red">
+                        {errors && errors.fule_type && errors.fule_type.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">
@@ -279,11 +316,22 @@ function UserPostUpdate() {
                       </label>
                       <input
                         id="transmission"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors &&
+                          errors.transmission &&
+                          errors.transmission.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.transmission}
                         {...register("transmission")}
                       />
+                      <small className="text-xs text-red">
+                        {errors &&
+                          errors.transmission &&
+                          errors.transmission.message}
+                      </small>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-4">
@@ -291,11 +339,18 @@ function UserPostUpdate() {
                       <label className="text-lg font-semibold">Color</label>
                       <input
                         id="color"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.color && errors.color.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.color}
                         {...register("color")}
                       />
+                      <small className="text-xs text-red">
+                        {errors && errors.color && errors.color.message}
+                      </small>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Year</label>
@@ -338,7 +393,7 @@ function UserPostUpdate() {
                         className={`h-8 pl-2 border-2 outline-none ${
                           errors &&
                           errors.number_of_people &&
-                          errors.number_of_people
+                          errors.number_of_people.message
                             ? "border-red"
                             : "border-gray-500"
                         }  rounded-md`}
@@ -349,7 +404,7 @@ function UserPostUpdate() {
                       <span className="text-xs text-red">
                         {errors &&
                           errors.number_of_people &&
-                          errors.number_of_people}
+                          errors.number_of_people.message}
                       </span>
                     </div>
                   </div>
@@ -360,23 +415,37 @@ function UserPostUpdate() {
                       </label>
                       <input
                         id="drive_type"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.drive_type && errors.drive_type.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         type="text"
                         defaultValue={data?.drivetype}
                         {...register("drive_type")}
                       />
+                      <span className="text-xs text-red">
+                        {errors && errors.drive_type && errors.drive_type?.message}
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Status</label>
                       <select
                         id="status"
-                        className="h-8 pl-2 border-2 border-gray-500 rounded-md"
+                        className={`h-8 pl-2 border-2 outline-none ${
+                          errors && errors.status && errors.status.message
+                            ? "border-red"
+                            : "border-gray-500"
+                        }  rounded-md`}
                         defaultValue={data?.status}
                         {...register("status")}
                       >
                         <option value="Sell">Sell</option>
                         <option value="Buy">Buy</option>
                       </select>
+                      <span className="text-xs text-red">
+                        {errors && errors.status && errors.status.message}
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-lg font-semibold">Kilometer</label>

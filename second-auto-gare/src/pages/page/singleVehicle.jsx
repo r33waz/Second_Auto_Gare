@@ -25,7 +25,7 @@ import { Button } from "../../shadcn_ui/ui/button";
 import Otpvalidation from "../../components/otpValidation";
 import { SucessToast } from "../../components/common/toast";
 import { postData } from "../../service/axiosservice";
-import Chat from "./chat";
+import Chat from "../../components/chat";
 
 function SingleVehicle() {
   const [isOpen, setOpen] = useState(false);

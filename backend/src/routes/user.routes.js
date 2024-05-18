@@ -26,8 +26,8 @@ const router = express.Router();
 router.post("/signup", Signup);
 router.post("/login", Login);
 router.post("/logout", Logout);
-router.get("/users", authentication, getAllUser);
-router.get("/users/:id", authentication, getUserById);
+router.get("/users", getAllUser);
+router.get("/users/:id",getUserById);
 router.patch(
   "/updateuser/:id",
   authentication,
@@ -36,8 +36,8 @@ router.patch(
 );
 router.delete(
   "/usersdelete/:id",
-  authentication,
-  authorization("admin"),
+  // authentication,
+  // authorization("admin"),
   userDelete
 );
 

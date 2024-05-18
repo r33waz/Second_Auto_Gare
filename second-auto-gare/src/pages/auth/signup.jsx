@@ -7,9 +7,12 @@ import { NavLink } from "react-router-dom";
 import { postData, postImageData } from "../../service/axiosservice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch } from "react-redux";
+import { userSignup } from "../../redux/loginslice/loginThunk";
 yupResolver;
 function Signup() {
   const naviagte = useNavigate();
+  const dispatch = useDispatch();
   const [isShow, setShow] = useState(false);
   const [newPassword, setnewPassword] = useState(false);
   const SigninSchema = yup.object({
@@ -21,9 +24,10 @@ function Signup() {
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email"),
     phonenumber: yup.string().required("Enter Phone Number"),
     role: yup.string().required("Select  Your Role"),
-    newpassword: yup.string(),
+    newpassword: yup.string().required("Enter Your Password"),
     confirmnewpassword: yup
       .string()
+      .required("Re-Type Your Password")
       .oneOf([yup.ref("newpassword"), null], "Passwords must match"),
   });
   const {
@@ -35,23 +39,11 @@ function Signup() {
   });
 
   const OnSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("firstname", data.firstname);
-    formData.append("lastname", data.lastname);
-    formData.append("email", data.email);
-    formData.append("phonenumber", data.phonenumber);
-    formData.append("password", data.confirmnewpassword);
-    formData.append("role", data.role);
-    const resp = await postData("/api/v1/signup", formData);
-    if (resp?.status) {
+    dispatch(userSignup(data)).then(() => {
       naviagte("/login");
-      toast.success(resp?.message);
-    }
+    });
   };
 
-  useEffect(() => {
-    document.title = "Signup";
-  });
   return (
     <div className="container mx-auto ">
       <div className="flex items-center justify-center h-screen ">
@@ -118,6 +110,9 @@ function Signup() {
                     placeholder="Create Password"
                     {...register("newpassword")}
                   />
+                  <small className="tracking-wider text-red">
+                    {errors.newpassword?.message}
+                  </small>
                   <span
                     onClick={() => setnewPassword(!newPassword)}
                     className="absolute cursor-pointer right-5 top-2.5"
@@ -162,16 +157,15 @@ function Signup() {
                       </svg>
                     )}
                   </span>
-                  <small className="tracking-wider text-red">
-                    {errors.newpassword?.message}
-                  </small>
                 </div>
                 <div className="flex flex-col gap-1.5 relative">
                   <input
                     type={isShow ? "text" : "password"}
                     autoComplete="off"
                     className={`w-full h-10 pl-2 text-black  :text-white placeholder-gray-500 bg-transparent border ${
-                      errors.confirmnewpassword ? "border-red" : "border-gray-500"
+                      errors.confirmnewpassword
+                        ? "border-red"
+                        : "border-gray-500"
                     }  rounded-sm shadow-[0px_1px_2px_1px_#00000024] `}
                     id="confirmnewpassword"
                     placeholder="Re-type  your password"
@@ -258,9 +252,9 @@ function Signup() {
                     <option value="dealer">Dealer</option>
                     <option value="user">User</option>
                   </select>
-                  <span className="text-xs font-semibold text-red">
+                  <small className="tracking-wider text-red">
                     {errors.role?.message}
-                  </span>
+                  </small>
                 </div>
               </div>
 

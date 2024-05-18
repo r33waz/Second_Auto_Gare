@@ -28,7 +28,7 @@ function Dashboard() {
   const { usersData } = useSelector((state) => state.chart);
   const { vehicleData } = useSelector((state) => state.chart);
   const { vehicleStatusData } = useSelector((state) => state.chart);
-  console.log("usesrData", usersData);
+  console.log("usesrData", user);
 
   useEffect(() => {
     dispatch(GetAllUser());

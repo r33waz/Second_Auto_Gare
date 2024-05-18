@@ -9,11 +9,16 @@ import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
 
 export const Signup = async (req, res) => {
-  const saltRounds = 10;
   console.log(req.body);
   try {
-    const { firstname, lastname, email, phonenumber, password, role } =
-      req.body;
+    const {
+      firstname,
+      lastname,
+      email,
+      phonenumber,
+      confirmnewpassword,
+      role,
+    } = req.body;
     // Check for existing user with the same username
     const existingUserEmail = await User.findOne({ email });
     if (existingUserEmail) {
@@ -22,7 +27,7 @@ export const Signup = async (req, res) => {
         message: "Email already exists",
       });
     }
-    const hashpassword = await bcrypt.hash(password, saltRounds);
+    const hashpassword = await bcrypt.hash(confirmnewpassword, 10);
     const newUser = new User({
       firstname,
       lastname,
@@ -177,6 +182,8 @@ export const getUserById = async (req, res) => {
 
 //*API for user update
 export const userUpdate = async (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
   try {
     const id = req.params.id;
     const user = await User.findById({ _id: id });
@@ -231,19 +238,8 @@ export const userUpdate = async (req, res) => {
       } else {
         // Update user with image
         let postPhoto;
-        if (
-          req.file.mimetype === "image/jpeg" ||
-          req.file.mimetype === "image/png" ||
-          req.file.mimetype === "image/jpg"
-        ) {
-          postPhoto = await cloudinary.v2.uploader.upload(req.file.path);
-          fs.unlinkSync(req.file.path); // Remove the uploaded file from the server
-        } else {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid image type",
-          });
-        }
+        postPhoto = await cloudinary.v2.uploader.upload(req.file.path);
+        fs.unlinkSync(req.file.path); // Remove the uploaded file from the server
 
         // Deleting old images from cloudinary if they exist
         if (user?.photo && user?.photo?.public_id) {
@@ -510,7 +506,7 @@ export const resetPassword = async (req, res) => {
 export const setPassword = async (req, res) => {
   const { id, token } = req.params;
   const { password } = req.body;
-  console.log(password)
+  console.log(password);
   try {
     const validuser = await User.findOne({ _id: id, verifytoken: token });
 
@@ -530,10 +526,10 @@ export const setPassword = async (req, res) => {
       res.status(401).json({ status: 401, message: "user not exist" });
     }
   } catch (error) {
-     console.log(error);
-     return res.status(500).json({
-       status: false,
-       message: "Internal Server Error",
-     });
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
   }
 };
