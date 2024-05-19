@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FetchVehicle } from "../../redux/vehicleslice/vehiclethunk";
 import Loading from "../../components/common/loading";
 import { useNavigate } from "react-router-dom";
+import { Zoom } from "react-awesome-reveal";
 
 function Vehicle() {
   const dispatch = useDispatch();
@@ -45,109 +46,119 @@ function Vehicle() {
         <div className="flex flex-col w-full pt-5">
           <h2 className="text-4xl">Vehicle Deatils </h2>
           <div className="w-full px-2 mt-5">
-            <div className="flex flex-wrap items-center justify-between gap-10 md:flex-nowrap">
-              <div className="flex flex-col w-full gap-2">
-                <label className="text-lg font-light">Filter by brand</label>
-                <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
-                  onChange={(e) =>
-                    e.target.value && handelSearch(e.target.value)
-                  }
-                >
-                  <option value="" className="text-gray-500">
-                    Select a Brand
-                  </option>
-                  <option value="kia">KIA</option>
-                  <option value="hundai">Hundai</option>
-                  <option value="nissan">Nissan</option>
-                  <option value="toyota">Toyota</option>
-                  <option value="ford">Ford</option>
-                  <option value="honda">Honda</option>
-                  <option value="mitsubisi">Mitsubisi</option>
-                  <option value="renult">Renult</option>
-                  <option value="mercedes">Mercedes</option>
+            <Zoom cascade>
+              <div className="flex flex-wrap items-center justify-between w-full gap-10 md:flex-nowrap">
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
+                  <label className="text-sm font-light text-purple">
+                    Filter by brand
+                  </label>
+                  <select
+                    className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
+                    onChange={(e) =>
+                      e.target.value && handelSearch(e.target.value)
+                    }
+                  >
+                    <option value="" className="text-gray-500">
+                      Select a Brand
+                    </option>
+                    <option value="kia">KIA</option>
+                    <option value="hundai">Hundai</option>
+                    <option value="nissan">Nissan</option>
+                    <option value="toyota">Toyota</option>
+                    <option value="ford">Ford</option>
+                    <option value="honda">Honda</option>
+                    <option value="mitsubisi">Mitsubisi</option>
+                    <option value="renult">Renult</option>
+                    <option value="mercedes">Mercedes</option>
 
-                  <option value="bmw">BMW</option>
-                  <option value="suzuki">Suzuki</option>
-                  <option value="mahendra">Mahendra</option>
-                  <option value="jeep">Jeep</option>
-                </select>
+                    <option value="bmw">BMW</option>
+                    <option value="suzuki">Suzuki</option>
+                    <option value="mahendra">Mahendra</option>
+                    <option value="jeep">Jeep</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
+                  <label className="text-sm font-light text-purple">
+                    Filter by Ctegory
+                  </label>
+                  <select
+                    className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
+                    onChange={(e) =>
+                      e.target.value && handelSearch(e.target.value)
+                    }
+                  >
+                    <option value="" className="text-gray-500">
+                      Select Category
+                    </option>
+                    <option value="kia">SUV</option>
+                    <option value="hundai">Sedan</option>
+                    <option value="nissan">Hatchback</option>
+                    <option value="toyota">Van</option>
+                    <option value="ford">Hybrid</option>
+                    <option value="honda">Truck</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
+                  <label className="text-sm font-light text-purple">
+                    Filter by color
+                  </label>
+                  <select
+                    className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
+                    onChange={(e) =>
+                      e.target.value && vehicleSearchColor(e.target.value)
+                    }
+                  >
+                    <option value="" className="text-gray-500">
+                      Select Color
+                    </option>
+                    <option value="red">Red</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                    <option value="gray">Gray</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
+                  <label className="text-sm font-light text-purple">
+                    Filter by transmission
+                  </label>
+                  <select
+                    className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out "
+                    onChange={(e) =>
+                      e.target.value &&
+                      vehicleSearchTransmission(e.target.value)
+                    }
+                  >
+                    <option value="" className="text-gray-500">
+                      Select Transmission
+                    </option>
+                    <option value="automatic">Automatic</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg ">
+                  <label className="text-sm font-light text-purple">
+                    Filter by fule type
+                  </label>
+                  <select
+                    className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out "
+                    onChange={(e) =>
+                      e.target.value && vehicleSearchFule(e.target.value)
+                    }
+                  >
+                    <option value="" className="text-gray-500">
+                      Select Fule Type
+                    </option>
+                    <option value="petrol">Petrol</option>
+                    <option value="desele">Desele</option>
+                    <option value="electric">Electric</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+                </div>
               </div>
-              <div className="flex flex-col w-full gap-2">
-                <label className="text-lg font-light">Filter by Ctegory</label>
-                <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
-                  onChange={(e) =>
-                    e.target.value && handelSearch(e.target.value)
-                  }
-                >
-                  <option value="" className="text-gray-500">
-                    Select Category
-                  </option>
-                  <option value="kia">SUV</option>
-                  <option value="hundai">Sedan</option>
-                  <option value="nissan">Hatchback</option>
-                  <option value="toyota">Van</option>
-                  <option value="ford">Hybrid</option>
-                  <option value="honda">Truck</option>
-                </select>
-              </div>
-              <div className="flex flex-col w-full gap-2">
-                <label className="text-lg font-light">Filter by color</label>
-                <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
-                  onChange={(e) =>
-                    e.target.value && vehicleSearchColor(e.target.value)
-                  }
-                >
-                  <option value="" className="text-gray-500">
-                    Select Color
-                  </option>
-                  <option value="red">Red</option>
-                  <option value="green">Green</option>
-                  <option value="blue">Blue</option>
-                  <option value="white">White</option>
-                  <option value="black">Black</option>
-                  <option value="gray">Gray</option>
-                </select>
-              </div>
-              <div className="flex flex-col w-full gap-2">
-                <label className="text-lg font-light">
-                  Filter by transmission
-                </label>
-                <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
-                  onChange={(e) =>
-                    e.target.value && vehicleSearchTransmission(e.target.value)
-                  }
-                >
-                  <option value="" className="text-gray-500">
-                    Select Transmission
-                  </option>
-                  <option value="automatic">Automatic</option>
-                  <option value="manual">Manual</option>
-                </select>
-              </div>
-              <div className="flex flex-col w-full gap-2">
-                <label className="text-lg font-light">
-                  Filter by fule type
-                </label>
-                <select
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out border-2 rounded"
-                  onChange={(e) =>
-                    e.target.value && vehicleSearchFule(e.target.value)
-                  }
-                >
-                  <option value="" className="text-gray-500">
-                    Select Fule Type
-                  </option>
-                  <option value="petrol">Petrol</option>
-                  <option value="desele">Desele</option>
-                  <option value="electric">Electric</option>
-                  <option value="Hybrid">Hybrid</option>
-                </select>
-              </div>
-            </div>
+            </Zoom>
+
             <Tabs defaultValue="sell" className="w-full mt-3">
               <TabsList className="grid w-full grid-cols-2 gap-4 bg-gray-500 bg-opacity-40">
                 <TabsTrigger

@@ -84,12 +84,11 @@ function Vehicle() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex items-center justify-start gap-3"></div>
       <div className="flex gap-2 px-2">
         <section className="flex flex-col ">
           <form onSubmit={handleSubmit(Onsubmit)}>
             <div
-              className={`relative flex flex-col justify-center gap-4 px-6 py-4 bg-white border border-gray-400 mt-14 ${
+              className={`relative flex flex-col justify-center gap-4  py-4 bg-white border border-gray-400 mt-14 ${
                 isOpen ? "w-60" : "w-0 overflow-x-hidden"
               }`}
             >
@@ -116,7 +115,7 @@ function Vehicle() {
                 <select
                   id="brand"
                   {...register("brand")}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white border border-b rounded outline-none"
                 >
                   <option value="" className="text-gray-500">
                     Select a Brand
@@ -142,7 +141,7 @@ function Vehicle() {
                 <select
                   id="category"
                   {...register("category", { value: category?.type })}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
                 >
                   <option value="" className="text-gray-500">
                     Select Category
@@ -161,7 +160,7 @@ function Vehicle() {
                 <select
                   id="color"
                   {...register("color")}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
                 >
                   <option value="" className="text-gray-500">
                     Select Color
@@ -179,7 +178,7 @@ function Vehicle() {
                 <select
                   id="transmission"
                   {...register("transmission")}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
                 >
                   <option value="" className="text-gray-500">
                     Select Transmission
@@ -192,7 +191,7 @@ function Vehicle() {
                 <select
                   id="fule_type"
                   {...register("fule_type")}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
                 >
                   <option value="" className="text-gray-500">
                     Select Fule Type
@@ -207,7 +206,7 @@ function Vehicle() {
                 <select
                   id="year"
                   {...register("year")}
-                  className="h-8 pl-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                  className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
                 >
                   <option value="">Select Year</option>
                   {years.map((year) => (
@@ -259,7 +258,7 @@ function Vehicle() {
           <div className="flex flex-col gap-4">
             <HeroSubtitle className="hidden md:visible ">
               <div className="flex items-center gap-3">
-                <Link to="/home">
+                <Link to="/">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="32"
@@ -290,7 +289,7 @@ function Vehicle() {
               No vehicle found
             </div>
           ) : (
-            <section className="mt-4 md:mt-8">
+            <section className="mt-4 md:mt-8 h-[100vh]">
               {isLoading ? (
                 <Loading />
               ) : (
@@ -389,53 +388,53 @@ function Vehicle() {
                       );
                     })}
                   </div>
-                  <ReactPaginate
-                    previousLabel={
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="32"
-                          height="32"
-                          viewBox="0 0 1024 1024"
-                          className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="m272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9z"
-                          />
-                        </svg>
-                      </span>
-                    }
-                    nextLabel={
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="32"
-                          height="32"
-                          viewBox="0 0 1024 1024"
-                          className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512L181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5m304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512L485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5"
-                          />
-                        </svg>
-                      </span>
-                    }
-                    // breakLabel={"..."}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={3}
-                    onPageChange={handlePageClick}
-                    containerClassName="flex items-center justify-center my-8 gap-4 "
-                    pageClassName="border rounded-full block hover:bg-purple hover:text-white w-10 h-10 flex justify-center items-center "
-                    pageLinkClassName="page-link"
-                    activeClassName="bg-purple text-white"
-                  />
                 </>
               )}
             </section>
           )}
+          <ReactPaginate
+            previousLabel={
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 1024 1024"
+                  className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                >
+                  <path
+                    fill="currentColor"
+                    d="m272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9z"
+                  />
+                </svg>
+              </span>
+            }
+            nextLabel={
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 1024 1024"
+                  className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512L181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5m304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512L485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5"
+                  />
+                </svg>
+              </span>
+            }
+            // breakLabel={"..."}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={handlePageClick}
+            containerClassName="flex items-center justify-center my-8 gap-4 "
+            pageClassName="border rounded-full block hover:bg-purple hover:text-white w-10 h-10 flex justify-center items-center "
+            pageLinkClassName="page-link"
+            activeClassName="bg-purple text-white"
+          />
         </section>
 
         {/*  */}

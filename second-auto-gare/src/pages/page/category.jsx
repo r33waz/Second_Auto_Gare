@@ -99,7 +99,7 @@ function Category() {
               <SwiperSlide className="z-30 w-20 h-10">
                 <Link
                   to="/car/suv"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Suv
                   <img src={Suv} alt="SUV" className="w-12 h-12" />{" "}
@@ -109,7 +109,7 @@ function Category() {
               <SwiperSlide>
                 <Link
                   to="/car/sedan"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Sedan
                   <img src={Sedan} alt="Sedan" className="w-12 h-12" />
@@ -118,7 +118,7 @@ function Category() {
               <SwiperSlide>
                 <Link
                   to="/car/hatchback"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple  gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Hatchback
                   <img src={Hatchback} alt="Hatchback" className="w-12 h-12" />
@@ -127,7 +127,7 @@ function Category() {
               <SwiperSlide>
                 <Link
                   to="/car/hybrid"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Hybrid
                   <img src={Hybrid} alt="Hybrid" className="w-12 h-12" />
@@ -136,7 +136,7 @@ function Category() {
               <SwiperSlide>
                 <Link
                   to="/car/van"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Van
                   <img src={Van} alt="Van" className="w-12 h-12" />
@@ -145,7 +145,7 @@ function Category() {
               <SwiperSlide>
                 <Link
                   to="/car/truck"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 duration-300 hover:text-purple gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Truck
                   <img src={Truck} alt="Truck" className="w-12 h-12" />
@@ -155,7 +155,7 @@ function Category() {
                 {" "}
                 <Link
                   to="/car/electric"
-                  className="bg-white gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
+                  className="bg-white hover:scale-105 hover:text-purple duration-300 gap-2 flex flex-col items-center lg:w-40 md:w-52 w-40 p-4 rounded-lg shadow-[0px_0px_4px_1px_#00000024]"
                 >
                   Electric
                   <img src={Electric} alt="Electric" className="w-12 h-12" />
@@ -923,11 +923,11 @@ function Category() {
                   {vehicle?.slice(0, 10).map((e, index) => (
                     <SwiperSlide key={index}>
                       <CarCard>
-                        <div className="relative flex flex-col">
+                        <div className="flex flex-col border rounded-xl shadow-[0px_2px_6px_1px_#00000024]">
                           <img
                             src={e.imageUrl[0]?.url}
                             alt={`Image ${index}`}
-                            className="object-cover h-48 rounded-tr-2xl rounded-tl-2xl"
+                            className="object-cover h-48 rounded-t-xl"
                           />
                           <div className="flex flex-col py-2 px-2.5 gap-3">
                             <NavLink
@@ -1008,20 +1008,6 @@ function Category() {
                               </Link>
                             </div>
                           </div>
-                          <button className="absolute top-3 right-3">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="32"
-                              height="32"
-                              viewBox="0 0 24 24"
-                              className="p-1 bg-white rounded-full h-7 w-7"
-                            >
-                              <path
-                                fill="currentColor"
-                                d="M5 21V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v16l-7-3zm2-3.05l5-2.15l5 2.15V5H7zM7 5h10z"
-                              />
-                            </svg>
-                          </button>
                         </div>
                       </CarCard>
                     </SwiperSlide>

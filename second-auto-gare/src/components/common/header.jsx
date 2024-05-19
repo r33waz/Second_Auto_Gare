@@ -21,7 +21,7 @@ function Header() {
   const Links = [
     {
       name: "Home",
-      link: "/home",
+      link: "/",
     },
     {
       name: "Vehicle",
