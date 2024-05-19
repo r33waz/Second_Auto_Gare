@@ -41,7 +41,10 @@ router.delete(
   userDelete
 );
 
-router.get("/user", authentication, authorization("admin"), userSearchByEmail);
+router.get("/user",
+  // authentication,
+  // authorization("admin"),
+  userSearchByEmail);
 router.post("/send_otp", authentication, otpVerification, SendOTP);
 router.post("/verify_otp", authentication, verifyOtpValidation, VerifyOtp);
 router.post("/forget_password", forgetPassoword);

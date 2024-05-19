@@ -23,6 +23,7 @@ import {
 } from "../../shadcn_ui/ui/dialog";
 import { Button } from "../../shadcn_ui/ui/button";
 import { Loader } from "lucide-react";
+import { Fade } from "react-awesome-reveal";
 
 function User() {
   const [itemsPerPage] = useState(12);
@@ -164,7 +165,8 @@ function User() {
                             ></th>
                           </tr>
                         </thead>
-                        <tbody className="text-sm font-light text-center divide-y divide-gray-200 dark:divide-gray-700">
+
+                        <tbody className="w-full text-sm font-light text-center divide-y divide-gray-200 dark:divide-gray-700">
                           {currentItems?.map((e) => {
                             return (
                               <>

@@ -12,6 +12,7 @@ export const Addvehicle = async (req, res) => {
       });
     }
 
+    console.log(req.body)
     const {
       user,
       model,

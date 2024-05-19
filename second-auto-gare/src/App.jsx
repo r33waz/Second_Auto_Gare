@@ -160,7 +160,7 @@ function App() {
                 }
               />
               <Route
-                path="/home"
+                path="/"
                 element={
                   <>
                     <Header />
