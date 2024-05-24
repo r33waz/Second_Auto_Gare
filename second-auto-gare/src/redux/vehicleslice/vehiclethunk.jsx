@@ -80,7 +80,7 @@ export const SearchVehicle = createAsyncThunk(
       return resp?.data?.data;
     } catch (error) {
       console.log(error);
-      // ErrorToast({ message: error.response });
+      ErrorToast({ message: error.response });
       return rejectWithValue(error?.message);
     }
   }

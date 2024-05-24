@@ -30,7 +30,7 @@ router.get("/users", getAllUser);
 router.get("/users/:id",getUserById);
 router.patch(
   "/updateuser/:id",
-  authentication,
+  // authentication,
   upload.single("photo"),
   userUpdate
 );
