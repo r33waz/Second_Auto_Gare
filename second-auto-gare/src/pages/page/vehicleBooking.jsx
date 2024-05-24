@@ -502,7 +502,7 @@ function VehicleBooking() {
                             to="/login"
                             className="py-3 text-lg text-center text-white rounded-xl bg-purple"
                           >
-                            Message Dealer
+                            Book Now
                           </Link>
                         ) : login?.verified ? (
                           <>

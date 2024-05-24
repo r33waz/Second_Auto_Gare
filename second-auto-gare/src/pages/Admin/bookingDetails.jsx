@@ -51,13 +51,16 @@ function BookingDetails() {
                 <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
                   <div className="flex flex-col gap-3">
                     <h1 className="font-semibold md:text-2xl">
-                      {booking?.vehicle.brand} /{booking?.vehicle.model}
+                      Vehicle Booking Details
                     </h1>
                     <p>{booking?.vehicle.meta_description.slice(0, 100)}</p>
                   </div>
                   <p className="flex gap-2"></p>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
+                  <p className="text-2xl font-semibold md:text-3xl">
+                    {booking?.vehicle.brand} /{booking?.vehicle.model}
+                  </p>
                   <div className="flex flex-wrap items-center gap-4 md:flex-nowrap">
                     <SmallCard>
                       <p className="flex gap-2">
@@ -141,9 +144,6 @@ function BookingDetails() {
                       </p>
                     </SmallCard>
                   </div>
-                  <p className="text-2xl font-semibold md:text-3xl">
-                    Price: Rs {booking?.vehicle.price.toLocaleString()}
-                  </p>
                 </div>
               </div>
             </section>

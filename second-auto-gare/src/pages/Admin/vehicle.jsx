@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "../../components/common/card";
 import { useEffect } from "react";
 import { Button } from "../../shadcn_ui/ui/button";
@@ -18,26 +18,97 @@ import "swiper/css/navigation";
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 import SideNav from "../../components/common/SlideNav";
 import { useDispatch, useSelector } from "react-redux";
-import { FetchVehicle } from "../../redux/vehicleslice/vehiclethunk";
+import {
+  FetchVehicle,
+  SearchVehicle,
+} from "../../redux/vehicleslice/vehiclethunk";
 import Loading from "../../components/common/loading";
 import { useNavigate } from "react-router-dom";
 import { Zoom } from "react-awesome-reveal";
+import { useForm } from "react-hook-form";
+import ReactPaginate from "react-paginate";
 
 function Vehicle() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: vehicle, isLoadng } = useSelector((state) => state.vehicle);
-  console.log(vehicle)
+  const [searchVehicle, setSearchVehicle] = useState({
+    brand: "",
+    category: "",
+    transmission: "",
+    fule_type: "",
+    color: "",
+    year: "",
+  });
+
+  console.log("searchVehicle", searchVehicle);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setSearchVehicle((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const [itemsPerPage] = useState(12);
+  const [itemOffset, setItemOffset] = useState(0);
+  const { searchVehicle: vehicle, searchVehicleLoading: isLoading } =
+    useSelector((state) => state.vehicle);
+
+  const endOffset = itemOffset + itemsPerPage;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  const currentItems = vehicle?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(currentItems?.length / itemsPerPage);
+  console.log(currentItems);
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % vehicle?.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let year = currentYear; year >= 2001; year--) {
+    years.push(year);
+  }
+
   useEffect(() => {
-    dispatch(FetchVehicle());
+    dispatch(
+      SearchVehicle({
+        brand: "",
+        category: "",
+        transmission: "",
+        fule_type: "",
+        color: "",
+        year: "",
+      })
+    );
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      SearchVehicle({
+        brand: searchVehicle.brand ? searchVehicle?.brand : "",
+        category: searchVehicle?.category ? searchVehicle.category : "",
+        transmission: searchVehicle?.transmission
+          ? searchVehicle?.transmission
+          : "",
+        fule_type: searchVehicle.fule_type ? searchVehicle.fule_type : "",
+        color: searchVehicle.color ? searchVehicle.color : "",
+        year: parseInt(searchVehicle.year) ? parseInt(searchVehicle.year) : "",
+      })
+    );
+  }, [searchVehicle]);
 
   const viewDetails = (id) => {
     navigate(`/admin/vehicle_detail/${id}`);
   };
 
-  if (isLoadng) {
-    return <Loading />;
+  if (isLoading) {
+    <Loading/>
   }
   return (
     <>
@@ -46,17 +117,17 @@ function Vehicle() {
         <div className="flex flex-col w-full pt-5">
           <h2 className="text-4xl">Vehicle Deatils </h2>
           <div className="w-full px-2 mt-5">
-            <Zoom cascade>
-              <div className="flex flex-wrap items-center justify-between w-full gap-10 md:flex-nowrap">
+            <Zoom cascade triggerOnce={true}>
+              <div className="flex flex-wrap items-center justify-between w-full gap-2 md:flex-nowrap">
                 <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
                   <label className="text-sm font-light text-purple">
                     Filter by brand
                   </label>
                   <select
                     className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
-                    onChange={(e) =>
-                      e.target.value && handelSearch(e.target.value)
-                    }
+                    id="brand"
+                    value={searchVehicle.brand}
+                    onChange={handleChange}
                   >
                     <option value="" className="text-gray-500">
                       Select a Brand
@@ -70,7 +141,6 @@ function Vehicle() {
                     <option value="mitsubisi">Mitsubisi</option>
                     <option value="renult">Renult</option>
                     <option value="mercedes">Mercedes</option>
-
                     <option value="bmw">BMW</option>
                     <option value="suzuki">Suzuki</option>
                     <option value="mahendra">Mahendra</option>
@@ -79,23 +149,41 @@ function Vehicle() {
                 </div>
                 <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
                   <label className="text-sm font-light text-purple">
-                    Filter by Ctegory
+                    Filter by brand
+                  </label>
+                  <select
+                    id="year"
+                    className="w-full h-8 px-2 overflow-auto transition duration-500 ease-in-out bg-white rounded outline-none"
+                    value={searchVehicle.year}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
+                  <label className="text-sm font-light text-purple">
+                    Filter by category
                   </label>
                   <select
                     className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
-                    onChange={(e) =>
-                      e.target.value && handelSearch(e.target.value)
-                    }
+                    id="category"
+                    value={searchVehicle.category}
+                    onChange={handleChange}
                   >
                     <option value="" className="text-gray-500">
                       Select Category
                     </option>
-                    <option value="kia">SUV</option>
-                    <option value="hundai">Sedan</option>
-                    <option value="nissan">Hatchback</option>
-                    <option value="toyota">Van</option>
-                    <option value="ford">Hybrid</option>
-                    <option value="honda">Truck</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="Hatchback">Hatchback</option>
+                    <option value="Van">Van</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Truck">Truck</option>
                   </select>
                 </div>
                 <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg">
@@ -104,9 +192,9 @@ function Vehicle() {
                   </label>
                   <select
                     className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out rounded"
-                    onChange={(e) =>
-                      e.target.value && vehicleSearchColor(e.target.value)
-                    }
+                    id="color"
+                    value={searchVehicle.color}
+                    onChange={handleChange}
                   >
                     <option value="" className="text-gray-500">
                       Select Color
@@ -125,10 +213,9 @@ function Vehicle() {
                   </label>
                   <select
                     className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out "
-                    onChange={(e) =>
-                      e.target.value &&
-                      vehicleSearchTransmission(e.target.value)
-                    }
+                    id="transmission"
+                    value={searchVehicle.transmission}
+                    onChange={handleChange}
                   >
                     <option value="" className="text-gray-500">
                       Select Transmission
@@ -139,21 +226,21 @@ function Vehicle() {
                 </div>
                 <div className="flex flex-col w-full gap-1 p-1 border-2 rounded-lg ">
                   <label className="text-sm font-light text-purple">
-                    Filter by fule type
+                    Filter by fuel type
                   </label>
                   <select
                     className="h-8 pl-2 overflow-auto text-sm transition duration-500 ease-in-out "
-                    onChange={(e) =>
-                      e.target.value && vehicleSearchFule(e.target.value)
-                    }
+                    id="fule_type"
+                    value={searchVehicle.fule_type}
+                    onChange={handleChange}
                   >
                     <option value="" className="text-gray-500">
-                      Select Fule Type
+                      Select Fuel Type
                     </option>
                     <option value="petrol">Petrol</option>
-                    <option value="desele">Desele</option>
+                    <option value="desele">Diesel</option>
                     <option value="electric">Electric</option>
-                    <option value="Hybrid">Hybrid</option>
+                    <option value="hybrid">Hybrid</option>
                   </select>
                 </div>
               </div>
@@ -174,7 +261,7 @@ function Vehicle() {
                   Rent
                 </TabsTrigger>
               </TabsList>
-              {vehicle ? (
+              {currentItems.length > 0 ? (
                 <>
                   <TabsContent value="sell">
                     <>
@@ -277,13 +364,54 @@ function Vehicle() {
                             })}
                         </tbody>
                       </table>
+                      <ReactPaginate
+                        previousLabel={
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="32"
+                              height="32"
+                              viewBox="0 0 1024 1024"
+                              className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="m272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9z"
+                              />
+                            </svg>
+                          </span>
+                        }
+                        nextLabel={
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="32"
+                              height="32"
+                              viewBox="0 0 1024 1024"
+                              className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512L181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5m304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512L485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5"
+                              />
+                            </svg>
+                          </span>
+                        }
+                        // breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName="flex items-center justify-center my-8 gap-4 "
+                        pageClassName="border rounded-full block hover:bg-purple hover:text-white w-10 h-10 flex justify-center items-center "
+                        pageLinkClassName="page-link"
+                        activeClassName="bg-purple text-white"
+                      />
                     </>
                   </TabsContent>
 
                   <TabsContent value="rent">
-                    <div
-                      className={`w-full pt-10 overflow-x-auto overflow-y-auto h-[500px]`}
-                    >
+                    <div className={`w-full`}>
                       <table className="w-full mb-4 bg-white border divide-y divide-gray-200 rounded shadow-md dark:divide-gray-700">
                         <thead className="border-b-2">
                           <tr>
@@ -383,6 +511,49 @@ function Vehicle() {
                             })}
                         </tbody>
                       </table>
+                      <ReactPaginate
+                        previousLabel={
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="32"
+                              height="32"
+                              viewBox="0 0 1024 1024"
+                              className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="m272.9 512l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L186.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H532c6.7 0 10.4-7.7 6.3-12.9zm304 0l265.4-339.1c4.1-5.2.4-12.9-6.3-12.9h-77.3c-4.9 0-9.6 2.3-12.6 6.1L490.8 492.3a31.99 31.99 0 0 0 0 39.5l255.3 326.1c3 3.9 7.7 6.1 12.6 6.1H836c6.7 0 10.4-7.7 6.3-12.9z"
+                              />
+                            </svg>
+                          </span>
+                        }
+                        nextLabel={
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="32"
+                              height="32"
+                              viewBox="0 0 1024 1024"
+                              className="p-1 rounded-full h-7 w-7 active:bg-purple active:text-white"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M533.2 492.3L277.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H188c-6.7 0-10.4 7.7-6.3 12.9L447.1 512L181.7 851.1A7.98 7.98 0 0 0 188 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5m304 0L581.9 166.1c-3-3.9-7.7-6.1-12.6-6.1H492c-6.7 0-10.4 7.7-6.3 12.9L751.1 512L485.7 851.1A7.98 7.98 0 0 0 492 864h77.3c4.9 0 9.6-2.3 12.6-6.1l255.3-326.1c9.1-11.7 9.1-27.9 0-39.5"
+                              />
+                            </svg>
+                          </span>
+                        }
+                        // breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName="flex items-center justify-center my-8 gap-4 "
+                        pageClassName="border rounded-full block hover:bg-purple hover:text-white w-10 h-10 flex justify-center items-center "
+                        pageLinkClassName="page-link"
+                        activeClassName="bg-purple text-white"
+                      />
                     </div>
                   </TabsContent>
                 </>
