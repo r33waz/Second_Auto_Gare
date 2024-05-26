@@ -29,7 +29,7 @@ function Inbox() {
   const scrollRef = useRef();
   console.log("message", messgae);
   console.log("onlieUser", onlieUser);
-  console.log(conversations);
+  console.log("conservation", conversations);
 
   useEffect(() => {
     dispatch(singleUserConvo({ id: user?.id }));
@@ -124,7 +124,7 @@ function Inbox() {
       <div className="flex h-full ">
         <div
           className={` h-screen overflow-y-auto overflow-x-hidden  flex flex-col shadow-lg relative duration-700 ${
-            isOpen ? "w-[400px]" : "w-12"
+            isOpen ? "w-[400px]" : "w-16"
           }`}
         >
           <Button
@@ -176,18 +176,18 @@ function Inbox() {
                     <div className="flex items-center gap-2">
                       <img
                         src={i?.photo ? i?.photo : ErrorImg}
-                        alt={i?.firstname[0]}
+                        alt={i?.firstname[0] ? i?.firstname[0] : "User"}
                         className="object-cover text-center border-2 rounded-full w-14 h-14"
                       />
                       <h1>{i?.firstname + "" + i?.lastname}</h1>
                     </div>
                     <div className=" flex flex-col items-end gap-2.5">
-                      <span className="relative flex w-5 h-5 text-center">
-                        <span className="absolute inline-flex w-full h-full text-center rounded-full opacity-75 animate-ping bg-purple"></span>
+                      {/* <span className="relative flex w-5 h-5 text-center"> */}
+                      {/* <span className="absolute inline-flex w-full h-full text-center rounded-full opacity-75 animate-ping bg-purple"></span>
                         <span className="relative inline-flex w-5 h-5 pt-0.5 pl-1.5 text-xs text-white rounded-full bg-purple">
                           2
                         </span>
-                      </span>
+                      </span> */}
                       <span className="text-sm text-purple">{currentDate}</span>
                     </div>
                   </div>
@@ -209,7 +209,7 @@ function Inbox() {
               </div>
             </div>
 
-            <div className="flex flex-col h-full px-8 py-6 mt-10 overflow-scroll ">
+            <div className="flex flex-col h-full px-8 py-6 mt-10 overflow-y-scroll ">
               {messgae && messgae?.messages?.length <= 0 ? (
                 <div className="flex justify-center mt-2 text-purple/80">
                   Start a conversation..
@@ -231,38 +231,36 @@ function Inbox() {
                 ))
               )}
             </div>
-            <form onSubmit={handleSubmit(onsubmit)}>
-              <div className="flex justify-center gap-3 rounded-2xl">
-                <div className="w-[50%] flex border border-gray-300 items-center rounded-2xl">
-                  <div className="flex flex-col w-full ">
-                    <input
-                      id="message"
-                      placeholder="Enter your message "
-                      type="text"
-                      className="h-12 pl-2 rounded-2xl"
-                      {...register("message", { required: true })}
-                    />
-                    {errors?.message && (
-                      <span className="text-xs text-red">
-                        Can't send empty message
-                      </span>
-                    )}
-                  </div>
-                  <Button type="submit">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      className="p-2 text-white rounded-full bg-purple"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M4 18.5v-5.154L9.846 12L4 10.654V5.5L19.423 12z"
-                      />
-                    </svg>
-                  </Button>
+            <form onSubmit={handleSubmit(onsubmit)} className="w-full">
+              <div className="flex items-center w-full pl-2 border border-gray-300 rounded-2xl">
+                <div className="flex flex-col w-full ">
+                  <input
+                    id="message"
+                    placeholder="Enter your message "
+                    type="text"
+                    className="h-8 pl-2 "
+                    {...register("message", { required: true })}
+                  />
+                  {errors?.message && (
+                    <span className="text-xs text-red">
+                      Can't send empty message
+                    </span>
+                  )}
                 </div>
+                <Button type="submit">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    className="p-2 text-white rounded-full bg-purple"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M4 18.5v-5.154L9.846 12L4 10.654V5.5L19.423 12z"
+                    />
+                  </svg>
+                </Button>
               </div>
             </form>
           </div>

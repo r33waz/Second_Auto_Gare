@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -26,10 +26,12 @@ import Otpvalidation from "../../components/otpValidation";
 import { SucessToast } from "../../components/common/toast";
 import { postData } from "../../service/axiosservice";
 import Chat from "../../components/chat";
+import SharePoat from "../../components/common/sharepost";
 
 function SingleVehicle() {
   const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
+
   const dispatch = useDispatch();
   const { login, authenticate } = useSelector((state) => state.login);
   console.log("login", login);
@@ -113,24 +115,9 @@ function SingleVehicle() {
                       {singleVehicle?.brand} /{singleVehicle?.model}
                     </h1>
                     <p>{singleVehicle?.meta_description.slice(0, 100)}</p>
+                    <p>{singleVehicle?.description}</p>
                   </div>
-                  <p className="flex gap-2">
-                    Share
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="25"
-                        height="25"
-                        viewBox="0 0 1024 1024"
-                        className="p-1 text-white rounded-full bg-purple"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M752 664c-28.5 0-54.8 10-75.4 26.7L469.4 540.8a160.68 160.68 0 0 0 0-57.6l207.2-149.9C697.2 350 723.5 360 752 360c66.2 0 120-53.8 120-120s-53.8-120-120-120s-120 53.8-120 120c0 11.6 1.6 22.7 4.7 33.3L439.9 415.8C410.7 377.1 364.3 352 312 352c-88.4 0-160 71.6-160 160s71.6 160 160 160c52.3 0 98.7-25.1 127.9-63.8l196.8 142.5c-3.1 10.6-4.7 21.8-4.7 33.3c0 66.2 53.8 120 120 120s120-53.8 120-120s-53.8-120-120-120m0-476c28.7 0 52 23.3 52 52s-23.3 52-52 52s-52-23.3-52-52s23.3-52 52-52M312 600c-48.5 0-88-39.5-88-88s39.5-88 88-88s88 39.5 88 88s-39.5 88-88 88m440 236c-28.7 0-52-23.3-52-52s23.3-52 52-52s52 23.3 52 52s-23.3 52-52 52"
-                        />
-                      </svg>
-                    </span>
-                  </p>
+                  <SharePoat data={singleVehicle} />
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-3 md:flex-nowrap">
                   <div className="flex flex-wrap items-center gap-4 md:flex-nowrap">
@@ -506,77 +493,82 @@ function SingleVehicle() {
                         <span>{singleVehicle?.user?.phonenumber}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between gap-2 ">
-                      {!authenticate ? (
-                        <Link
-                          to="/login"
-                          className="py-3 text-lg text-center text-white rounded-xl bg-purple"
-                        >
-                          Message Dealer
-                        </Link>
-                      ) : login?.verified ? (
-                        <>
-                          <Chat
-                            key={singleVehicle?.user?._id}
-                            data={singleVehicle?.user}
-                          />
-                        </>
-                      ) : (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="py-3 text-lg text-center text-white rounded-xl bg-purple">
-                              Message Dealer
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent
-                            className={`mt-6 ${
-                              isOpen ? "h-56  w-full " : " h-32 w-full"
-                            } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-40 bg-black text-white`}
-                          >
-                            <DialogClose />
-                            <DialogTitle className="flex items-center gap-2 text-sm font-light">
-                              <span>Verify your account</span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="15"
-                                height="15"
-                                viewBox="0 0 15 15"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="currentColor"
-                                  d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"
-                                />
-                              </svg>
-                            </DialogTitle>
-                            <DialogHeader>
-                              <DialogDescription className="flex flex-col items-center justify-center">
-                                <Button
-                                  onClick={sendOtp}
-                                  className="p-2 text-lg font-semibold border border-white md:w-40 rounded-xl"
-                                >
-                                  Send OTP
-                                </Button>
 
-                                <div
-                                  className={`mt-5 ${
-                                    isOpen ? "visivle" : "hidden"
-                                  }`}
+                    {login?.id === singleVehicle?.user?._id ? (
+                      ""
+                    ) : (
+                      <div className="flex flex-col justify-between gap-2 ">
+                        {!authenticate ? (
+                          <Link
+                            to="/login"
+                            className={`py-3 text-lg text-center text-white rounded-xl bg-purple `}
+                          >
+                            Message Dealer
+                          </Link>
+                        ) : login?.verified ? (
+                          <>
+                            <Chat
+                              key={singleVehicle?.user?._id}
+                              user={singleVehicle?.user}
+                            />
+                          </>
+                        ) : (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button className="py-3 text-lg text-center text-white rounded-xl bg-purple">
+                                Message Dealer
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent
+                              className={`mt-6 ${
+                                isOpen ? "h-56  w-full " : " h-32 w-full"
+                              } sm:max-w-[425px] left-[37%] p-3 border-2 rounded-md  top-40 bg-black text-white`}
+                            >
+                              <DialogClose />
+                              <DialogTitle className="flex items-center gap-2 text-sm font-light">
+                                <span>Verify your account</span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="15"
+                                  height="15"
+                                  viewBox="0 0 15 15"
                                 >
-                                  <Otpvalidation data={singleVehicle?.id} />
-                                </div>
-                              </DialogDescription>
-                            </DialogHeader>
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      <a
-                        href={`https://wa.me/${singleVehicle?.user?.phonenumber}/?text=hi`}
-                        className="py-3 text-lg text-center text-white rounded-xl bg-green"
-                      >
-                        Message via whatsapp
-                      </a>
-                    </div>
+                                  <path
+                                    fill="none"
+                                    stroke="currentColor"
+                                    d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"
+                                  />
+                                </svg>
+                              </DialogTitle>
+                              <DialogHeader>
+                                <DialogDescription className="flex flex-col items-center justify-center">
+                                  <Button
+                                    onClick={sendOtp}
+                                    className="p-2 text-lg font-semibold border border-white md:w-40 rounded-xl"
+                                  >
+                                    Send OTP
+                                  </Button>
+
+                                  <div
+                                    className={`mt-5 ${
+                                      isOpen ? "visivle" : "hidden"
+                                    }`}
+                                  >
+                                    <Otpvalidation data={singleVehicle?.id} />
+                                  </div>
+                                </DialogDescription>
+                              </DialogHeader>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                        <a
+                          href={`https://wa.me/${singleVehicle?.user?.phonenumber}/?text=hi`}
+                          className="py-3 text-lg text-center text-white rounded-xl bg-green"
+                        >
+                          Message via whatsapp
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -587,7 +579,9 @@ function SingleVehicle() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <div
-                    className={`flex flex-col gap-3 overflow-y-scroll ${singleVehicle?.comments.length>5?"h-80":""}`}
+                    className={`flex flex-col gap-3 overflow-y-scroll ${
+                      singleVehicle?.comments.length > 5 ? "h-80" : ""
+                    }`}
                   >
                     {singleVehicle?.comments.map((e) => {
                       return (
