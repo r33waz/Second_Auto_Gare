@@ -60,22 +60,22 @@ function App() {
                 element={
                   <div className="flex">
                     <Routes>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/user" element={<User />} />
-                        <Route
-                          path="/updateProfile/:id"
-                          element={<UpdateUser />}
-                        />
-                        <Route path="/vehicle" element={<Vehicle />} />
-                        <Route path="/allbooking" element={<AllBooking />} />
-                        <Route
-                          path="/booking_detail/:id"
-                          element={<BookingDetails />}
-                        />
-                        <Route
-                          path="/vehicle_detail/:id"
-                          element={<VehicleDetail />}
-                        />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/user" element={<User />} />
+                      <Route
+                        path="/updateProfile/:id"
+                        element={<UpdateUser />}
+                      />
+                      <Route path="/vehicle" element={<Vehicle />} />
+                      <Route path="/allbooking" element={<AllBooking />} />
+                      <Route
+                        path="/booking_detail/:id"
+                        element={<BookingDetails />}
+                      />
+                      <Route
+                        path="/vehicle_detail/:id"
+                        element={<VehicleDetail />}
+                      />
                     </Routes>
                   </div>
                 }
@@ -148,7 +148,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/booking"
                 element={

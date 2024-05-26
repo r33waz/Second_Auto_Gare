@@ -1,6 +1,5 @@
 import express from "express";
 
-
 import cors from "cors";
 
 import mainRouter from "./src/routes/main.js";
@@ -10,7 +9,7 @@ import { Dbconnect } from "./src/config/dbconfig.js";
 import cookieParser from "cookie-parser";
 
 import { Server } from "socket.io";
-import {createServer} from "http"
+import { createServer } from "http";
 import User from "./src/models/user.model.js";
 import "dotenv/config.js";
 
@@ -38,22 +37,23 @@ const io = new Server(server, {
 });
 // Socket Connection
 let users = [];
+console.log("user", users);
 io.on("connection", (socket) => {
-  console.log("New connection", socket. id);
+  console.log("New connection", socket.id);
   socket.on("addUser", (userId) => {
     const existingUser = users.find((i) => i?.userId === userId);
     if (!existingUser) {
       const user = { userId, socketId: socket?.id };
       users.push(user);
-      io.emit("getOnlineUser",users)
+      io.emit("getOnlineUser", users);
     }
   });
   socket.on(
     "sendMessage",
     async ({ senderId, recieverId, message, conversationId }) => {
       console.log(senderId, recieverId, message, conversationId);
-      const reciver =  users.find((user) => user?.userId === recieverId);
-      const sender =  users.find((user) => user?.userId === senderId);
+      const reciver = users.find((user) => user?.userId === recieverId);
+      const sender = users.find((user) => user?.userId === senderId);
       console.log("recevir sender", reciver, sender);
       const user = await User.findById(senderId);
       if (reciver) {
@@ -75,8 +75,8 @@ io.on("connection", (socket) => {
 
 app.use(mainRouter);
 
-const PORT = process.env.PORT ;
-const SOCKET_PORT = process.env.SOCKET_PORT ;
+const PORT = process.env.PORT;
+const SOCKET_PORT = process.env.SOCKET_PORT;
 server.listen(SOCKET_PORT, () => {
   console.log(`Socket is running at ${SOCKET_PORT}`);
 });
