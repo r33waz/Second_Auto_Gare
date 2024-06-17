@@ -6,7 +6,7 @@ import mainRouter from "./routes/main.js";
 
 import { Dbconnect } from "./config/dbconfig.js";
 
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 
 import { Server } from "socket.io";
 import { createServer } from "http";
@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin:"https://second-auto-gare.vercel.app/",
+    origin: process.env.BASE_URL,
     credentials: true,
   })
 );
