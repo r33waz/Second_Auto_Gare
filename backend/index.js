@@ -6,7 +6,6 @@ import mainRouter from "./src/routes/main.js";
 
 import { Dbconnect } from "./src/config/dbconfig.js";
 
-import cookieParser from "cookie-parser";
 
 import { Server } from "socket.io";
 import { createServer } from "http";
