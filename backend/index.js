@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin:[""],
+    origin:["https://second-auto-gare.vercel.app/"],
     credentials: true,
   })
 );
