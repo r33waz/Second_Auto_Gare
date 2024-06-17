@@ -2,14 +2,14 @@ import express from "express";
 
 import cors from "cors";
 
-import mainRouter from "./src/routes/main.js";
+import mainRouter from "./routes/main.js";
 
-import { Dbconnect } from "./src/config/dbconfig.js";
+import { Dbconnect } from "./config/dbconfig.js";
 
 
 import { Server } from "socket.io";
 import { createServer } from "http";
-import User from "./src/models/user.model.js";
+import User from "./models/user.model.js";
 import "dotenv/config.js";
 
 const app = express();
