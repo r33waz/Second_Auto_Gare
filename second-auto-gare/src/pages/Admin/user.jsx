@@ -28,7 +28,6 @@ import { Fade } from "react-awesome-reveal";
 function User() {
   const [itemsPerPage] = useState(12);
   const [itemOffset, setItemOffset] = useState(0);
-  const Userref = useRef();
   const [searchValue, setSearchvalue] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
